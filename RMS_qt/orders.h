@@ -11,6 +11,9 @@
 #include <QLabel>
 #include <QFrame>
 #include <QString>
+#include <QTableWidget>
+#include <QHeaderView>
+#include <QPushButton>
 
 namespace Ui {
 class orders;
