@@ -9,14 +9,23 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    add_tables.cpp \
+    edit.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    table.cpp
 
 HEADERS += \
-    mainwindow.h
+    add_tables.h \
+    edit.h \
+    mainwindow.h \
+    table.h
 
 FORMS += \
-    mainwindow.ui
+    add_tables.ui \
+    edit.ui \
+    mainwindow.ui \
+    table.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
