@@ -18,7 +18,7 @@
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>20</y>
+      <y>0</y>
       <width>58</width>
       <height>16</height>
      </rect>
@@ -31,7 +31,7 @@
     <property name="geometry">
      <rect>
       <x>700</x>
-      <y>20</y>
+      <y>0</y>
       <width>58</width>
       <height>16</height>
      </rect>
@@ -44,9 +44,9 @@
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>69</y>
-      <width>681</width>
-      <height>421</height>
+      <y>49</y>
+      <width>701</width>
+      <height>501</height>
      </rect>
     </property>
     <property name="widgetResizable">
@@ -57,8 +57,8 @@
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>679</width>
-       <height>419</height>
+       <width>699</width>
+       <height>499</height>
       </rect>
      </property>
      <widget class="QWidget" name="cardContainer" native="true">

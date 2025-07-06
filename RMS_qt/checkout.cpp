@@ -1,13 +1,6 @@
 #include "checkout.h"
 #include "ui_checkout.h"
-#include <QVBoxLayout>
-#include <QLabel>
-#include <QTableWidget>
-#include <QHeaderView>
-#include <QPushButton>
-#include <QGridLayout>
-#include <QFrame>
-#include <QRegularExpression>
+
 
 checkout::checkout(const QString &orderId, const QString &table, const QString &time, const QString &status,
                    const QList<QList<QString>> &items, QWidget *parent)
@@ -225,7 +218,34 @@ checkout::checkout(const QString &orderId, const QString &table, const QString &
     mainLayout->addWidget(buttonSection);
 
     // Connect button to close dialog
-    connect(completeBtn, &QPushButton::clicked, this, &QDialog::accept);
+    connect(completeBtn, &QPushButton::clicked, this, [=]() {
+        // Only add the database if it doesn't already exist
+        if (!QSqlDatabase::contains("qt_sql_default_connection")) {
+            mydb = QSqlDatabase::addDatabase("QSQLITE");
+            mydb.setDatabaseName("/Users/pratik/Programming/RMS/RmsApp.db");
+        } else {
+            mydb = QSqlDatabase::database("qt_sql_default_connection");
+        }
+
+        if(mydb.open()){
+            qDebug() <<"Database is connected by checkout page";
+        }
+        else{
+            qDebug() << "Database connection failed" ;
+            qDebug() << "Error:"<< mydb.lastError();
+        }
+        QSqlQuery updateStatus(mydb);
+        updateStatus.prepare("UPDATE orders SET status = ? WHERE order_id = ?");
+        updateStatus.addBindValue("Billed");
+        updateStatus.addBindValue(orderId);
+        if (updateStatus.exec()) {
+            qDebug() << "Order status updated to Billed";
+        } else {
+            qDebug() << "Failed to update status:" << updateStatus.lastError();
+        }
+        this->accept();    // closes the dialog
+    });
+
 
     // Apply layout to frame
     QVBoxLayout *frameLayout = new QVBoxLayout(ui->frame);

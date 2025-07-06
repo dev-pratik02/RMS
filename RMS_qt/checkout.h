@@ -3,7 +3,15 @@
 #include <QDialog>
 #include <QList>
 #include <QString>
-
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QTableWidget>
+#include <QHeaderView>
+#include <QPushButton>
+#include <QGridLayout>
+#include <QFrame>
+#include <QRegularExpression>
+#include <QtSql>
 namespace Ui {
 class checkout;
 }
@@ -19,6 +27,7 @@ public:
 
 private:
     Ui::checkout *ui;
+    QSqlDatabase mydb;
 };
 
 #endif // CHECKOUT_H

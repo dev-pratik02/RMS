@@ -34,7 +34,7 @@ orders::orders(QWidget *parent)
     //Fetching data from database
 
     QSqlQuery queryInsert(mydb);
-    if(queryInsert.exec("SELECT * FROM orders where status!='billed'")){
+    if(queryInsert.exec("SELECT * FROM orders where status!='Billed'")){
         qDebug()<<"Successfully fetched order details";
     }
     else{
@@ -300,17 +300,42 @@ QWidget* orders::createOrderCard(const QString &orderId, const QString &table, c
 
     mainLayout->addWidget(bottomSection);
 
-    // --- Connect buttons to open dialogs ---
     connect(editBtn, &QPushButton::clicked, this, [=]() {
         edit_order *dlg = new edit_order(orderId, table, time, status, items, card);
         dlg->setAttribute(Qt::WA_DeleteOnClose);
+
+        // Connect to finished signal to refresh when dialog closes
+        connect(dlg, &QDialog::finished, this, [=](int result) {
+            if (result == QDialog::Accepted) {
+                this->close();
+                ptrorders = new orders();
+                ptrorders->show();
+            }
+            else if ( result == 1234){
+                edit_order *newdlg = new edit_order(orderId, table, time, status, items, card);
+                newdlg->setAttribute(Qt::WA_DeleteOnClose);
+                newdlg->show();
+            }
+        });
+
         dlg->show();
     });
+
     connect(checkoutBtn, &QPushButton::clicked, this, [=]() {
         checkout *dlg = new checkout(orderId, table, time, status, items, card);
         dlg->setAttribute(Qt::WA_DeleteOnClose);
+
+        connect(dlg, &QDialog::finished, this, [=](int result) {
+            if (result == QDialog::Accepted) {
+                this->close();
+                ptrorders = new orders();
+                ptrorders->show();
+            }
+        });
+
         dlg->show();
     });
+
 
     return card;
 }

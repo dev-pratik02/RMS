@@ -1,14 +1,6 @@
 #include "edit_order.h"
 #include "ui_edit_order.h"
-#include <QVBoxLayout>
-#include <QLabel>
-#include <QTableWidget>
-#include <QHeaderView>
-#include <QPushButton>
-#include <QGridLayout>
-#include <QSpacerItem>
-#include <QComboBox>
-#include <QSpinBox>
+
 
 edit_order::edit_order(QWidget *parent)
     : QDialog(parent)
@@ -24,6 +16,9 @@ edit_order::edit_order(const QString &orderId, const QString &table, const QStri
 {
     ui->setupUi(this);
 
+
+    orderIdGlobal = orderId;
+
     // Remove any layout from the frame
     QLayout *oldLayout = ui->frame->layout();
     if (oldLayout) {
@@ -34,6 +29,23 @@ edit_order::edit_order(const QString &orderId, const QString &table, const QStri
         }
         delete oldLayout;
     }
+
+    // Only add the database if it doesn't already exist
+    if (!QSqlDatabase::contains("qt_sql_default_connection")) {
+        mydb = QSqlDatabase::addDatabase("QSQLITE");
+        mydb.setDatabaseName("/Users/pratik/Programming/RMS/RmsApp.db");
+    } else {
+        mydb = QSqlDatabase::database("qt_sql_default_connection");
+    }
+
+    if(mydb.open()){
+        qDebug() <<"Database is connected by edit orders page";
+    }
+    else{
+        qDebug() << "Database connection failed" ;
+        qDebug() << "Error:"<< mydb.lastError();
+    }
+
 
     // --- Card Layout ---
     QWidget *card = new QWidget(ui->frame);
@@ -109,7 +121,7 @@ edit_order::edit_order(const QString &orderId, const QString &table, const QStri
     priceLabel->setFixedWidth(priceColWidth);
 
     headerLayout->addWidget(nameLabel);
-    headerLayout->addSpacing(nameQtyGap); // increased gap between name and quantity
+    headerLayout->addSpacing(nameQtyGap);
     headerLayout->addWidget(qtyLabel);
     headerLayout->addSpacing(qtyPriceGap);
     headerLayout->addWidget(priceLabel);
@@ -143,8 +155,28 @@ edit_order::edit_order(const QString &orderId, const QString &table, const QStri
     orderTable->setColumnWidth(1, qtyColWidth + qtyPriceGap);
     orderTable->setColumnWidth(2, priceColWidth);
 
-    // Example menu list for dropdowns
-    QStringList menuList = {"Burger", "Fries", "Soda", "Pizza", "Salad", "Coffee", "Tea", "Sandwich", "Pasta"};
+
+    //Creating a menu list by fetching menu from database
+
+    QSqlQuery queryMenuList(mydb);
+    if(queryMenuList.exec("SELECT * FROM menu")){
+        qDebug()<<"Successfully fetched menu details";
+    }
+    else{
+        qDebug()<< "Can't fetch menu details";
+        qDebug() << "Error:" << queryMenuList.lastError();
+    }
+
+    QStringList menuList;
+    // For SQLite, count rows manually:
+    int records = 0;
+    while (queryMenuList.next()) {
+        ++records;
+        QString menu_item_name=queryMenuList.value(1).toString();
+        menuList.append(menu_item_name);
+    }
+    qDebug() << "Number of records:" << records;
+    queryMenuList.first();
 
     for (int i = 0; i < items.size(); ++i) {
         // --- ComboBox for menu item (editable, default to card value) ---
@@ -200,6 +232,10 @@ edit_order::edit_order(const QString &orderId, const QString &table, const QStri
         QTableWidgetItem *priceItem = new QTableWidgetItem(items[i].value(2));
         priceItem->setTextAlignment(Qt::AlignCenter);
         orderTable->setItem(i, 2, priceItem);
+
+        comboBoxes.append(combo);
+        spinBoxes.append(spin);
+
     }
 
     mainLayout->addWidget(orderTable);
@@ -212,19 +248,19 @@ edit_order::edit_order(const QString &orderId, const QString &table, const QStri
 
     QPushButton *readyBtn = new QPushButton("Mark as Ready", actionSection);
     QPushButton *servedBtn = new QPushButton("Mark as Served", actionSection);
-    QPushButton *cancelBtn = new QPushButton("Cancel Order", actionSection);
+    QPushButton *delBtn = new QPushButton("Delete Order", actionSection);
 
     readyBtn->setStyleSheet("background-color: #28a745; color: white; border-radius: 6px; padding: 8px 18px; font-size: 14px; font-weight: bold;");
     servedBtn->setStyleSheet("background-color: #0078d7; color: white; border-radius: 6px; padding: 8px 18px; font-size: 14px; font-weight: bold;");
-    cancelBtn->setStyleSheet("background-color: #6c757d; color: white; border-radius: 6px; padding: 8px 18px; font-size: 14px; font-weight: bold;");
+    delBtn->setStyleSheet("background-color: #6c757d; color: white; border-radius: 6px; padding: 8px 18px; font-size: 14px; font-weight: bold;");
 
     readyBtn->setFixedHeight(36);
     servedBtn->setFixedHeight(36);
-    cancelBtn->setFixedHeight(36);
+    delBtn->setFixedHeight(36);
 
     actionLayout->addWidget(readyBtn);
     actionLayout->addWidget(servedBtn);
-    actionLayout->addWidget(cancelBtn);
+    actionLayout->addWidget(delBtn);
     mainLayout->addWidget(actionSection);
 
     // --- Reset & Save Buttons ---
@@ -249,6 +285,35 @@ edit_order::edit_order(const QString &orderId, const QString &table, const QStri
     mainLayout->addSpacing(8);
     mainLayout->addWidget(saveResetSection);
 
+    connect(resetBtn, &QPushButton::clicked, this, [=]() {
+        this->done(1234);
+    });
+    connect(saveBtn, &QPushButton::clicked, this, &edit_order::onSaveClicked);
+    connect(readyBtn, &QPushButton::clicked, this, [=]() { updateStatus("Ready"); });
+    connect(servedBtn, &QPushButton::clicked, this, [=]() { updateStatus("Served"); });
+    connect(delBtn, &QPushButton::clicked, this, [=]() {
+        QSqlQuery querydelitems(mydb);
+        querydelitems.prepare("delete from order_items where order_id= ?");
+        querydelitems.addBindValue(orderId);
+        if(querydelitems.exec()){
+            qDebug()<<"Order: "<<orderId<<"deleted successfully";
+        }
+        else{
+            qDebug()<<"Order: "<<orderId<<"could not be deleted";
+        }
+
+        QSqlQuery querydelorder(mydb);
+        querydelorder.prepare("delete from orders where order_id= ?");
+        querydelorder.addBindValue(orderId);
+        if(querydelorder.exec()){
+            qDebug()<<"Order: "<<orderId<<"deleted successfully";
+        }
+        else{
+            qDebug()<<"Order: "<<orderId<<"could not be deleted";
+        }
+        this->accept();
+    });
+
     // Apply layout to frame
     QVBoxLayout *frameLayout = new QVBoxLayout(ui->frame);
     frameLayout->setContentsMargins(0, 0, 0, 0);
@@ -260,6 +325,55 @@ edit_order::~edit_order()
 {
     delete ui;
 }
+
+void edit_order::onSaveClicked() {
+    for (int i = 0; i < comboBoxes.size(); ++i) {
+        QString itemName = comboBoxes[i]->currentText();
+        int quantity = spinBoxes[i]->value();
+
+        // Look up menu_item_id from item name
+        QSqlQuery query(mydb);
+        query.prepare("SELECT menu_item_id FROM menu WHERE item_name = ?");
+        query.addBindValue(itemName);
+        QString menuId = "unknown";
+        if (query.exec() && query.next()) {
+            menuId = query.value(0).toString();
+        }
+
+        // You can now update or insert into order_items
+        QSqlQuery upsert(mydb);
+        upsert.prepare("UPDATE order_items SET menu_item_id = ?, quantity = ? "
+                       "WHERE order_id = ? AND item_id = ("
+                       "  SELECT item_id FROM order_items WHERE order_id = ? LIMIT 1 OFFSET ?)");
+        upsert.addBindValue(menuId);
+        upsert.addBindValue(quantity);
+        upsert.addBindValue(orderIdGlobal);
+        upsert.addBindValue(orderIdGlobal);
+        upsert.addBindValue(i);
+
+        if (!upsert.exec()) {
+            qDebug() << "Failed to update row" << i << ":" << upsert.lastError();
+        }
+    }
+
+    qDebug() << "Order updated successfully.";
+    this->accept();
+
+}
+
+void edit_order::updateStatus(const QString &newStatus) {
+    QSqlQuery updateStatus(mydb);
+    updateStatus.prepare("UPDATE orders SET status = ? WHERE order_id = ?");
+    updateStatus.addBindValue(newStatus);
+    updateStatus.addBindValue(orderIdGlobal);
+    if (updateStatus.exec()) {
+        qDebug() << "Order status updated to" << newStatus;
+    } else {
+        qDebug() << "Failed to update status:" << updateStatus.lastError();
+    }
+    this->accept();
+}
+
 
 
 
