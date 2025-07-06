@@ -7,18 +7,6 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ptrorders = new orders();
-
-    DB_connection= QSqlDatabase::addDatabase("QSQLITE");
-    DB_connection.setDatabaseName("/Users/pratik/Programming/RMS/RmsApp.db");
-    if(DB_connection.open()){
-        qDebug() <<"Database is connected";
-    }
-    else{
-        qDebug() << "Database connection failed" ;
-        qDebug() << "Error:"<< DB_connection.lastError();
-    }
-
-
 }
 
 MainWindow::~MainWindow()
