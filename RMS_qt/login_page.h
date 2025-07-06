@@ -12,10 +12,10 @@ class login_page : public QDialog
     Q_OBJECT
 
 public:
+
     explicit login_page(QWidget *parent = nullptr);
     ~login_page();
 
-private:
     Ui::login_page *ui;
 };
 
