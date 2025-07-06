@@ -7,10 +7,11 @@ staff::staff(QWidget *parent)
 {
     ui->setupUi(this);
 
+    qDebug() << "The application dir path is :\n" << QCoreApplication::applicationDirPath();
     ptraddstaff = new addstaff();
     if (!QSqlDatabase::contains("qt_sql_default_connection")) {
         mydb = QSqlDatabase::addDatabase("QSQLITE");
-        QString dbPath = QCoreApplication::applicationDirPath() + "/../../../../../../RmsApp.db";
+        QString dbPath = QCoreApplication::applicationDirPath() + "/../../../../RmsApp.db";
         dbPath = QDir::cleanPath(dbPath);
         mydb.setDatabaseName(dbPath);
     } else {

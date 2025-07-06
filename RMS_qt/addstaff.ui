@@ -16,14 +16,15 @@
   <widget class="QLabel" name="ADDSTAFF">
    <property name="geometry">
     <rect>
-     <x>370</x>
+     <x>308</x>
      <y>20</y>
-     <width>89</width>
-     <height>16</height>
+     <width>181</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="font">
     <font>
+     <family>Arial</family>
      <pointsize>16</pointsize>
      <italic>true</italic>
      <bold>true</bold>
@@ -36,7 +37,7 @@
     <set>Qt::AlignmentFlag::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>50</x>
@@ -47,10 +48,16 @@
    </property>
    <layout class="QFormLayout" name="formLayout_2">
     <item row="1" column="0" colspan="2">
-     <widget class="QLineEdit" name="LINEEDITONE"/>
+     <widget class="QLineEdit" name="input_name"/>
     </item>
     <item row="5" column="0">
      <widget class="QLabel" name="POSITION">
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>POSITION:</string>
       </property>
@@ -60,30 +67,48 @@
      </widget>
     </item>
     <item row="6" column="0" colspan="2">
-     <widget class="QLineEdit" name="LINEEDITTWO"/>
+     <widget class="QLineEdit" name="input_position"/>
     </item>
     <item row="9" column="0" colspan="2">
      <widget class="QLabel" name="SALARY">
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>SALARY:</string>
       </property>
      </widget>
     </item>
     <item row="10" column="0" colspan="2">
-     <widget class="QLineEdit" name="LINEEDITTHREE"/>
+     <widget class="QLineEdit" name="input_salary"/>
     </item>
     <item row="13" column="0" colspan="2">
      <widget class="QLabel" name="QUALIFICATIONS">
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>QUALIFICATIONS:</string>
       </property>
      </widget>
     </item>
     <item row="14" column="0" colspan="2">
-     <widget class="QLineEdit" name="LINEEDITFOUR"/>
+     <widget class="QLineEdit" name="input_qualifications"/>
     </item>
     <item row="17" column="0" colspan="2">
      <widget class="QLabel" name="CITIZENSHIP">
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>CITIZENSHIP:</string>
       </property>
@@ -91,22 +116,29 @@
     </item>
     <item row="21" column="0" colspan="2">
      <widget class="QLabel" name="CONTACTINFO">
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>CONTACT INFO:</string>
       </property>
      </widget>
     </item>
     <item row="22" column="0" colspan="2">
-     <widget class="QLineEdit" name="LINEEDITSIX"/>
+     <widget class="QLineEdit" name="input_contactinfo"/>
     </item>
     <item row="18" column="0" colspan="2">
-     <widget class="QLineEdit" name="LINEEDITFIVE"/>
+     <widget class="QLineEdit" name="input_citizenship"/>
     </item>
     <item row="0" column="0">
      <widget class="QLabel" name="NAME">
       <property name="font">
        <font>
-        <pointsize>11</pointsize>
+        <family>Arial</family>
+        <pointsize>12</pointsize>
        </font>
       </property>
       <property name="text">
@@ -116,21 +148,22 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>570</x>
      <y>530</y>
-     <width>181</width>
-     <height>32</height>
+     <width>195</width>
+     <height>33</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="QPushButton" name="CANCEL">
+     <widget class="QPushButton" name="btn_cancel">
       <property name="font">
        <font>
-        <pointsize>10</pointsize>
+        <family>Arial</family>
+        <pointsize>12</pointsize>
         <italic>true</italic>
         <bold>true</bold>
        </font>
@@ -141,10 +174,11 @@
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="ADD">
+     <widget class="QPushButton" name="btn_add">
       <property name="font">
        <font>
-        <pointsize>10</pointsize>
+        <family>Arial</family>
+        <pointsize>12</pointsize>
         <italic>true</italic>
         <bold>true</bold>
        </font>

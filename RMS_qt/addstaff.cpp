@@ -15,14 +15,5 @@ addstaff::~addstaff()
 
 
 
-void addstaff::on_btn_reset_clicked()
-{
 
-}
-
-
-void addstaff::on_btn_add_clicked()
-{
-
-}
 
