@@ -279,6 +279,7 @@ DIST          = /Users/pratik/Qt/6.9.1/macos/mkspecs/features/spec_pre.prf \
 		/Users/pratik/Qt/6.9.1/macos/mkspecs/features/qt_config.prf \
 		/Users/pratik/Qt/6.9.1/macos/mkspecs/macx-clang/qmake.conf \
 		/Users/pratik/Qt/6.9.1/macos/mkspecs/features/spec_post.prf \
+		../../.qmake.stash \
 		/Users/pratik/Qt/6.9.1/macos/mkspecs/features/exclusive_builds.prf \
 		/Users/pratik/Qt/6.9.1/macos/mkspecs/features/mac/sdk.prf \
 		/Users/pratik/Qt/6.9.1/macos/mkspecs/features/toolchain.prf \
@@ -320,7 +321,7 @@ TARGET        = RMS_qt.app/Contents/MacOS/RMS_qt
 EXPORT_QMAKE_MAC_SDK = macosx
 EXPORT_QMAKE_MAC_SDK_VERSION = 15.5
 EXPORT_QMAKE_XCODE_DEVELOPER_PATH = /Applications/Xcode.app/Contents/Developer
-EXPORT__QMAKE_STASH_ = 
+EXPORT__QMAKE_STASH_ = /Users/pratik/Programming/RMS/RMS_qt/build/Qt_6_9_1_for_macOS-Debug/.qmake.stash
 EXPORT_VALID_ARCHS = x86_64 arm64
 EXPORT_DEFAULT_ARCHS = arm64
 EXPORT_ARCHS = $(filter $(EXPORT_VALID_ARCHS), $(if $(ARCHS), $(ARCHS), $(if $(EXPORT_DEFAULT_ARCHS), $(EXPORT_DEFAULT_ARCHS), $(EXPORT_VALID_ARCHS))))
@@ -554,6 +555,7 @@ Makefile: ../../RMS_qt.pro /Users/pratik/Qt/6.9.1/macos/mkspecs/macx-clang/qmake
 		/Users/pratik/Qt/6.9.1/macos/mkspecs/features/qt_config.prf \
 		/Users/pratik/Qt/6.9.1/macos/mkspecs/macx-clang/qmake.conf \
 		/Users/pratik/Qt/6.9.1/macos/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/Users/pratik/Qt/6.9.1/macos/mkspecs/features/exclusive_builds.prf \
 		/Users/pratik/Qt/6.9.1/macos/mkspecs/features/mac/sdk.prf \
 		/Users/pratik/Qt/6.9.1/macos/mkspecs/features/toolchain.prf \
@@ -806,6 +808,7 @@ Makefile: ../../RMS_qt.pro /Users/pratik/Qt/6.9.1/macos/mkspecs/macx-clang/qmake
 /Users/pratik/Qt/6.9.1/macos/mkspecs/features/qt_config.prf:
 /Users/pratik/Qt/6.9.1/macos/mkspecs/macx-clang/qmake.conf:
 /Users/pratik/Qt/6.9.1/macos/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /Users/pratik/Qt/6.9.1/macos/mkspecs/features/exclusive_builds.prf:
 /Users/pratik/Qt/6.9.1/macos/mkspecs/features/mac/sdk.prf:
 /Users/pratik/Qt/6.9.1/macos/mkspecs/features/toolchain.prf:
@@ -875,6 +878,7 @@ clean: compiler_clean
 
 distclean: clean 
 	-$(DEL_FILE) -r RMS_qt.app
+	-$(DEL_FILE) .qmake.stash
 	-$(DEL_FILE) Makefile
 
 
