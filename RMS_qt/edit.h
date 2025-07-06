@@ -2,7 +2,7 @@
 #define EDIT_H
 
 #include <QDialog>
-
+#include <QtSql>
 namespace Ui {
 class edit;
 }
@@ -17,8 +17,10 @@ public:
 private slots:
     void on_btn_back_clicked();
     void on_btn_add_clicked();
+
 private:
     Ui::edit *ui;
+    QSqlDatabase mydb;
 };
 
 #endif // EDIT_H

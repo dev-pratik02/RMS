@@ -47,6 +47,18 @@ table::table(QWidget *parent)
             }
             row++;
         }
+        QSqlQuery queryAvailableTables(mydb);
+        queryAvailableTables.prepare("SELECT * FROM tables where status='free'");
+        int count=0;
+        if(queryAvailableTables.exec()){
+            while(queryAvailableTables.next()){
+                count++;
+            }
+        }
+        ui->totalTables->setText("Total no. of tables: "+ QString::number(row).trimmed() );
+        ui->totalTables->setAlignment(Qt::AlignCenter);
+        ui->availableTables->setText("Available tables: "+ QString::number(count).trimmed() );
+        ui->availableTables->setAlignment(Qt::AlignCenter);
 
     }
 
