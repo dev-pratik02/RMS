@@ -6,9 +6,17 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ptrstaff = new staff();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete ptrstaff;
 }
+
+void MainWindow::on_pushButton_clicked()
+{
+    ptrstaff->show();
+}
+
