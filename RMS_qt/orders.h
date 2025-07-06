@@ -38,7 +38,7 @@ private:
     checkout *ptrcheckout;
     edit_order *ptredit_order;
 
-
+    orders *ptrorders;
     QSqlDatabase mydb;
     QWidget* createOrderCard(const QString &orderId, const QString &table, const QString &time, const QString &status);
 };

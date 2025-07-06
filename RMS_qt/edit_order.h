@@ -2,6 +2,16 @@
 #define EDIT_ORDER_H
 
 #include <QDialog>
+#include <QtSql>
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QTableWidget>
+#include <QHeaderView>
+#include <QPushButton>
+#include <QGridLayout>
+#include <QSpacerItem>
+#include <QComboBox>
+#include <QSpinBox>
 
 namespace Ui {
 class edit_order;
@@ -21,6 +31,14 @@ private:
     Ui::edit_order *ui;
     QString m_orderId, m_table, m_time, m_status;
     QList<QList<QString>> m_items;
+
+    QSqlDatabase mydb;
+    void onSaveClicked();
+    void updateStatus(const QString &newStatus);
+    QList<QComboBox*> comboBoxes;
+    QList<QSpinBox*> spinBoxes;
+    QString orderIdGlobal;
+
 };
 
 #endif // EDIT_ORDER_H
