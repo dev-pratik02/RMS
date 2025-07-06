@@ -2,6 +2,7 @@
 #define EDITSTAFF_H
 
 #include <QDialog>
+#include <QMessageBox>
 #include <QtSql>
 
 namespace Ui {

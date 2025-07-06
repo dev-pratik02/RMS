@@ -8,10 +8,10 @@ staff::staff(QWidget *parent)
     ui->setupUi(this);
 
     qDebug() << "The application dir path is :\n" << QCoreApplication::applicationDirPath();
-    ptraddstaff = new addstaff();
+
     if (!QSqlDatabase::contains("qt_sql_default_connection")) {
         mydb = QSqlDatabase::addDatabase("QSQLITE");
-        QString dbPath = QCoreApplication::applicationDirPath() + "/../../../../RmsApp.db";
+        QString dbPath = QCoreApplication::applicationDirPath() + "/../../../../../../RmsApp.db";
         dbPath = QDir::cleanPath(dbPath);
         mydb.setDatabaseName(dbPath);
     } else {
@@ -62,6 +62,16 @@ staff::~staff()
 
 void staff::on_ADDSTAFF_clicked()
 {
-    ptraddstaff->show();
+    addstaff *ptraddstaff = new addstaff(this);
+    int result = ptraddstaff->exec(); // modal dialog
+    delete ptraddstaff;
+
+    if (result == QDialog::Accepted) {
+        this->close();           // close current staff window
+        staff *newStaff = new staff();  // re-create fresh staff window
+        newStaff->show();        // show the refreshed window
+    }
 }
+
+
 
