@@ -98,8 +98,9 @@
    </property>
    <property name="font">
     <font>
+     <family>Arial</family>
      <pointsize>12</pointsize>
-     <italic>true</italic>
+     <italic>false</italic>
      <bold>true</bold>
     </font>
    </property>
@@ -136,8 +137,9 @@
    </property>
    <property name="font">
     <font>
+     <family>Arial</family>
      <pointsize>11</pointsize>
-     <italic>true</italic>
+     <italic>false</italic>
      <bold>true</bold>
     </font>
    </property>
@@ -148,16 +150,17 @@
   <widget class="QLabel" name="EDITMENUITEM">
    <property name="geometry">
     <rect>
-     <x>270</x>
-     <y>0</y>
+     <x>290</x>
+     <y>20</y>
      <width>241</width>
      <height>41</height>
     </rect>
    </property>
    <property name="font">
     <font>
+     <family>Arial</family>
      <pointsize>16</pointsize>
-     <italic>true</italic>
+     <italic>false</italic>
      <bold>true</bold>
     </font>
    </property>
