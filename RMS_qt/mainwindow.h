@@ -25,3 +25,4 @@ private:
     login_page *ptrlogin;
 };
 #endif // MAINWINDOW_H
+
