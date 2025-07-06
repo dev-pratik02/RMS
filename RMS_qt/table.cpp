@@ -11,7 +11,30 @@ table::table(QWidget *parent)
     connect(ui->btn_edit, &QPushButton::clicked, this, &table::on_btn_edit_clicked);
 
 
-    mydb = QSqlDatabase::addDatabase(SQLITE);
+    // Only add the database if it doesn't already exist
+    if (!QSqlDatabase::contains("qt_sql_default_connection")) {
+        mydb = QSqlDatabase::addDatabase("QSQLITE");
+        mydb.setDatabaseName("/Users/pratik/Programming/RMS/RmsApp.db");
+    } else {
+        mydb = QSqlDatabase::database("qt_sql_default_connection");
+    }
+
+    if(mydb.open()){
+        qDebug() <<"Database is accessed by tables page";
+    }
+    else{
+        qDebug() << "Database connection failed" ;
+        qDebug() << "Error:"<< mydb.lastError();
+    }
+    QSqlQuery queryTables(mydb);
+    queryTables.prepare("SELECT * FROM tables");
+    if(queryTables.exec()){
+        qDebug()<<"Accessed tables from database";
+    }
+    else {
+        qDebug() << "Could not access tables";
+        qDebug() << queryTables.lastError();
+    }
 
 }
 

@@ -21,6 +21,7 @@ private slots:
 private:
     Ui::table *ui;
     edit *editpage;
+    QSqlDatabase mydb;
 };
 
 #endif // TABLE_H
