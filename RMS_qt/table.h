@@ -2,6 +2,8 @@
 #define TABLE_H
 
 #include <QMainWindow>
+#include <QtSql>
+
 class edit;
 namespace Ui {
 class table;

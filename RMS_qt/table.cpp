@@ -10,6 +10,9 @@ table::table(QWidget *parent)
     ui->setupUi(this);
     connect(ui->btn_edit, &QPushButton::clicked, this, &table::on_btn_edit_clicked);
 
+
+    mydb = QSqlDatabase::addDatabase(SQLITE);
+
 }
 
 table::~table()

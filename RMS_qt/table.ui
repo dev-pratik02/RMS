@@ -115,7 +115,7 @@ border-radius:15</string>
      <string>Edit Tables</string>
     </property>
    </widget>
-   <widget class="QTableView" name="Table_list">
+   <widget class="QTableView" name="table_tables">
     <property name="geometry">
      <rect>
       <x>5</x>
