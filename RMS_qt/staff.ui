@@ -52,7 +52,7 @@
      </font>
     </property>
     <property name="text">
-     <string>&quot;Total No Of Staff = &quot;</string>
+     <string>Total No Of Staff : </string>
     </property>
    </widget>
    <widget class="QLabel" name="staffmembers_2">
@@ -93,7 +93,7 @@
      <string>ADD STAFF</string>
     </property>
    </widget>
-   <widget class="QTableWidget" name="tableWidget">
+   <widget class="QTableWidget" name="table_staff">
     <property name="geometry">
      <rect>
       <x>20</x>

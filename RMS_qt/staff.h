@@ -2,6 +2,8 @@
 #define STAFF_H
 #include "addstaff.h"
 #include <QMainWindow>
+#include <QtSql>
+
 
 namespace Ui {
 class staff;
@@ -21,6 +23,7 @@ private slots:
 private:
     Ui::staff *ui;
     addstaff *ptraddstaff;
+    QSqlDatabase mydb;
 };
 
 #endif // STAFF_H
