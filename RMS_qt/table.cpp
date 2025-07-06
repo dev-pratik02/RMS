@@ -27,15 +27,33 @@ table::table(QWidget *parent)
         qDebug() << "Error:"<< mydb.lastError();
     }
     QSqlQuery queryTables(mydb);
-    if(queryTables.exec("SELECT * FROM tables")){
-         qDebug()<<"Accessed tables from database";
+    queryTables.prepare("SELECT * FROM tables");
+    if (queryTables.exec()) {
+        qDebug() << "Accessed tables from database";
+
+        int row = 0;
+        QStringList headers= {"Table no.","Seats","Status","Order Id","Timestamp","Remarks"};
+
+        ui->table_tables->setColumnCount(6);
+        ui->table_tables->setHorizontalHeaderLabels(headers);
+        while (queryTables.next()) {
+
+            ui->table_tables->insertRow(row); //entry of empty row
+
+            for (int col = 0; col < queryTables.record().count(); ++col) {
+                QTableWidgetItem *item = new QTableWidgetItem(queryTables.value(col).toString());
+                item->setTextAlignment(Qt::AlignCenter);  // ← Center-align the text
+                ui->table_tables->setItem(row, col, item);
+            }
+            row++;
+        }
+
     }
 
     else {
         qDebug() << "Could not access tables";
         qDebug() << queryTables.lastError();
     }
-
 }
 
 table::~table()
