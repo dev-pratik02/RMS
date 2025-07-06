@@ -11,6 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
+<<<<<<< HEAD
    <string>Dialog</string>
   </property>
   <widget class="QLabel" name="welcomeback">
@@ -32,6 +33,10 @@
     <string>WELCOME BACK</string>
    </property>
   </widget>
+=======
+   <string>Login </string>
+  </property>
+>>>>>>> 369932c8b277f895069b150f5014d60f9140759c
  </widget>
  <resources/>
  <connections/>
