@@ -27,10 +27,10 @@ table::table(QWidget *parent)
         qDebug() << "Error:"<< mydb.lastError();
     }
     QSqlQuery queryTables(mydb);
-    queryTables.prepare("SELECT * FROM tables");
-    if(queryTables.exec()){
-        qDebug()<<"Accessed tables from database";
+    if(queryTables.exec("SELECT * FROM tables")){
+         qDebug()<<"Accessed tables from database";
     }
+
     else {
         qDebug() << "Could not access tables";
         qDebug() << queryTables.lastError();
