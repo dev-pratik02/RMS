@@ -15,6 +15,8 @@
 #include <QTableWidget>
 #include <QHeaderView>
 #include <QPushButton>
+#include <QtSql>
+
 
 namespace Ui {
 class orders;
@@ -36,6 +38,8 @@ private:
     checkout *ptrcheckout;
     edit_order *ptredit_order;
 
+
+    QSqlDatabase mydb;
     QWidget* createOrderCard(const QString &orderId, const QString &table, const QString &time, const QString &status);
 };
 

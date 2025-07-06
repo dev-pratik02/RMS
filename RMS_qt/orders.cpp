@@ -7,9 +7,22 @@ orders::orders(QWidget *parent)
     , ui(new Ui::orders)
 {
     ui->setupUi(this);
-    // Remove these lines, as checkout and edit_order now require arguments
-    // ptrcheckout= new checkout();
-    // ptredit_order= new edit_order();
+
+    // Only add the database if it doesn't already exist
+    if (!QSqlDatabase::contains("qt_sql_default_connection")) {
+        mydb = QSqlDatabase::addDatabase("QSQLITE");
+        mydb.setDatabaseName("/Users/pratik/Programming/RMS/RmsApp.db");
+    } else {
+        mydb = QSqlDatabase::database("qt_sql_default_connection");
+    }
+
+    if(mydb.open()){
+        qDebug() <<"Database is connected by orders page";
+    }
+    else{
+        qDebug() << "Database connection failed" ;
+        qDebug() << "Error:"<< mydb.lastError();
+    }
 
     // Remove any widget previously set in the scroll area
     if (QWidget *oldWidget = ui->scrollArea->widget()) {
@@ -17,12 +30,35 @@ orders::orders(QWidget *parent)
             oldWidget->deleteLater();
     }
 
+
+    //Fetching data from database
+
+    QSqlQuery queryInsert(mydb);
+    if(queryInsert.exec("SELECT * FROM orders where status!='billed'")){
+        qDebug()<<"Successfully fetched order details";
+    }
+    else{
+        qDebug()<< "Can't fetch order details";
+        qDebug() << "Error:" << queryInsert.lastError();
+    }
+
+    // For SQLite, count rows manually:
+    int records = 0;
+    while (queryInsert.next()) {
+        ++records;
+    }
+    qDebug() << "Number of records:" << records;
+    queryInsert.first();
+
+
+
+
     const int columns = 3;
     const int cardWidth = 200;
     const int cardHeight = 120;
     const int hSpacing = 12;
     const int vSpacing = 12;
-    const int count = 20;
+    const int count = records;
     int rows = (count + columns - 1) / columns;
 
     QWidget *dynamicCardContainer = new QWidget;
@@ -32,17 +68,20 @@ orders::orders(QWidget *parent)
     gridLayout->setVerticalSpacing(vSpacing);
     gridLayout->setContentsMargins(0, 0, 0, 0);
 
-    for (int i = 0; i < count; ++i) {
+
+    int i=0;
+    do{
         int row = i / columns;
         int col = i % columns;
         QWidget *card = createOrderCard(
-            QString::number(i+1),
-            QString::number((i%4)+1),
-            "1:45 PM",
-            (i%2==0) ? "Pending" : "Completed"
+            queryInsert.value(0).toString(),
+            queryInsert.value(1).toString(),
+            queryInsert.value(2).toString(),
+            queryInsert.value(3).toString()
         );
         gridLayout->addWidget(card, row, col);
-    }
+        ++i;
+    }while(queryInsert.next());
 
     // Set a minimum size for the container so the scroll area works
     dynamicCardContainer->setMinimumSize(
@@ -68,12 +107,12 @@ QWidget* orders::createOrderCard(const QString &orderId, const QString &table, c
     mainLayout->setContentsMargins(6, 6, 6, 6);
     mainLayout->setSpacing(3);
 
-    // --- Top Section: 2x2 grid for info labels, with reduced spacing ---
+    // --- Top Section: 2x2 grid for info labels ---
     QWidget *topSection = new QWidget(card);
     QGridLayout *topGrid = new QGridLayout(topSection);
     topGrid->setContentsMargins(0, 0, 0, 0);
-    topGrid->setHorizontalSpacing(2); // less horizontal space
-    topGrid->setVerticalSpacing(0);   // less vertical space
+    topGrid->setHorizontalSpacing(2);
+    topGrid->setVerticalSpacing(0);
 
     QString labelStyle = "color: white; background: transparent; border: none; font-size: 10px;";
 
@@ -112,8 +151,8 @@ QWidget* orders::createOrderCard(const QString &orderId, const QString &table, c
 
     // Set column widths for both header and table
     int nameColWidth = 90;
-    int qtyColWidth = 40;
-    int priceColWidth = 50;
+    int qtyColWidth = 30;
+    int priceColWidth = 60;
 
     QLabel *nameLabel = new QLabel("Name", headerWidget);
     QLabel *qtyLabel = new QLabel("Qty", headerWidget);
@@ -137,73 +176,106 @@ QWidget* orders::createOrderCard(const QString &orderId, const QString &table, c
 
     mainLayout->addWidget(headerWidget);
 
+
+    //Fetching orders from Database
+    QSqlQuery queryOrders(mydb);
+    QSqlQuery queryMenu(mydb);
+    // Use parameterized query to avoid SQL injection and ensure correct value substitution
+    queryOrders.prepare("SELECT * FROM order_items WHERE order_id = ?");
+    queryOrders.addBindValue(orderId);
+
+    if(queryOrders.exec()){
+        qDebug() << "Successfully fetched order items for order_id:" << orderId;
+    }
+    else {
+        qDebug() << "Failed to obtain the order items for order_id:" << orderId;
+        qDebug() << queryOrders.lastError();
+    }
+
+    int orders_row = 0;
+    while (queryOrders.next()) {
+        ++orders_row;
+    }
+    qDebug() << "Number of order items:" << orders_row;
+
+    // Reset query to first record for reading data
+    if (orders_row > 0)
+        queryOrders.first();
+
     // --- Middle Section: Table of order items (6 rows, no headers) ---
-    QTableWidget *orderTable = new QTableWidget(6, 3, card);
+    QTableWidget *orderTable = new QTableWidget(orders_row, 3, card);
     orderTable->horizontalHeader()->setVisible(false);
     orderTable->verticalHeader()->setVisible(false);
     orderTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
     orderTable->setFocusPolicy(Qt::NoFocus);
     orderTable->setSelectionMode(QAbstractItemView::NoSelection);
     orderTable->setShowGrid(false);
-    orderTable->setFixedHeight(170);
+    orderTable->setFixedHeight(180);
     orderTable->setStyleSheet(
         "QTableWidget {"
         " background: #222;"
         " color: white;"
         " border: none;"
-        " font-size: 13px;"
+        " font-size: 10px;"
         "}"
         "QTableWidget::item {"
-        " padding: 4px;"
+        " padding: 2px 4px;"
         " background: transparent;"
         "}"
-    );
+        );
     orderTable->setColumnWidth(0, nameColWidth);
     orderTable->setColumnWidth(1, qtyColWidth);
     orderTable->setColumnWidth(2, priceColWidth);
 
-    // Example data for demonstration (fill up to 6 rows)
-    QStringList names, qtys, prices;
-    if (orderId == "1") {
-        names = {"Burger", "Fries", "Soda", "Pizza", "Salad", "Coffee"};
-        qtys = {"2", "1", "2", "1", "1", "3"};
-        prices = {"$10", "$3", "$4", "$8", "$5", "$6"};
-    } else if (orderId == "2") {
-        names = {"Pizza", "Soda", "Fries", "Burger", "Coffee", "Salad"};
-        qtys = {"1", "2", "2", "1", "2", "1"};
-        prices = {"$8", "$4", "$3", "$10", "$6", "$5"};
-    } else if (orderId == "3") {
-        names = {"Salad", "Coffee", "Pizza", "Tea", "Burger", "Fries"};
-        qtys = {"1", "3", "1", "2", "1", "2"};
-        prices = {"$5", "$6", "$8", "$3", "$10", "$3"};
-    } else if (orderId == "4") {
-        names = {"Sandwich", "Tea", "Fries", "Pizza", "Soda", "Salad"};
-        qtys = {"2", "1", "1", "2", "1", "1"};
-        prices = {"$7", "$3", "$3", "$8", "$4", "$5"};
-    } else {
-        // For other cards, generate some variation based on orderId
-        int id = orderId.toInt();
-        names = {"Burger", "Pizza", "Coffee", "Fries", "Salad", "Soda"};
-        qtys = {
-            QString::number((id % 3) + 1),
-            QString::number((id % 2) + 1),
-            QString::number((id % 4) + 1),
-            QString::number((id % 2) + 2),
-            QString::number((id % 5) + 1),
-            QString::number((id % 3) + 2)
-        };
-        prices = {"$10", "$8", "$6", "$3", "$5", "$4"};
-    }
-    for (int i = 0; i < 6; ++i) {
-        QTableWidgetItem *item0 = new QTableWidgetItem(names.value(i));
-        QTableWidgetItem *item1 = new QTableWidgetItem(qtys.value(i));
-        QTableWidgetItem *item2 = new QTableWidgetItem(prices.value(i));
-        item0->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-        item1->setTextAlignment(Qt::AlignCenter);
-        item2->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
-        orderTable->setItem(i, 0, item0);
-        orderTable->setItem(i, 1, item1);
-        orderTable->setItem(i, 2, item2);
+
+    // Prepare order items for passing
+    QList<QList<QString>> items;
+
+    // Fill orders in the card
+    int i=0;
+    if (orders_row > 0 && queryOrders.first()) {
+        do {
+            // Fetch menu item details for each order item
+            queryMenu.prepare("SELECT item_name, price FROM menu WHERE menu_item_id = ?");
+            QString menuItemId = queryOrders.value(2).toString().trimmed();
+            queryMenu.addBindValue(menuItemId);
+            qDebug() << "Looking up menu_item_id:" << menuItemId;
+
+            QString itemname;
+            double price = 0.0;
+
+            if (queryMenu.exec()) {
+                if (queryMenu.next()) {
+                    itemname = queryMenu.value(0).toString();
+                    price = queryMenu.value(1).toDouble();
+                } else {
+                    qDebug() << "No match in menu table for menu_item_id:" << menuItemId;
+                    itemname = "Unknown";
+                }
+            } else {
+                qDebug() << "Menu query failed:" << queryMenu.lastError();
+                itemname = "Unknown";
+            }
+
+            QString qtyStr = queryOrders.value(3).toString();
+            int quantity = qtyStr.toInt();
+            double totalprice = price * quantity;
+
+            QTableWidgetItem *item0 = new QTableWidgetItem(itemname);
+            QTableWidgetItem *item1 = new QTableWidgetItem(qtyStr);
+            QTableWidgetItem *item2 = new QTableWidgetItem(QString::number(totalprice, 'f', 2));
+            item0->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+            item1->setTextAlignment(Qt::AlignCenter);
+            item2->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
+            orderTable->setItem(i, 0, item0);
+            orderTable->setItem(i, 1, item1);
+            orderTable->setItem(i, 2, item2);
+
+            //append value to the list for passing later
+            items.append({itemname, qtyStr, QString::number(totalprice, 'f', 2)});
+            ++i;
+
+        } while (queryOrders.next());
     }
 
     mainLayout->addWidget(orderTable);
@@ -227,12 +299,6 @@ QWidget* orders::createOrderCard(const QString &orderId, const QString &table, c
     bottomLayout->addWidget(checkoutBtn);
 
     mainLayout->addWidget(bottomSection);
-
-    // Prepare order items for passing (example data)
-    QList<QList<QString>> items;
-    for (int i = 0; i < 6; ++i) {
-        items.append({names.value(i), qtys.value(i), prices.value(i)});
-    }
 
     // --- Connect buttons to open dialogs ---
     connect(editBtn, &QPushButton::clicked, this, [=]() {
