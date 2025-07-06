@@ -6,9 +6,17 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ptrmenu = new menu();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete ptrmenu;
 }
+
+void MainWindow::on_pushButton_clicked()
+{
+    ptrmenu->show();
+}
+
