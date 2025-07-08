@@ -80,5 +80,6 @@ CMakeLists.txt.user*
 .rcc/
 .uic/
 /build*/
-RmsApp.db
 ../RmsApp.db
+../RmsApp.db
+RmsApp.db
