@@ -6,9 +6,17 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ptrorders = new orders();
 }
 
 MainWindow::~MainWindow()
 {
+    delete ptrorders;
     delete ui;
 }
+
+void MainWindow::on_pushButton_clicked()
+{
+    ptrorders->show();
+}
+
