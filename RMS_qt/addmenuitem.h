@@ -14,9 +14,15 @@ class addmenuitem : public QDialog
 public:
     explicit addmenuitem(QWidget *parent = nullptr);
     ~addmenuitem();
+signals:
+    void itemSaved();
+
+
+private slots:
+    void on_btnsave_clicked();
 
 private:
     Ui::addmenuitem *ui;
 };
 
-#endif // ADDMENUITEM_H
+#endif

@@ -1,4 +1,5 @@
 #include "menu.h"
+#include "addmenuitem.h"
 #include "ui_menu.h"
 #include <QSqlDatabase>
 #include <QSqlQuery>
@@ -72,11 +73,17 @@ menu::~menu()
 {
     delete ui;
 }
-
 void menu::on_btn_addmenu_clicked()
 {
-    ptraddmenuitem->show();
+    addmenuitem *addDialog = new addmenuitem(this);
+
+    // When the item is saved, close this window and reopen menu (or go to orders)
+    connect(addDialog, &addmenuitem::itemSaved, this, [=]() {
+        this->close();  // Close current menu window
+        menu *newMenu = new menu();
+        newMenu->show();
+    });
+
+    addDialog->exec();  // Open as modal dialog
 }
-
-
 
