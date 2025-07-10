@@ -13,6 +13,7 @@ class editmenuitem : public QDialog
 
 public:
     explicit editmenuitem(QWidget *parent = nullptr);
+    explicit editmenuitem(QString id, QString name, QString price,QString description, QWidget *parent = nullptr);
     ~editmenuitem();
 
 private:

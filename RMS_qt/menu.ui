@@ -64,7 +64,7 @@
      <string>Menu Items:</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="ADDMENITEMS">
+   <widget class="QPushButton" name="btn_addmenu">
     <property name="geometry">
      <rect>
       <x>580</x>
@@ -87,64 +87,37 @@
    <widget class="QTableWidget" name="tableWidget">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>160</y>
-      <width>801</width>
-      <height>351</height>
+      <x>70</x>
+      <y>200</y>
+      <width>681</width>
+      <height>192</height>
      </rect>
     </property>
-    <property name="font">
-     <font>
-      <family>Arial</family>
-      <pointsize>12</pointsize>
-      <italic>false</italic>
-     </font>
-    </property>
-    <property name="rowCount">
-     <number>3</number>
-    </property>
-    <property name="columnCount">
-     <number>3</number>
-    </property>
-    <attribute name="horizontalHeaderDefaultSectionSize">
-     <number>270</number>
-    </attribute>
-    <row/>
-    <row/>
-    <row/>
+    <column>
+     <property name="text">
+      <string>Item ID</string>
+     </property>
+    </column>
     <column>
      <property name="text">
       <string>Item Name</string>
      </property>
-     <property name="font">
-      <font>
-       <family>Arial</family>
-       <italic>false</italic>
-       <kerning>false</kerning>
-      </font>
+    </column>
+    <column>
+     <property name="text">
+      <string>Item Price </string>
      </property>
     </column>
     <column>
      <property name="text">
-      <string>Item Id</string>
-     </property>
-     <property name="font">
-      <font>
-       <family>Arial</family>
-       <kerning>false</kerning>
-      </font>
+      <string>Description</string>
      </property>
     </column>
     <column>
      <property name="text">
-      <string>Price</string>
+      <string>Action</string>
      </property>
     </column>
-    <item row="0" column="0">
-     <property name="text">
-      <string/>
-     </property>
-    </item>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

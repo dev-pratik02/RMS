@@ -33,7 +33,7 @@
     <string>ITEM NAME:</string>
    </property>
   </widget>
-  <widget class="QPlainTextEdit" name="PLAINTEXTEDITONE">
+  <widget class="QPlainTextEdit" name="item_description">
    <property name="geometry">
     <rect>
      <x>70</x>
@@ -46,7 +46,7 @@
     <string/>
    </property>
   </widget>
-  <widget class="QLineEdit" name="LINEEDITTWO">
+  <widget class="QLineEdit" name="item_price">
    <property name="geometry">
     <rect>
      <x>70</x>
@@ -77,7 +77,7 @@
     <string>PRICE:</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="LINEEDITONE">
+  <widget class="QLineEdit" name="item_name">
    <property name="geometry">
     <rect>
      <x>70</x>
