@@ -1,6 +1,7 @@
 #include "menu.h"
 #include "addmenuitem.h"
 #include "editmenuitem.h"
+#include "category.h"
 #include "ui_menu.h"
 #include <QSqlDatabase>
 #include <QMessageBox>
@@ -32,6 +33,7 @@ menu::~menu()
 {
     delete ui;
 }
+
 void menu::loadData()
 {
     ui->tableWidget->setColumnCount(5);
@@ -135,4 +137,9 @@ void menu::on_btn_edit_clicked()
 
 
     editWin->exec();
+}
+void menu::on_btn_category_clicked()
+{
+    category *catDialog = new category(this);
+    catDialog->exec();
 }

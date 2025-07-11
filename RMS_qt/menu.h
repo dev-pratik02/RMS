@@ -2,8 +2,8 @@
 #define MENU_H
 
 #include <QMainWindow>
-#include "editmenuitem.h"
 #include "addmenuitem.h"
+#include "category.h"
 
 namespace Ui {
 class menu;
@@ -19,10 +19,12 @@ public:
 
 private slots:
     void on_btn_addmenu_clicked();
+    void on_btn_category_clicked();
     void on_btn_edit_clicked();
     void loadData();
     void handleEditButton(QString,QString,QString,QString);
     void handleDeleteButton(QString id);
+
 
 private:
     Ui::menu *ui;
