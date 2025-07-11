@@ -14,6 +14,7 @@ editmenuitem::editmenuitem(QString id, QString name, QString price, QString desc
     itemId(id)
 {
     ui->setupUi(this);
+    ui->item_id->setText(id);
     ui->item_name->setText(name);
     ui->item_price->setText(price);
     ui->item_description->setText(description);

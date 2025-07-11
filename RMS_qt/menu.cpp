@@ -3,6 +3,8 @@
 #include "editmenuitem.h"
 #include "ui_menu.h"
 #include <QSqlDatabase>
+#include <QMessageBox>
+#include <QHBoxLayout>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDebug>
@@ -32,6 +34,7 @@ menu::~menu()
 }
 void menu::loadData()
 {
+    ui->tableWidget->setColumnCount(5);
     ui->tableWidget->clearContents();
     ui->tableWidget->setRowCount(0);
 
@@ -51,16 +54,27 @@ void menu::loadData()
             ui->tableWidget->setItem(row, 2, new QTableWidgetItem(price));
             ui->tableWidget->setItem(row, 3, new QTableWidgetItem(description));
 
+            QWidget *actionWidget = new QWidget();
+            QHBoxLayout *layout = new QHBoxLayout(actionWidget);
+            layout->setContentsMargins(0, 0, 0, 0);
+
+            // Edit button
             QPushButton *editBtn = new QPushButton("Edit");
-            ui->tableWidget->setCellWidget(row, 4, editBtn);
-
             connect(editBtn, &QPushButton::clicked, this, [=]() {
-                handleEditButton(id, name, price,description);
+                handleEditButton(id, name, price, description);
             });
+            layout->addWidget(editBtn);
 
+            // Delete button
+            QPushButton *deleteBtn = new QPushButton("Delete");
+            connect(deleteBtn, &QPushButton::clicked, this, [=]() {
+            handleDeleteButton(id);
+            });
+            layout->addWidget(deleteBtn);
+
+            ui->tableWidget->setCellWidget(row, 4, actionWidget);
             row++;
-        }
-
+    }
 
         qDebug() << "Loaded" << row << "rows into table.";
     }
@@ -74,6 +88,22 @@ void menu::handleEditButton(QString id, QString name, QString price, QString des
 
     editWin->exec();
 }
+
+void menu::handleDeleteButton(QString id)
+{
+    QSqlQuery query;
+    query.prepare("DELETE FROM menu WHERE [ITEM ID] = ?");
+    query.addBindValue(id);
+
+    if (!query.exec()) {
+        QMessageBox::critical(this, "Delete Failed", query.lastError().text());
+        return;
+    }
+
+    QMessageBox::information(this, "Deleted", "Item deleted successfully.");
+    loadData();  // Refresh table
+}
+
 
 void menu::on_btn_addmenu_clicked()
 {

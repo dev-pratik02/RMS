@@ -90,10 +90,10 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>60</x>
+      <x>30</x>
       <y>180</y>
-      <width>691</width>
-      <height>192</height>
+      <width>751</width>
+      <height>221</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -129,7 +129,7 @@
      <number>28</number>
     </attribute>
     <attribute name="horizontalHeaderDefaultSectionSize">
-     <number>137</number>
+     <number>148</number>
     </attribute>
     <attribute name="horizontalHeaderHighlightSections">
      <bool>true</bool>
