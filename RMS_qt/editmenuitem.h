@@ -12,12 +12,19 @@ class editmenuitem : public QDialog
     Q_OBJECT
 
 public:
-    explicit editmenuitem(QWidget *parent = nullptr);
     explicit editmenuitem(QString id, QString name, QString price,QString description, QWidget *parent = nullptr);
     ~editmenuitem();
 
+signals:
+    void dataUpdated();
+
+private slots:
+    void on_btn_save_clicked();
+
 private:
     Ui::editmenuitem *ui;
+    QString itemId;
 };
 
-#endif // EDITMENUITEM_H
+
+#endif

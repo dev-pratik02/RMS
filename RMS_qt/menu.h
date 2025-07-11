@@ -19,6 +19,8 @@ public:
 
 private slots:
     void on_btn_addmenu_clicked();
+    void on_btn_edit_clicked();
+    void loadData();
     void handleEditButton(QString,QString,QString,QString);  // custom slot
 
 private:
@@ -27,7 +29,7 @@ private:
 private:
     void connectDatabase();
     void loadDataIntoTable();
-    QVector<QPushButton*> editButtons;  // store buttons if needed
+    QVector<QPushButton*> editButtons;
 
 };
 

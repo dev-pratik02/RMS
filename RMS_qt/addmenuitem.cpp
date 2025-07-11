@@ -35,7 +35,7 @@ void addmenuitem::on_btnsave_clicked()
     }
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("C:/Users/Swift/OneDrive/Desktop/Database/menu.db");  // Ensure this file exists in the .exe folder
+    db.setDatabaseName("C:/Users/Swift/OneDrive/Desktop/Database/menu.db");
 
     if (!db.open()) {
         qDebug() << "Database connection failed:" << db.lastError().text();
@@ -64,12 +64,12 @@ void addmenuitem::on_btnsave_clicked()
         qDebug() << "Insert error:" << query.lastError().text();
     } else {
         QMessageBox::information(this, "Success", "Menu item added successfully!");
-        // Clear input fields after saving
+
         ui->item_id->clear();
         ui->item_name->clear();
         ui->item_price->clear();
         ui->item_description->clear();
     }
-    emit itemSaved();  // ✅ Notify parent window
+    emit itemSaved();
     this->accept();
 }
