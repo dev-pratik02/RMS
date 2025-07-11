@@ -85,8 +85,9 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>10</pointsize>
-      <bold>true</bold>
+      <family>Arial</family>
+      <pointsize>9</pointsize>
+      <bold>false</bold>
      </font>
     </property>
     <property name="text">
@@ -108,10 +109,10 @@
      </font>
     </property>
     <property name="columnCount">
-     <number>5</number>
+     <number>6</number>
     </property>
     <attribute name="horizontalHeaderDefaultSectionSize">
-     <number>160</number>
+     <number>190</number>
     </attribute>
     <column>
      <property name="text">
@@ -121,6 +122,11 @@
     <column>
      <property name="text">
       <string>NAME</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>SALARY</string>
      </property>
     </column>
     <column>
@@ -135,7 +141,7 @@
     </column>
     <column>
      <property name="text">
-      <string>PHONE</string>
+      <string>CONTACT</string>
      </property>
     </column>
    </widget>
@@ -146,7 +152,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>24</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>

@@ -11,8 +11,9 @@ staff::staff(QWidget *parent)
 
     if (!QSqlDatabase::contains("qt_sql_default_connection")) {
         mydb = QSqlDatabase::addDatabase("QSQLITE");
-        QString dbPath = QCoreApplication::applicationDirPath() + "/../../../../../../RmsApp.db";
-        dbPath = QDir::cleanPath(dbPath);
+        // QString dbPath = QCoreApplication::applicationDirPath() + "/../../../../../../RmsApp.db";
+        // dbPath = QDir::cleanPath(dbPath);
+        QString dbPath= "C:/Users/VICTUS/OneDrive/Desktop/database/staff.db";
         mydb.setDatabaseName(dbPath);
     } else {
         mydb = QSqlDatabase::database("qt_sql_default_connection");
@@ -26,7 +27,7 @@ staff::staff(QWidget *parent)
         qDebug() << "Error:"<< mydb.lastError();
     }
     QSqlQuery queryStaff(mydb);
-    queryStaff.prepare("SELECT staff_id, staff_name, position, age, contact FROM staff");
+    queryStaff.prepare("SELECT staff_id, staff_name, salary, position, age, contact FROM staff");
     if (queryStaff.exec()) {
         qDebug() << "Accessed staff info from database";
 

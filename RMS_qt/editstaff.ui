@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>CONTACT INFO:</string>
+    <string>CONTACT:</string>
    </property>
   </widget>
   <widget class="QLabel" name="POSITION">
@@ -36,7 +36,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>POSITION:</string>
+    <string>NAME:</string>
    </property>
    <property name="textFormat">
     <enum>Qt::TextFormat::AutoText</enum>
@@ -97,7 +97,7 @@
     </font>
    </property>
    <property name="text">
-    <string>NAME:</string>
+    <string>ID:</string>
    </property>
   </widget>
   <widget class="QPushButton" name="SAVE">
@@ -196,7 +196,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>QUALIFICATIONS:</string>
+    <string>POSITION:</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="LINEEDITFOUR">
@@ -219,7 +219,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>CITIZENSHIP:</string>
+    <string>AGE:</string>
    </property>
   </widget>
  </widget>
