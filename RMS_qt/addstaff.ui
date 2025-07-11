@@ -48,10 +48,14 @@
    </property>
    <layout class="QFormLayout" name="formLayout_2">
     <item row="1" column="0" colspan="2">
-     <widget class="QLineEdit" name="input_name"/>
+     <widget class="QLineEdit" name="input_id">
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
     </item>
     <item row="5" column="0">
-     <widget class="QLabel" name="POSITION">
+     <widget class="QLabel" name="name">
       <property name="font">
        <font>
         <family>Arial</family>
@@ -67,7 +71,11 @@
      </widget>
     </item>
     <item row="6" column="0" colspan="2">
-     <widget class="QLineEdit" name="input_position"/>
+     <widget class="QLineEdit" name="input_name">
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
     </item>
     <item row="9" column="0" colspan="2">
      <widget class="QLabel" name="SALARY">
@@ -86,7 +94,7 @@
      <widget class="QLineEdit" name="input_salary"/>
     </item>
     <item row="13" column="0" colspan="2">
-     <widget class="QLabel" name="Age">
+     <widget class="QLabel" name="position">
       <property name="font">
        <font>
         <family>Arial</family>
@@ -99,10 +107,10 @@
      </widget>
     </item>
     <item row="14" column="0" colspan="2">
-     <widget class="QLineEdit" name="input_age"/>
+     <widget class="QLineEdit" name="input_position"/>
     </item>
     <item row="17" column="0" colspan="2">
-     <widget class="QLabel" name="CITIZENSHIP">
+     <widget class="QLabel" name="age">
       <property name="font">
        <font>
         <family>Arial</family>
@@ -115,7 +123,7 @@
      </widget>
     </item>
     <item row="21" column="0" colspan="2">
-     <widget class="QLabel" name="CONTACTINFO">
+     <widget class="QLabel" name="contact">
       <property name="font">
        <font>
         <family>Arial</family>
@@ -128,13 +136,13 @@
      </widget>
     </item>
     <item row="22" column="0" colspan="2">
-     <widget class="QLineEdit" name="input_contactinfo"/>
+     <widget class="QLineEdit" name="input_contact"/>
     </item>
     <item row="18" column="0" colspan="2">
-     <widget class="QLineEdit" name="input_citizenship"/>
+     <widget class="QLineEdit" name="input_age"/>
     </item>
     <item row="0" column="0">
-     <widget class="QLabel" name="NAME">
+     <widget class="QLabel" name="id">
       <property name="font">
        <font>
         <family>Arial</family>

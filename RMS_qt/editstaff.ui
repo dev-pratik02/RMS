@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QLabel" name="CONTACTINFO">
+  <widget class="QLabel" name="contact">
    <property name="geometry">
     <rect>
      <x>120</x>
@@ -26,7 +26,7 @@
     <string>CONTACT:</string>
    </property>
   </widget>
-  <widget class="QLabel" name="POSITION">
+  <widget class="QLabel" name="name">
    <property name="geometry">
     <rect>
      <x>120</x>
@@ -62,7 +62,7 @@
     <string>CANCEL</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="LINEEDITSIX">
+  <widget class="QLineEdit" name="input_contact">
    <property name="geometry">
     <rect>
      <x>120</x>
@@ -72,7 +72,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QLineEdit" name="LINEEDITONE">
+  <widget class="QLineEdit" name="input_id">
    <property name="geometry">
     <rect>
      <x>120</x>
@@ -82,7 +82,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QLabel" name="NAME">
+  <widget class="QLabel" name="id">
    <property name="geometry">
     <rect>
      <x>120</x>
@@ -120,7 +120,7 @@
     <string>SAVE</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="LINEEDITTWO">
+  <widget class="QLineEdit" name="input_name">
    <property name="geometry">
     <rect>
      <x>120</x>
@@ -166,7 +166,7 @@
     <string>SALARY:</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="LINEEDITFIVE">
+  <widget class="QLineEdit" name="input_age">
    <property name="geometry">
     <rect>
      <x>120</x>
@@ -176,7 +176,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QLineEdit" name="LINEEDITTHREE">
+  <widget class="QLineEdit" name="input_salary">
    <property name="geometry">
     <rect>
      <x>120</x>
@@ -186,7 +186,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QLabel" name="QUALIFICATIONS">
+  <widget class="QLabel" name="position">
    <property name="geometry">
     <rect>
      <x>120</x>
@@ -199,7 +199,7 @@
     <string>POSITION:</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="LINEEDITFOUR">
+  <widget class="QLineEdit" name="input_position">
    <property name="geometry">
     <rect>
      <x>120</x>
@@ -209,7 +209,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QLabel" name="CITIZENSHIP">
+  <widget class="QLabel" name="age">
    <property name="geometry">
     <rect>
      <x>120</x>

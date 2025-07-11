@@ -1,9 +1,9 @@
 #ifndef STAFF_H
 #define STAFF_H
-#include "addstaff.h"
+
 #include <QMainWindow>
 #include <QtSql>
-
+#include "addstaff.h"
 
 namespace Ui {
 class staff;

@@ -15,7 +15,7 @@ addstaff::addstaff(QWidget *parent)
     // Validators
     ui->input_age->setValidator(new QIntValidator(0, 99, this));
     ui->input_salary->setValidator(new QDoubleValidator(0.0, 999999.99, 2, this));
-    ui->input_contactinfo->setValidator(new QIntValidator(1000000000, 9999999999, this));
+    ui->input_contact->setValidator(new QIntValidator(1000000000, 9999999999, this));
 
     // Regular expression to accept only letters and spaces
     QRegularExpression rx("^[a-zA-Z ]*$");
@@ -31,9 +31,9 @@ addstaff::addstaff(QWidget *parent)
     ui->input_name->clear();
     ui->input_position->clear();
     ui->input_salary->clear();
-    ui->input_citizenship->clear();
-    ui->input_contactinfo->clear();
     ui->input_age->clear();
+    ui->input_contact->clear();
+    ui->input_id->clear();
 
 
 }
@@ -74,8 +74,8 @@ void addstaff::on_btn_add_clicked()
     QString name= ui->input_name->text();
     QString position= ui->input_position->text();
     QString salary= ui->input_salary->text();
-    QString citizenship_no= ui->input_citizenship->text();
-    QString contact = ui->input_contactinfo->text();
+    QString citizenship_no= ui->input_id->text();
+    QString contact = ui->input_contact->text();
     QString age= ui->input_age->text();
 
     // Check for empty fields
@@ -113,11 +113,11 @@ void addstaff::on_btn_add_clicked()
 
 void addstaff::on_btn_reset_clicked()
 {
+    ui->input_id->setText("");
     ui->input_name->setText("");
-    ui->input_position->setText("");
     ui->input_salary->setText("");
-    ui->input_citizenship->setText("");
-    ui->input_contactinfo->setText("");
+    ui->input_position->setText("");
     ui->input_age->setText("");
+    ui->input_contact->setText("");
 }
 
