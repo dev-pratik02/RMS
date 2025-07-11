@@ -18,49 +18,53 @@ staff::staff(QWidget *parent)
     if (!QSqlDatabase::contains("qt_sql_default_connection")) {
         mydb = QSqlDatabase::addDatabase("QSQLITE");
         QString dbPath = "C:/Users/VICTUS/OneDrive/Desktop/database/staff.db";
-        //dbPath = QDir::cleanPath(dbPath
         mydb.setDatabaseName(dbPath);
     } else {
         mydb = QSqlDatabase::database("qt_sql_default_connection");
     }
-
     if (mydb.open()) {
         qDebug() << "Database is accessed by staff page";
-    } else {
+    }
+    else {
         qDebug() << "Database connection failed";
         qDebug() << "Error:" << mydb.lastError();
     }
 
-    QSqlQuery queryStaff(mydb);
-    queryStaff.prepare("SELECT staff_id, staff_name, position, age, contact FROM staff");
-    if (queryStaff.exec()) {
-        qDebug() << "Accessed staff info from database";
-
-        int row = 0;
-        while (queryStaff.next()) {
-            ui->table_staff->insertRow(row); // Insert empty row
-
-            for (int col = 0; col < queryStaff.record().count(); ++col) {
-                QTableWidgetItem *item = new QTableWidgetItem(queryStaff.value(col).toString());
-                item->setTextAlignment(Qt::AlignCenter);  // Center-align the text
-                ui->table_staff->setItem(row, col, item);
-            }
-            row++;
-        }
-
-        ui->totalstaff->setText("Total no. of staff: " + QString::number(row).trimmed());
-        ui->totalstaff->setAlignment(Qt::AlignCenter);
-
-    } else {
-        qDebug() << "Could not access staff";
-        qDebug() << queryStaff.lastError();
-    }
+    loadStaffData();
 }
+
+
 
 staff::~staff()
 {
     delete ui;
 }
+
+void staff::loadStaffData()
+{
+    ui->table_staff->setRowCount(0); // clear existing rows
+
+    QSqlQuery query(mydb);
+    if (!query.exec("SELECT staff_id, staff_name, position, salary, age, contact FROM staff")) {
+        qDebug() << "Load staff query error:" << query.lastError().text();
+        return;
+    }
+
+    int row = 0;
+    while (query.next()) {
+        ui->table_staff->insertRow(row);
+        for (int col = 0; col < 6; ++col) { // 6 columns in select
+            QTableWidgetItem *item = new QTableWidgetItem(query.value(col).toString());
+            item->setTextAlignment(Qt::AlignCenter);
+            ui->table_staff->setItem(row, col, item);
+        }
+        row++;
+    }
+    ui->totalstaff->setText("Total no. of staff: " + QString::number(row));
+    ui->totalstaff->setAlignment(Qt::AlignCenter);
+}
+
+
 void staff::on_ADDSTAFF_clicked()
 {
     addstaff *ptraddstaff = new addstaff(this);

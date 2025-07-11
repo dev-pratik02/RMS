@@ -1,41 +1,37 @@
 #include "addstaff.h"
 #include "ui_addstaff.h"
 #include <QMessageBox>
+#include <QDebug>
 #include <QRegularExpression>
 #include <QRegularExpressionValidator>
-
-
-
 
 addstaff::addstaff(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::addstaff)
 {
     ui->setupUi(this);
-    // Validators
-    ui->input_age->setValidator(new QIntValidator(0, 99, this));
-    ui->input_salary->setValidator(new QDoubleValidator(0.0, 999999.99, 2, this));
+
+    if (!QSqlDatabase::contains("qt_sql_default_connection")) {
+        mydb = QSqlDatabase::addDatabase("QSQLITE");
+        QString dbPath = QCoreApplication::applicationDirPath() + "/your_database_path.db"; // Correct DB path
+        dbPath = QDir::cleanPath(dbPath);
+        mydb.setDatabaseName(dbPath);
+    } else {
+        mydb = QSqlDatabase::database("qt_sql_default_connection");
+    }
+
+    if (!mydb.open()) {
+        qDebug() << "Addstaff DB open error:" << mydb.lastError().text();
+    }
+
+    // Setup validators (optional but recommended)
+    ui->input_age->setValidator(new QIntValidator(18, 99, this));
+    ui->input_salary->setValidator(new QDoubleValidator(0, 1000000, 2, this));
     ui->input_contact->setValidator(new QIntValidator(1000000000, 9999999999, this));
 
-    // Regular expression to accept only letters and spaces
-    QRegularExpression rx("^[a-zA-Z ]*$");
-
-    // Validator
-    QRegularExpressionValidator *nameValidator = new QRegularExpressionValidator(rx, this);
-
-    // Apply to inputs
-    ui->input_name->setValidator(nameValidator);
-    ui->input_position->setValidator(nameValidator);
-
-    // Clear fields every time it's created
-    ui->input_name->clear();
-    ui->input_position->clear();
-    ui->input_salary->clear();
-    ui->input_age->clear();
-    ui->input_contact->clear();
-    ui->input_id->clear();
-
-
+    QRegularExpression rx("^[a-zA-Z\\s]*$");
+    ui->input_name->setValidator(new QRegularExpressionValidator(rx, this));
+    ui->input_position->setValidator(new QRegularExpressionValidator(rx, this));
 }
 
 addstaff::~addstaff()
@@ -43,81 +39,41 @@ addstaff::~addstaff()
     delete ui;
 }
 
-
-
-
-
-
 void addstaff::on_btn_add_clicked()
 {
-    qDebug() << "The application dir path is :\n" << QCoreApplication::applicationDirPath();
-
-    if (!QSqlDatabase::contains("qt_sql_default_connection")) {
-        mydb = QSqlDatabase::addDatabase("QSQLITE");
-        QString dbPath = QCoreApplication::applicationDirPath() + "/../../../../../../RmsApp.db";
-        dbPath = QDir::cleanPath(dbPath);
-        mydb.setDatabaseName(dbPath);
-    } else {
-        mydb = QSqlDatabase::database("qt_sql_default_connection");
-    }
-
-    if(mydb.open()){
-        qDebug() <<"Database is accessed by addstaff page";
-    }
-    else{
-        qDebug() << "Database connection failed" ;
-        qDebug() << "Error:"<< mydb.lastError();
-    }
-
-
-    QSqlQuery queryAddStaff(mydb);
-    QString name= ui->input_name->text();
-    QString position= ui->input_position->text();
-    QString salary= ui->input_salary->text();
-    QString citizenship_no= ui->input_id->text();
+    QString name = ui->input_name->text();
+    QString position = ui->input_position->text();
+    QString salary = ui->input_salary->text();
+    QString age = ui->input_age->text();
     QString contact = ui->input_contact->text();
-    QString age= ui->input_age->text();
 
-    // Check for empty fields
-    if (name.isEmpty() || position.isEmpty() || salary.isEmpty() ||
-        citizenship_no.isEmpty() || contact.isEmpty() || age.isEmpty())
-    {
-        QMessageBox::warning(this, "Input Error", "Please fill in all the fields before adding staff.");
-        return; // stop further execution
+    if (name.isEmpty() || position.isEmpty() || salary.isEmpty() || age.isEmpty() || contact.isEmpty()) {
+        QMessageBox::warning(this, "Input Error", "Please fill all fields.");
+        return;
     }
 
-    queryAddStaff.prepare("INSERT INTO staff (staff_name, position, salary, citizenship_no, contact, age) "
-                          "VALUES (?, ?, ?, ?, ?, ?)");
-    queryAddStaff.addBindValue(name);
-    queryAddStaff.addBindValue(position);
-    queryAddStaff.addBindValue(salary);
-    queryAddStaff.addBindValue(citizenship_no);
-    queryAddStaff.addBindValue(contact);
-    queryAddStaff.addBindValue(age);
+    QSqlQuery query(mydb);
+    query.prepare("INSERT INTO staff (staff_name, position, salary, age, contact) VALUES (?, ?, ?, ?, ?)");
+    query.addBindValue(name);
+    query.addBindValue(position);
+    query.addBindValue(salary);
+    query.addBindValue(age);
+    query.addBindValue(contact);
 
-
-    if (queryAddStaff.exec()) {
-        qDebug() << "added staff info into database";
+    if (!query.exec()) {
+        QMessageBox::critical(this, "Database Error", "Failed to add staff: " + query.lastError().text());
+        return;
     }
 
-    else {
-        qDebug() << "Could not access staff";
-        qDebug() << queryAddStaff.lastError();
-    }
-
-    addstaff::on_btn_reset_clicked();
-    this->accept();
-
+    QMessageBox::information(this, "Success", "Staff added successfully!");
+    accept(); // Close dialog and signal success
 }
-
 
 void addstaff::on_btn_reset_clicked()
 {
-    ui->input_id->setText("");
-    ui->input_name->setText("");
-    ui->input_salary->setText("");
-    ui->input_position->setText("");
-    ui->input_age->setText("");
-    ui->input_contact->setText("");
+    ui->input_name->clear();
+    ui->input_position->clear();
+    ui->input_salary->clear();
+    ui->input_age->clear();
+    ui->input_contact->clear();
 }
-

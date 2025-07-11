@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QtSql>
+
 namespace Ui {
 class addstaff;
 }
@@ -17,13 +18,11 @@ public:
 
 private slots:
     void on_btn_add_clicked();
-
     void on_btn_reset_clicked();
 
 private:
     Ui::addstaff *ui;
     QSqlDatabase mydb;
-
 };
 
 #endif // ADDSTAFF_H

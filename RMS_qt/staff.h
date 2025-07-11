@@ -19,6 +19,7 @@ public:
 
 private slots:
     void on_ADDSTAFF_clicked();
+    void loadStaffData();
 
 private:
     Ui::staff *ui;

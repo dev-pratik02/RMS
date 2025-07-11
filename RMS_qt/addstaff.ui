@@ -47,14 +47,58 @@
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout_2">
-    <item row="1" column="0" colspan="2">
-     <widget class="QLineEdit" name="input_id">
+    <item row="8" column="0" colspan="2">
+     <widget class="QLineEdit" name="input_salary"/>
+    </item>
+    <item row="11" column="0" colspan="2">
+     <widget class="QLabel" name="position">
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string/>
+       <string>POSITION:</string>
       </property>
      </widget>
     </item>
-    <item row="5" column="0">
+    <item row="12" column="0" colspan="2">
+     <widget class="QLineEdit" name="input_position"/>
+    </item>
+    <item row="15" column="0" colspan="2">
+     <widget class="QLabel" name="age">
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>AGE:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="16" column="0" colspan="2">
+     <widget class="QLineEdit" name="input_age"/>
+    </item>
+    <item row="19" column="0" colspan="2">
+     <widget class="QLabel" name="contact">
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>CONTACT:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="20" column="0" colspan="2">
+     <widget class="QLineEdit" name="input_contact"/>
+    </item>
+    <item row="1" column="0">
      <widget class="QLabel" name="name">
       <property name="font">
        <font>
@@ -70,14 +114,7 @@
       </property>
      </widget>
     </item>
-    <item row="6" column="0" colspan="2">
-     <widget class="QLineEdit" name="input_name">
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-    </item>
-    <item row="9" column="0" colspan="2">
+    <item row="5" column="0">
      <widget class="QLabel" name="SALARY">
       <property name="font">
        <font>
@@ -90,67 +127,10 @@
       </property>
      </widget>
     </item>
-    <item row="10" column="0" colspan="2">
-     <widget class="QLineEdit" name="input_salary"/>
-    </item>
-    <item row="13" column="0" colspan="2">
-     <widget class="QLabel" name="position">
-      <property name="font">
-       <font>
-        <family>Arial</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
+    <item row="3" column="0" colspan="2">
+     <widget class="QLineEdit" name="input_name">
       <property name="text">
-       <string>POSITION:</string>
-      </property>
-     </widget>
-    </item>
-    <item row="14" column="0" colspan="2">
-     <widget class="QLineEdit" name="input_position"/>
-    </item>
-    <item row="17" column="0" colspan="2">
-     <widget class="QLabel" name="age">
-      <property name="font">
-       <font>
-        <family>Arial</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>AGE:</string>
-      </property>
-     </widget>
-    </item>
-    <item row="21" column="0" colspan="2">
-     <widget class="QLabel" name="contact">
-      <property name="font">
-       <font>
-        <family>Arial</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>CONTACT:</string>
-      </property>
-     </widget>
-    </item>
-    <item row="22" column="0" colspan="2">
-     <widget class="QLineEdit" name="input_contact"/>
-    </item>
-    <item row="18" column="0" colspan="2">
-     <widget class="QLineEdit" name="input_age"/>
-    </item>
-    <item row="0" column="0">
-     <widget class="QLabel" name="id">
-      <property name="font">
-       <font>
-        <family>Arial</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>ID:</string>
+       <string/>
       </property>
      </widget>
     </item>
