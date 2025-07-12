@@ -156,7 +156,12 @@
     </column>
     <column>
      <property name="text">
-      <string>Item Price </string>
+      <string>Price</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Category</string>
      </property>
     </column>
     <column>

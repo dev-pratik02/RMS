@@ -12,7 +12,7 @@ class editmenuitem : public QDialog
     Q_OBJECT
 
 public:
-    explicit editmenuitem(QString id, QString name, QString price,QString description, QWidget *parent = nullptr);
+    explicit editmenuitem(QString id, QString name, QString price,QString description,QString category, QWidget *parent = nullptr);
     ~editmenuitem();
 
 signals:

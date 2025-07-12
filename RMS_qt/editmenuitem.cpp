@@ -8,7 +8,7 @@
 #include <QPushButton>
 #include <QMessageBox>
 
-editmenuitem::editmenuitem(QString id, QString name, QString price, QString description, QWidget *parent)
+editmenuitem::editmenuitem(QString id, QString name, QString price, QString description,QString category, QWidget *parent)
     : QDialog(parent),
     ui(new Ui::editmenuitem),
     itemId(id)
