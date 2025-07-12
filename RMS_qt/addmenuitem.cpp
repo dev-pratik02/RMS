@@ -22,7 +22,7 @@ addmenuitem::~addmenuitem()
 {
     delete ui;
 }
-void addmenuitem::on_btnsave_clicked()
+void addmenuitem::on_btn_save_clicked()
 {
     QString itemid = ui->item_id->text();
     QString name = ui->item_name->text();
