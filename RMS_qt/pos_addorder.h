@@ -48,6 +48,8 @@ private:
     QSqlDatabase db;
 
     void loadItemsForCategory(const QString &category);
+    bool eventFilter(QObject *watched, QEvent *event) override;
+
 };
 
 #endif // POS_ADDORDER_H

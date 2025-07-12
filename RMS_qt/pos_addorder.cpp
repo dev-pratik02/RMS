@@ -181,16 +181,10 @@ void POS_AddOrder::updateOrderTable()
     orderInfoLabel->setText("Table No: 01\nOrder ID: 10745\nTotal: Rs. " + QString::number(total));
 }
 
-
 void POS_AddOrder::loadItemsForCategory(const QString &category) {
-    qDebug() << "load items function:";
+    qDebug() << "Loading items for category:" << category;
 
-    if (!itemsLayout) {
-        qDebug() << "itemsLayout is not initialized!";
-        return;
-    }
-
-    // Clear layout safely
+    // Clear previous layout
     QLayoutItem *item;
     while ((item = itemsLayout->takeAt(0)) != nullptr) {
         delete item->widget();
@@ -201,37 +195,89 @@ void POS_AddOrder::loadItemsForCategory(const QString &category) {
     itemQuery.prepare("SELECT item_name, price, image FROM menu WHERE category = :category");
     itemQuery.bindValue(":category", category.trimmed());
 
-    if (itemQuery.exec()) {
-        int index = 0;
-        qDebug() << "executed the query";
-        qDebug() << "Loading items for category:" << category;
-
-        while (itemQuery.next()) {
-            qDebug() << "inside the while loop";
-            QString itemName = itemQuery.value(0).toString();
-            double price = itemQuery.value(1).toDouble();
-            QByteArray imagePath = itemQuery.value(2).toByteArray();
-            QPixmap pixmap;
-            if (pixmap.loadFromData(imagePath)) {
-                QLabel *imageLabel = new QLabel;
-                imageLabel->setPixmap(pixmap.scaled(80, 80, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-                itemsLayout->addWidget(imageLabel);
-            } else {
-                qDebug() << "Failed to load pixmap from database BLOB";
-            }
-            QPushButton *itemBtn = new QPushButton();
-            itemBtn->setIcon(QIcon(imagePath));
-            itemBtn->setIconSize(QSize(100, 100));
-            itemBtn->setFixedSize(120, 120);
-            itemBtn->setProperty("itemName", itemName);
-            itemBtn->setProperty("price", price);
-
-            connect(itemBtn, &QPushButton::clicked, this, &POS_AddOrder::addItemToOrder);
-
-            itemsLayout->addWidget(itemBtn, index / 5, index % 5);
-            ++index;
-        }
-    } else {
-        qDebug() << "Failed to load items: " << itemQuery.lastError();
+    if (!itemQuery.exec()) {
+        qDebug() << "Failed to load items:" << itemQuery.lastError();
+        return;
     }
+
+    int index = 0;
+
+    while (itemQuery.next()) {
+        QString itemName = itemQuery.value(0).toString();
+        double price = itemQuery.value(1).toDouble();
+        QByteArray imageData = itemQuery.value(2).toByteArray();
+
+        // Image
+        QLabel *imageLabel = new QLabel;
+        imageLabel->setFixedSize(100, 100);
+        imageLabel->setAlignment(Qt::AlignCenter);
+
+        QPixmap pixmap;
+        if (pixmap.loadFromData(imageData)) {
+            imageLabel->setPixmap(pixmap.scaled(imageLabel->size(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation));
+        } else {
+            imageLabel->setText("No\nImage");
+            imageLabel->setStyleSheet("color: gray; font-size: 10px;");
+        }
+
+        // Name label (no border or padding)
+        QLabel *nameLabel = new QLabel(itemName);
+        nameLabel->setAlignment(Qt::AlignCenter);
+        nameLabel->setWordWrap(true);
+        nameLabel->setStyleSheet(R"(
+            QLabel {
+                color: white;
+                font-size: 12px;
+                font-weight: 600;
+            }
+        )");
+
+        // Card container
+        QFrame *card = new QFrame;
+        card->setMinimumSize(120, 160);
+        card->setMaximumSize(140, 180);
+        card->setStyleSheet(R"(
+            QFrame {
+                background-color: transparent;
+                border-radius: 10px;
+            }
+            QFrame:hover {
+                background-color: #2b2b2b;
+            }
+        )");
+
+        QVBoxLayout *cardLayout = new QVBoxLayout(card);
+        cardLayout->setContentsMargins(8, 8, 8, 8);
+        cardLayout->setSpacing(6);
+        cardLayout->setAlignment(Qt::AlignCenter);
+        cardLayout->addStretch();
+        cardLayout->addWidget(imageLabel, 0, Qt::AlignCenter);
+        cardLayout->addWidget(nameLabel);
+        cardLayout->addStretch();
+
+        // Make clickable
+        card->setProperty("itemName", itemName);
+        card->setProperty("price", price);
+        card->installEventFilter(this);
+
+        // Add to grid
+        int row = index / 5;
+        int col = index % 5;
+        itemsLayout->addWidget(card, row, col, Qt::AlignTop);
+        ++index;
+    }
+}
+
+
+
+bool POS_AddOrder::eventFilter(QObject *watched, QEvent *event) {
+    if (event->type() == QEvent::MouseButtonPress) {
+        QString itemName = watched->property("itemName").toString();
+        if (!itemName.isEmpty()) {
+            orderItems[itemName]++;
+            updateOrderTable();
+        }
+        return true;
+    }
+    return QWidget::eventFilter(watched, event);
 }
