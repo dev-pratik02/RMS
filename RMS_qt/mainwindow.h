@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 #include "orders.h"
+#include "pos.h"
 #include <QMainWindow>
 #include <QtSql>
 
@@ -21,9 +22,12 @@ public:
 private slots:
     void on_pushButton_clicked();
 
+    void on_pushButton_2_clicked();
+
 private:
     Ui::MainWindow *ui;
     QSqlDatabase DB_connection;
     orders *ptrorders;
+    class pos *ptrpos;
 };
 #endif // MAINWINDOW_H

@@ -33,7 +33,7 @@ edit_order::edit_order(const QString &orderId, const QString &table, const QStri
     // Only add the database if it doesn't already exist
     if (!QSqlDatabase::contains("qt_sql_default_connection")) {
         mydb = QSqlDatabase::addDatabase("QSQLITE");
-        mydb.setDatabaseName("/Users/pratik/Programming/RMS/RmsApp.db");
+        mydb.setDatabaseName("/Users/pratik/Programming/RMS/RMS_qt/RmsApp.db");
     } else {
         mydb = QSqlDatabase::database("qt_sql_default_connection");
     }

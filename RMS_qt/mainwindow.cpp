@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ptrorders = new orders();
+    ptrpos = new class pos();
 }
 
 MainWindow::~MainWindow()
@@ -18,5 +19,11 @@ MainWindow::~MainWindow()
 void MainWindow::on_pushButton_clicked()
 {
     ptrorders->show();
+}
+
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    ptrpos->show();
 }
 
