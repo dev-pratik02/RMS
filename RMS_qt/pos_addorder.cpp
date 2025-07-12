@@ -128,8 +128,9 @@ POS_AddOrder::POS_AddOrder(QString table_no,QWidget *parent)
     rightContainer->addWidget(orderInfoLabel);
 
     // Middle: Order Table
-    orderTable = new QTableWidget(0, 3);
-    orderTable->setHorizontalHeaderLabels({"Item", "No.", "Price"});
+    orderTable = new QTableWidget(0, 4);
+    orderTable->setHorizontalHeaderLabels({"Item", "No.", "Price", ""});
+
     orderTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     rightContainer->addWidget(orderTable);
 
@@ -157,7 +158,8 @@ void POS_AddOrder::addItemToOrder()
     if (!btn) return;
 
     QString itemName = btn->property("itemName").toString();
-    orderItems[itemName]++;
+    orderItems[itemName].quantity++;
+
     updateOrderTable();
 }
 
@@ -170,16 +172,35 @@ void POS_AddOrder::updateOrderTable()
         int row = orderTable->rowCount();
         orderTable->insertRow(row);
 
-        orderTable->setItem(row, 0, new QTableWidgetItem(it.key()));
-        orderTable->setItem(row, 1, new QTableWidgetItem(QString::number(it.value())));
-        double price = 120; // Static price for now
-        orderTable->setItem(row, 2, new QTableWidgetItem(QString::number(price * it.value())));
+        const QString &itemName = it.key();
+        const OrderItem &item = it.value();
 
-        total += price * it.value();
+        // Column 0: Item name
+        orderTable->setItem(row, 0, new QTableWidgetItem(itemName));
+
+        // Column 1: Quantity
+        orderTable->setItem(row, 1, new QTableWidgetItem(QString::number(item.quantity)));
+
+        // Column 2: Price (subtotal)
+        double subtotal = item.price * item.quantity;
+        orderTable->setItem(row, 2, new QTableWidgetItem(QString::number(subtotal)));
+
+        // Column 3: Decrease (-) button
+        QPushButton *minusBtn = new QPushButton("Delete");
+        minusBtn->setStyleSheet("font-weight: bold; background-color: #000000; color: white; border-radius: 5px;");
+        orderTable->setCellWidget(row, 3, minusBtn);
+
+        // Store item name in button
+        minusBtn->setProperty("itemName", itemName);
+
+        connect(minusBtn, &QPushButton::clicked, this, &POS_AddOrder::decreaseItemQuantity);
+
+        total += subtotal;
     }
 
     orderInfoLabel->setText("Table No: 01\nOrder ID: 10745\nTotal: Rs. " + QString::number(total));
 }
+
 
 void POS_AddOrder::loadItemsForCategory(const QString &category) {
     qDebug() << "Loading items for category:" << category;
@@ -269,15 +290,38 @@ void POS_AddOrder::loadItemsForCategory(const QString &category) {
 }
 
 
-
 bool POS_AddOrder::eventFilter(QObject *watched, QEvent *event) {
     if (event->type() == QEvent::MouseButtonPress) {
         QString itemName = watched->property("itemName").toString();
+        double price = watched->property("price").toDouble();  // new line
+
         if (!itemName.isEmpty()) {
-            orderItems[itemName]++;
+            if (!orderItems.contains(itemName)) {
+                orderItems[itemName] = {1, price};
+            } else {
+                orderItems[itemName].quantity++;
+            }
             updateOrderTable();
         }
         return true;
     }
     return QWidget::eventFilter(watched, event);
 }
+
+void POS_AddOrder::decreaseItemQuantity()
+{
+    QPushButton *btn = qobject_cast<QPushButton *>(sender());
+    if (!btn) return;
+
+    QString itemName = btn->property("itemName").toString();
+
+    if (orderItems.contains(itemName)) {
+        if (orderItems[itemName].quantity > 1) {
+            orderItems[itemName].quantity--;
+        } else {
+            orderItems.remove(itemName);  // Remove item entirely if quantity hits 0
+        }
+        updateOrderTable();
+    }
+}
+
