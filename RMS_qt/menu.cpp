@@ -21,7 +21,7 @@ menu::menu(QWidget *parent)
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName("C:/Users/Swift/RMS/RMS_qt/RmsApp.db");
-
+    // db.setDatabaseName("/Users/pratik/Programming/RMS/RMS_qt/RmsApp.db");
     if (!db.open()) {
         qDebug() << "Database connection failed:" << db.lastError().text();
     } else {
@@ -43,7 +43,7 @@ void menu::loadData()
     QSqlQuery query("SELECT menu_item_id, item_name, price,category, description FROM menu");
     int row = 0;
 
-    while (query.next()) {
+        while (query.next()) {
 
             QString id = query.value(0).toString();
             QString name = query.value(1).toString();

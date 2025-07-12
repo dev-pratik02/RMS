@@ -47,6 +47,8 @@ void addmenuitem::on_btn_save_clicked()
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName("C:/Users/Swift/RMS/RMS_qt/RmsApp.db");
+    // db.setDatabaseName("/Users/pratik/Programming/RMS/RMS_qt/RmsApp.db");
+
 
     if (!db.open()) {
         qDebug() << "Database connection failed:" << db.lastError().text();
@@ -90,7 +92,7 @@ void addmenuitem::on_image_upload_clicked()
 {
 
     //Image
-    QString imagePath = QFileDialog::getOpenFileName(this, "Select Image", "", "Images (*.png *.jpg *.bmp)");
+    QString imagePath = QFileDialog::getOpenFileName(this, "Select Image", "", "Images (*.png *.jpg *.bmp *.jpeg)");
     if (!imagePath.isEmpty()) {
         QPixmap pix(imagePath);
         ui->image_preview->setPixmap(pix.scaled(100, 100, Qt::KeepAspectRatio));  // Optional preview
