@@ -3,12 +3,20 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QMessageBox>
+#include <QIntValidator>
 
 addcategory::addcategory(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::addcategory)
 {
     ui->setupUi(this);
+    // Validator for category_id (only integers)
+    QIntValidator* idValidator = new QIntValidator(1, 9999, this);  // Adjust range as needed
+    ui->category_id->setValidator(idValidator);
+
+    // Validator for item_no (only integers)
+    QIntValidator* itemNoValidator = new QIntValidator(1, 999, this);  // Adjust range as needed
+    ui->item_no->setValidator(itemNoValidator);
 }
 
 addcategory::~addcategory()
@@ -29,7 +37,7 @@ void addcategory::on_btn_add_clicked()
     }
 
     QSqlQuery query;
-    query.prepare("INSERT INTO category ([category name], [category id], [no of items], [description]) "
+    query.prepare("INSERT INTO category ([category_name], [category_id], [display_order], [description]) "
                   "VALUES (:name, :id, :num, :desc)");
     query.bindValue(":name", name);
     query.bindValue(":id", id);

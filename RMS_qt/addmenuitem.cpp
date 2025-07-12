@@ -5,6 +5,8 @@
 #include <QMessageBox>
 #include <QDebug>
 #include <QSqlDatabase>
+#include <QIntValidator>
+#include <QDoubleValidator>
 
 addmenuitem::addmenuitem(QWidget *parent)
     : QDialog(parent)
@@ -16,6 +18,16 @@ addmenuitem::addmenuitem(QWidget *parent)
     ui->item_name->setPlaceholderText("Enter Item Name");
     ui->item_price->setPlaceholderText("Enter Price");
     ui->item_description->setPlaceholderText("Enter Description");
+
+    // Validator for item_id (only integers)
+    QIntValidator *idValidator = new QIntValidator(1, 9999, this); // Adjust range if needed
+    ui->item_id->setValidator(idValidator);
+
+    // Validator for item_price (only decimal numbers with 2 digits after decimal point)
+    QDoubleValidator *priceValidator = new QDoubleValidator(0.0, 99999.99, 2, this);
+    priceValidator->setNotation(QDoubleValidator::StandardNotation);
+    ui->item_price->setValidator(priceValidator);
+
 }
 
 addmenuitem::~addmenuitem()
@@ -35,7 +47,7 @@ void addmenuitem::on_btn_save_clicked()
     }
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("C:/Users/Swift/OneDrive/Desktop/Database/menu.db");
+    db.setDatabaseName("C:/Users/Swift/RMS/RMS_qt/RmsApp.db");
 
     if (!db.open()) {
         qDebug() << "Database connection failed:" << db.lastError().text();
@@ -43,16 +55,9 @@ void addmenuitem::on_btn_save_clicked()
         qDebug() << "Database connected successfully!";
     }
 
-    if (!db.open()) {
-        QMessageBox::critical(this, "Database Error", db.lastError().text());
-        qDebug() << "Database connection failed:" << db.lastError().text();
-        return;
-    } else {
-        qDebug() << "Database connected successfully!";
-    }
 
     QSqlQuery query;
-    query.prepare("INSERT INTO menu ([ITEM ID],[ITEM NAME],[PRICE],[DESCRIPTION]) "
+    query.prepare("INSERT INTO menu ([menu_item_id],[item_name],[price],[description]) "
                   "VALUES (:itemid, :name, :price, :description)");
     query.bindValue(":itemid", itemid);
     query.bindValue(":name", name);

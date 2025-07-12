@@ -3,6 +3,8 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QMessageBox>
+#include <QIntValidator>
+#include <QDoubleValidator>
 
 editcategory::editcategory(QString name, QString id, QString itemCount, QString description, QWidget *parent) :
     QDialog(parent),
@@ -15,6 +17,15 @@ editcategory::editcategory(QString name, QString id, QString itemCount, QString 
     ui->category_id->setText(id);
     ui->item_no->setText(itemCount);
      ui->category_description->setPlainText(description);
+
+
+     // Validator for category_id (integers only)
+     QIntValidator *idValidator = new QIntValidator(1, 9999, this); // Customize range as needed
+     ui->category_id->setValidator(idValidator);
+
+     // Validator for item_no (display_order)
+     QIntValidator *itemNoValidator = new QIntValidator(1, 999, this); // Customize range as needed
+     ui->item_no->setValidator(itemNoValidator);
 }
 editcategory::~editcategory()
 {
@@ -34,7 +45,7 @@ void editcategory::on_btn_edit_clicked()
     }
 
     QSqlQuery query;
-    query.prepare("UPDATE category SET [category name]=:name, [category id]=:id, [no of items]=:num, [description]=:desc WHERE [category id]=:originalId");
+    query.prepare("UPDATE category SET [category_name]=:name, [category_id]=:id, [display_order]=:num, [description]=:desc WHERE [category_id]=:originalId");
     query.bindValue(":name", newName);
     query.bindValue(":id", newId);
     query.bindValue(":num", newItem);

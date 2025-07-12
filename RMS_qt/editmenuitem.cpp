@@ -18,6 +18,14 @@ editmenuitem::editmenuitem(QString id, QString name, QString price, QString desc
     ui->item_name->setText(name);
     ui->item_price->setText(price);
     ui->item_description->setText(description);
+    // Validator for price (e.g., up to 99999.99 with 2 decimal points)
+    QDoubleValidator *priceValidator = new QDoubleValidator(0.0, 99999.99, 2, this);
+    priceValidator->setNotation(QDoubleValidator::StandardNotation);
+    ui->item_price->setValidator(priceValidator);
+    ui->item_price->setPlaceholderText("Enter valid price");
+    ui->item_name->setPlaceholderText("Enter item name");
+    ui->item_description->setPlaceholderText("Enter description");
+
 }
 
 editmenuitem::~editmenuitem()
@@ -41,7 +49,7 @@ void editmenuitem::on_btn_save_clicked()
     }
 
     QSqlQuery query;
-    query.prepare("UPDATE menu SET [ITEM NAME] = ?, PRICE = ?, DESCRIPTION = ? WHERE [ITEM ID] = ?");
+    query.prepare("UPDATE menu SET [item_name] = ?, price = ?, description = ? WHERE [menu_item_id] = ?");
     query.addBindValue(name);
     query.addBindValue(price);
     query.addBindValue(description);

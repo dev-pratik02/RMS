@@ -24,7 +24,7 @@ category::category(QWidget *parent)
 
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("C:/Users/Swift/OneDrive/Desktop/Database/menu.db");
+    db.setDatabaseName("C:/Users/Swift/RMS/RMS_qt/RmsApp.db");
 
     if (!db.open()) {
         qDebug() << "Database connection failed:" << db.lastError().text();
@@ -53,7 +53,7 @@ void category::on_btn_addcategory_clicked()
 
 void category::loadCategories()
 {
-    QSqlQuery query("SELECT [category name], [category id], [no of items], [description] FROM category");
+    QSqlQuery query("SELECT [category_name], [category_id], [display_order], [description] FROM category");
 
     ui->tableWidget->setRowCount(0);
     ui->tableWidget->setColumnCount(5);
@@ -91,8 +91,9 @@ void category::loadCategories()
         row++;
     }
 
-    QStringList headers = {"Category Name", "Category ID", "No. of Items", "Description", "Actions"};
+    QStringList headers = {"Category Name", "Category ID", "Display Order", "Description", "Actions"};
     ui->tableWidget->setHorizontalHeaderLabels(headers);
+    ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
 
@@ -108,7 +109,7 @@ void category::handleEditCategory(QString name, QString id, QString itemCount, Q
 void category::handleDeleteCategory(QString id)
 {
     QSqlQuery query;
-    query.prepare("DELETE FROM category WHERE [category id] = ?");
+    query.prepare("DELETE FROM category WHERE [category_id] = ?");
     query.addBindValue(id);
 
     if (!query.exec()) {

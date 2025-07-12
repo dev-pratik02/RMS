@@ -20,7 +20,7 @@ menu::menu(QWidget *parent)
     ptraddmenuitem = new addmenuitem();
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("C:/Users/Swift/OneDrive/Desktop/Database/menu.db");
+    db.setDatabaseName("C:/Users/Swift/RMS/RMS_qt/RmsApp.db");
 
     if (!db.open()) {
         qDebug() << "Database connection failed:" << db.lastError().text();
@@ -40,7 +40,7 @@ void menu::loadData()
     ui->tableWidget->clearContents();
     ui->tableWidget->setRowCount(0);
 
-    QSqlQuery query("SELECT [ITEM ID], [ITEM NAME], PRICE, DESCRIPTION FROM menu");
+    QSqlQuery query("SELECT menu_item_id, item_name, price, description FROM menu");
     int row = 0;
 
     while (query.next()) {
@@ -78,8 +78,9 @@ void menu::loadData()
             row++;
     }
 
-        qDebug() << "Loaded" << row << "rows into table.";
-    }
+    qDebug() << "Loaded" << row << "rows into table.";
+    ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+}
 
 void menu::handleEditButton(QString id, QString name, QString price, QString description)
 {
@@ -94,7 +95,7 @@ void menu::handleEditButton(QString id, QString name, QString price, QString des
 void menu::handleDeleteButton(QString id)
 {
     QSqlQuery query;
-    query.prepare("DELETE FROM menu WHERE [ITEM ID] = ?");
+    query.prepare("DELETE FROM menu WHERE menu_item_id = ?");
     query.addBindValue(id);
 
     if (!query.exec()) {
