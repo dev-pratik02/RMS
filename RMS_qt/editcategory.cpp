@@ -16,7 +16,7 @@ editcategory::editcategory(QString name, QString id, QString itemCount, QString 
     ui->category_name->setText(name);
     ui->category_id->setText(id);
     ui->item_no->setText(itemCount);
-     ui->category_description->setPlainText(description);
+    ui->category_description->setPlainText(description);
 
     ui->category_id->setReadOnly(true);
 

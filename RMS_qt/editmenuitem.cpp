@@ -16,6 +16,7 @@ editmenuitem::editmenuitem(QString id, QString name, QString price, QString desc
     ui->setupUi(this);
     ui->item_id->setText(id);
     ui->item_name->setText(name);
+    ui->item_category->setText(category);
     ui->item_price->setText(price);
     ui->item_description->setText(description);
 
@@ -24,6 +25,7 @@ editmenuitem::editmenuitem(QString id, QString name, QString price, QString desc
     ui->item_price->setValidator(priceValidator);
     ui->item_price->setPlaceholderText("Enter valid price");
     ui->item_name->setPlaceholderText("Enter item name");
+    ui->item_category->setPlaceholderText("Enter item category");
     ui->item_description->setPlaceholderText("Enter description");
 
     ui->item_id->setReadOnly(true);
@@ -39,21 +41,24 @@ editmenuitem::~editmenuitem()
 void editmenuitem::on_btn_save_clicked()
 {
     QString name = ui->item_name->text();
+    QString category = ui->item_category->text();
     QString price = ui->item_price->text();
     QString description = ui->item_description->text();
 
     qDebug() << "Name:" << name;
+    qDebug() << "Category:" << category;
     qDebug() << "Price:" << price;
     qDebug() << "Description:" << description;
 
-    if (name.isEmpty() || price.isEmpty() || description.isEmpty()) {
+    if (name.isEmpty() || category.isEmpty()|| price.isEmpty() || description.isEmpty()) {
         QMessageBox::warning(this, "Validation", "All fields must be filled.");
         return;
     }
 
     QSqlQuery query;
-    query.prepare("UPDATE menu SET [item_name] = ?, price = ?, description = ? WHERE [menu_item_id] = ?");
+    query.prepare("UPDATE menu SET [item_name] = ?,category = ?, price = ?, description = ? WHERE [menu_item_id] = ?");
     query.addBindValue(name);
+    query.addBindValue(category);
     query.addBindValue(price);
     query.addBindValue(description);
     query.addBindValue(itemId);
@@ -70,6 +75,7 @@ void editmenuitem::on_btn_save_clicked()
 void editmenuitem::on_btn_reset_clicked()
 {
     ui->item_name->clear();
+    ui->item_category->clear();
     ui->item_price->clear();
     ui->item_description->clear();
 }
