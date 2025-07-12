@@ -16,6 +16,9 @@ public:
     explicit pos(QWidget *parent = nullptr);
     ~pos();
 
+private slots:
+    void on_btn_place_order_clicked();
+
 private:
     Ui::pos *ui;
     QSqlDatabase mydb;
