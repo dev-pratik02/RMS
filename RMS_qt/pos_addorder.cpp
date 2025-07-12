@@ -1,9 +1,4 @@
 #include "pos_addorder.h"
-#include <QScrollArea>
-#include <QHeaderView>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QDebug>
 
 
 POS_AddOrder::POS_AddOrder(QWidget *parent)
@@ -21,9 +16,21 @@ POS_AddOrder::POS_AddOrder(QString table_no,QWidget *parent)
     setWindowTitle("POS - Add Order");
     setMinimumSize(1280, 800);
     resize(1280, 800);
-
-
     qDebug() << "The received table no. is " << table_no;
+
+    //DB connection;
+    if (!QSqlDatabase::contains("qt_sql_default_connection")) {
+        db = QSqlDatabase::addDatabase("QSQLITE");
+        db.setDatabaseName("/Users/pratik/Programming/RMS/RMS_qt/RmsApp.db");
+    } else {
+        db = QSqlDatabase::database("qt_sql_default_connection");
+    }
+    if(db.open()){
+        qDebug() << "Database connected successfully by POS";
+    }
+    else{
+        qDebug() << db.lastError();
+    }
 
     QHBoxLayout *mainLayout = new QHBoxLayout(this);
 
@@ -33,25 +40,66 @@ POS_AddOrder::POS_AddOrder(QString table_no,QWidget *parent)
     QVBoxLayout *leftContainer = new QVBoxLayout();
 
     // Category Scroll Area
+    // Horizontal Scrollable Category Bar
     QWidget *categoryWidget = new QWidget();
-    categoryLayout = new QVBoxLayout(categoryWidget);
-    QStringList categories = {"Starters", "Main Course", "Snacks", "Drinks", "Dessert", "Burgers"};
-    for (const QString &cat : categories) {
-        QPushButton *btn = new QPushButton(cat);
-        btn->setFixedHeight(40);
-        categoryLayout->addWidget(btn);
+    QHBoxLayout *categoryLayout = new QHBoxLayout(categoryWidget);
+
+    QButtonGroup *categoryGroup = new QButtonGroup(this);
+    categoryGroup->setExclusive(true);
+
+    QSqlQuery query(db);
+    query.prepare("SELECT category_name FROM category ORDER BY display_order ASC");
+
+    QString category;
+    if (query.exec()) {
+        qDebug() << "Successfully accessed categories";
+        while (query.next()) {
+            category = query.value(0).toString();
+
+            QPushButton *btn = new QPushButton(category);
+            btn->setFixedSize(120, 40);
+            btn->setCheckable(true);
+            categoryLayout->addWidget(btn);
+            categoryGroup->addButton(btn);
+
+            btn->setStyleSheet(R"(
+            QPushButton {
+                background-color: #000000;
+                color: white;
+                border-radius: 8px;
+            }
+            QPushButton:checked {
+                background-color: #0078d7;
+                color: white;
+                font-weight: bold;
+            }
+        )");
+
+            // Later: filter items grid based on selected category
+            connect(btn, &QPushButton::clicked, this, [category]() {
+                qDebug() << "Category clicked:" << category;
+            });
+        }
+    } else {
+        qDebug() << "Could not access categories";
+        qDebug() << query.lastError();
     }
+
+
 
     QScrollArea *categoryScroll = new QScrollArea();
     categoryScroll->setWidgetResizable(true);
+    categoryScroll->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    categoryScroll->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    categoryScroll->setFixedHeight(60);
     categoryScroll->setWidget(categoryWidget);
-    categoryScroll->setFixedHeight(200);
+
 
     // Items Scroll Area
     QWidget *itemsWidget = new QWidget();
     itemsLayout = new QGridLayout(itemsWidget);
 
-    for (int i = 0; i < 15; ++i) {
+    for (int i = 0; i < 100; ++i) {
         QPushButton *itemBtn = new QPushButton();
         itemBtn->setIcon(QIcon(":/images/burger.png"));
         itemBtn->setIconSize(QSize(100, 100));
@@ -74,14 +122,14 @@ POS_AddOrder::POS_AddOrder(QString table_no,QWidget *parent)
     QVBoxLayout *rightContainer = new QVBoxLayout();
 
     // Top: Order Info
-    orderInfoLabel = new QLabel("Table No: 01\nOrder ID: 10745");
+    orderInfoLabel = new QLabel("Table No: "+table_no+"\nOrder ID: "+"\n");
     orderInfoLabel->setStyleSheet("font-weight: bold; font-size: 16px;");
     rightContainer->addWidget(orderInfoLabel);
 
     // Middle: Order Table
     orderTable = new QTableWidget(0, 3);
     orderTable->setHorizontalHeaderLabels({"Item", "No.", "Price"});
-    orderTable->horizontalHeader()->setStretchLastSection(true);
+    orderTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     rightContainer->addWidget(orderTable);
 
     // Bottom: Buttons

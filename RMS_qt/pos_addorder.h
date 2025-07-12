@@ -9,6 +9,9 @@
 #include <QTableWidget>
 #include <QLabel>
 #include <QMap>
+#include <QtSql>
+#include <QButtonGroup>
+#include <QHeaderView>
 
 namespace Ui {
 class POS_AddOrder;
@@ -42,6 +45,7 @@ private:
 
     QMap<QString, int> orderItems;
     void updateOrderTable();
+    QSqlDatabase db;
 };
 
 #endif // POS_ADDORDER_H
