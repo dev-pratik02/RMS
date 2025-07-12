@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QtSql>
+#include "pos_addorder.h"
 
 namespace Ui {
 class pos;
@@ -22,6 +23,7 @@ private slots:
 private:
     Ui::pos *ui;
     QSqlDatabase mydb;
+    pos_addorder *ptraddorder;
 };
 
 #endif // POS_H

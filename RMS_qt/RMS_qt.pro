@@ -19,7 +19,8 @@ SOURCES += \
     orders.cpp   \
     checkout.cpp  \
     edit_order.cpp \
-    pos.cpp
+    pos.cpp \
+    pos_addorder.cpp
 
 HEADERS += \
     OrdersWidget.h \
@@ -27,14 +28,16 @@ HEADERS += \
     orders.h    \
     checkout.h  \
     edit_order.h \
-    pos.h
+    pos.h \
+    pos_addorder.h
 
 FORMS += \
     mainwindow.ui \
     orders.ui  \
     checkout.ui  \
     edit_order.ui \
-    pos.ui
+    pos.ui \
+    pos_addorder.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

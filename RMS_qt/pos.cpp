@@ -6,7 +6,7 @@ pos::pos(QWidget *parent)
     , ui(new Ui::pos)
 {
     ui->setupUi(this);
-
+    this->resize(1280, 800);
     // Only add the database if it doesn't already exist
     if (!QSqlDatabase::contains("qt_sql_default_connection")) {
         mydb = QSqlDatabase::addDatabase("QSQLITE");
@@ -53,6 +53,9 @@ pos::~pos()
 
 void pos::on_btn_place_order_clicked()
 {
-
+    QString table_no = ui->pos_table_dropdown->currentText();
+    qDebug() << "The table no. is: " << table_no;
+    ptraddorder = new pos_addorder(table_no,this);
+    ptraddorder->show();
 }
 
