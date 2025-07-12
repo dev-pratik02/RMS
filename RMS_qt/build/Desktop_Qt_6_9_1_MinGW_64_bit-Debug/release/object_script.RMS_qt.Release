@@ -1,0 +1,15 @@
+release/addcategory.o
+release/addmenuitem.o
+release/category.o
+release/editcategory.o
+release/editmenuitem.o
+release/main.o
+release/mainwindow.o
+release/menu.o
+release/moc_addcategory.o
+release/moc_addmenuitem.o
+release/moc_category.o
+release/moc_editcategory.o
+release/moc_editmenuitem.o
+release/moc_mainwindow.o
+release/moc_menu.o

@@ -19,4 +19,8 @@ void MainWindow::on_btn_login_clicked()
 {
     ptrlogin->show();
 }
-
+void MainWindow ::on_btn_signup_clicked()
+{
+    signup signupDialog(this);
+    signupDialog.exec();
+}

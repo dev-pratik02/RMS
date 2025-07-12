@@ -11,12 +11,21 @@ class login_page : public QDialog
 {
     Q_OBJECT
 
+private slots:
+    void onSignupClicked();
+    void onForgotClicked();
+
+private:
+     void setupUiLinks();
+     Ui::login_page *ui;
+
 public:
 
     explicit login_page(QWidget *parent = nullptr);
     ~login_page();
 
-    Ui::login_page *ui;
 };
+
+
 
 #endif // LOGIN_PAGE_H

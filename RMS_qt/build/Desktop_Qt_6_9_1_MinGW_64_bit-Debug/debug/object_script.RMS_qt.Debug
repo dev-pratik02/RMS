@@ -1,0 +1,15 @@
+debug/addcategory.o
+debug/addmenuitem.o
+debug/category.o
+debug/editcategory.o
+debug/editmenuitem.o
+debug/main.o
+debug/mainwindow.o
+debug/menu.o
+debug/moc_addcategory.o
+debug/moc_addmenuitem.o
+debug/moc_category.o
+debug/moc_editcategory.o
+debug/moc_editmenuitem.o
+debug/moc_mainwindow.o
+debug/moc_menu.o
