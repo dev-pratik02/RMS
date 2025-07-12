@@ -12,6 +12,7 @@
 #include <QtSql>
 #include <QButtonGroup>
 #include <QHeaderView>
+#include <QPixmap>
 
 namespace Ui {
 class POS_AddOrder;
@@ -22,7 +23,6 @@ class POS_AddOrder : public QWidget
     Q_OBJECT
 
 public:
-    explicit POS_AddOrder(QWidget *parent = nullptr);
     explicit POS_AddOrder(QString table_no,QWidget *parent = nullptr);
 
     ~POS_AddOrder();
@@ -46,6 +46,8 @@ private:
     QMap<QString, int> orderItems;
     void updateOrderTable();
     QSqlDatabase db;
+
+    void loadItemsForCategory(const QString &category);
 };
 
 #endif // POS_ADDORDER_H

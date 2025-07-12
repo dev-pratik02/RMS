@@ -1,13 +1,6 @@
 #include "pos_addorder.h"
 
 
-POS_AddOrder::POS_AddOrder(QWidget *parent)
-    : QWidget(parent),
-    ui(nullptr)
-{
-    QHBoxLayout *mainLayout = new QHBoxLayout(this);
-
-}
 
 POS_AddOrder::POS_AddOrder(QString table_no,QWidget *parent)
     : QWidget(parent),
@@ -39,6 +32,11 @@ POS_AddOrder::POS_AddOrder(QString table_no,QWidget *parent)
     // ==========================
     QVBoxLayout *leftContainer = new QVBoxLayout();
 
+
+    // Items layout MUST be created BEFORE you call loadItemsForCategory()
+    QWidget *itemsWidget = new QWidget();
+    itemsLayout = new QGridLayout(itemsWidget);  // << This is key
+
     // Category Scroll Area
     // Horizontal Scrollable Category Bar
     QWidget *categoryWidget = new QWidget();
@@ -51,12 +49,15 @@ POS_AddOrder::POS_AddOrder(QString table_no,QWidget *parent)
     query.prepare("SELECT category_name FROM category ORDER BY display_order ASC");
 
     QString category;
+    QPushButton *firstCategoryBtn = nullptr;
+
     if (query.exec()) {
         qDebug() << "Successfully accessed categories";
-        while (query.next()) {
-            category = query.value(0).toString();
 
-            QPushButton *btn = new QPushButton(category);
+        while (query.next()) {
+            QString categoryName = query.value(0).toString();
+
+            QPushButton *btn = new QPushButton(categoryName);
             btn->setFixedSize(120, 40);
             btn->setCheckable(true);
             categoryLayout->addWidget(btn);
@@ -75,15 +76,27 @@ POS_AddOrder::POS_AddOrder(QString table_no,QWidget *parent)
             }
         )");
 
-            // Later: filter items grid based on selected category
-            connect(btn, &QPushButton::clicked, this, [category]() {
-                qDebug() << "Category clicked:" << category;
+            connect(btn, &QPushButton::clicked, this, [=]() {
+                qDebug() << "Category clicked:" << categoryName;
+                loadItemsForCategory(categoryName);
             });
+
+            if (!firstCategoryBtn) {
+                firstCategoryBtn = btn;  // store the first button
+            }
         }
+
+        // Auto-select first category
+        if (firstCategoryBtn) {
+            firstCategoryBtn->setChecked(true);
+            emit firstCategoryBtn->clicked();  // triggers loading of items
+        }
+
     } else {
         qDebug() << "Could not access categories";
         qDebug() << query.lastError();
     }
+
 
 
 
@@ -96,18 +109,6 @@ POS_AddOrder::POS_AddOrder(QString table_no,QWidget *parent)
 
 
     // Items Scroll Area
-    QWidget *itemsWidget = new QWidget();
-    itemsLayout = new QGridLayout(itemsWidget);
-
-    for (int i = 0; i < 100; ++i) {
-        QPushButton *itemBtn = new QPushButton();
-        itemBtn->setIcon(QIcon(":/images/burger.png"));
-        itemBtn->setIconSize(QSize(100, 100));
-        itemBtn->setFixedSize(120, 120);
-        itemBtn->setProperty("itemName", "Burger");
-        connect(itemBtn, &QPushButton::clicked, this, &POS_AddOrder::addItemToOrder);
-        itemsLayout->addWidget(itemBtn, i / 5, i % 5);
-    }
 
     QScrollArea *itemsScroll = new QScrollArea();
     itemsScroll->setWidgetResizable(true);
@@ -178,4 +179,59 @@ void POS_AddOrder::updateOrderTable()
     }
 
     orderInfoLabel->setText("Table No: 01\nOrder ID: 10745\nTotal: Rs. " + QString::number(total));
+}
+
+
+void POS_AddOrder::loadItemsForCategory(const QString &category) {
+    qDebug() << "load items function:";
+
+    if (!itemsLayout) {
+        qDebug() << "itemsLayout is not initialized!";
+        return;
+    }
+
+    // Clear layout safely
+    QLayoutItem *item;
+    while ((item = itemsLayout->takeAt(0)) != nullptr) {
+        delete item->widget();
+        delete item;
+    }
+
+    QSqlQuery itemQuery(db);
+    itemQuery.prepare("SELECT item_name, price, image FROM menu WHERE category = :category");
+    itemQuery.bindValue(":category", category.trimmed());
+
+    if (itemQuery.exec()) {
+        int index = 0;
+        qDebug() << "executed the query";
+        qDebug() << "Loading items for category:" << category;
+
+        while (itemQuery.next()) {
+            qDebug() << "inside the while loop";
+            QString itemName = itemQuery.value(0).toString();
+            double price = itemQuery.value(1).toDouble();
+            QByteArray imagePath = itemQuery.value(2).toByteArray();
+            QPixmap pixmap;
+            if (pixmap.loadFromData(imagePath)) {
+                QLabel *imageLabel = new QLabel;
+                imageLabel->setPixmap(pixmap.scaled(80, 80, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+                itemsLayout->addWidget(imageLabel);
+            } else {
+                qDebug() << "Failed to load pixmap from database BLOB";
+            }
+            QPushButton *itemBtn = new QPushButton();
+            itemBtn->setIcon(QIcon(imagePath));
+            itemBtn->setIconSize(QSize(100, 100));
+            itemBtn->setFixedSize(120, 120);
+            itemBtn->setProperty("itemName", itemName);
+            itemBtn->setProperty("price", price);
+
+            connect(itemBtn, &QPushButton::clicked, this, &POS_AddOrder::addItemToOrder);
+
+            itemsLayout->addWidget(itemBtn, index / 5, index % 5);
+            ++index;
+        }
+    } else {
+        qDebug() << "Failed to load items: " << itemQuery.lastError();
+    }
 }
