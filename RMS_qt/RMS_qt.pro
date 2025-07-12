@@ -1,4 +1,6 @@
 QT       += core gui
+QT += sql
+
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -19,7 +21,8 @@ HEADERS += \
     forgotpass.h \
     login_page.h \
     mainwindow.h \
-    signup.h
+    signup.h \
+    utils.h
 
 FORMS += \
     forgotpass.ui \

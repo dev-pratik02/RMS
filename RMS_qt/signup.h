@@ -15,8 +15,13 @@ public:
     explicit signup(QWidget *parent = nullptr);
     ~signup();
 
+private slots:
+    void on_btn_confirm_clicked();
+
+
 private:
     Ui::signup *ui;
+    bool openDatabase();
 };
 
 #endif // SIGNUP_H

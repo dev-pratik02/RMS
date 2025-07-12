@@ -17,6 +17,10 @@ public:
 
 private:
     Ui::forgotpass *ui;
+
+private slots:
+    void on_btn_confirm_clicked();
+
 };
 
 #endif // FORGOTPASS_H

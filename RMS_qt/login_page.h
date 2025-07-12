@@ -14,6 +14,7 @@ class login_page : public QDialog
 private slots:
     void onSignupClicked();
     void onForgotClicked();
+    void on_btn_login_clicked();
 
 private:
      void setupUiLinks();

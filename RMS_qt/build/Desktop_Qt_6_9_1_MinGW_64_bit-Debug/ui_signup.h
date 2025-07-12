@@ -11,9 +11,12 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QDateEdit>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QToolButton>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
@@ -23,7 +26,7 @@ class Ui_signup
 {
 public:
     QLabel *label;
-    QWidget *widget;
+    QWidget *layoutWidget;
     QVBoxLayout *verticalLayout_2;
     QLabel *label_2;
     QLabel *label_3;
@@ -31,12 +34,15 @@ public:
     QLabel *label_5;
     QLabel *label_6;
     QLabel *label_7;
-    QLineEdit *form_phone;
-    QLineEdit *form_name;
-    QLineEdit *form_dob;
-    QLineEdit *form_cpass;
-    QLineEdit *formemail;
-    QLineEdit *form_pass;
+    QLineEdit *line_phone;
+    QLineEdit *line_name;
+    QLineEdit *line_confirmpass;
+    QLineEdit *line_email;
+    QLineEdit *line_password;
+    QPushButton *btn_confirm;
+    QDateEdit *date_dob;
+    QToolButton *eyeButton;
+    QToolButton *eyeButton_2;
 
     void setupUi(QDialog *signup)
     {
@@ -51,13 +57,13 @@ public:
         font.setPointSize(16);
         font.setBold(true);
         label->setFont(font);
-        widget = new QWidget(signup);
-        widget->setObjectName("widget");
-        widget->setGeometry(QRect(61, 111, 141, 321));
-        verticalLayout_2 = new QVBoxLayout(widget);
+        layoutWidget = new QWidget(signup);
+        layoutWidget->setObjectName("layoutWidget");
+        layoutWidget->setGeometry(QRect(61, 111, 141, 321));
+        verticalLayout_2 = new QVBoxLayout(layoutWidget);
         verticalLayout_2->setObjectName("verticalLayout_2");
         verticalLayout_2->setContentsMargins(0, 0, 0, 0);
-        label_2 = new QLabel(widget);
+        label_2 = new QLabel(layoutWidget);
         label_2->setObjectName("label_2");
         QFont font1;
         font1.setFamilies({QString::fromUtf8("Arial")});
@@ -66,54 +72,64 @@ public:
 
         verticalLayout_2->addWidget(label_2);
 
-        label_3 = new QLabel(widget);
+        label_3 = new QLabel(layoutWidget);
         label_3->setObjectName("label_3");
         label_3->setFont(font1);
 
         verticalLayout_2->addWidget(label_3);
 
-        label_4 = new QLabel(widget);
+        label_4 = new QLabel(layoutWidget);
         label_4->setObjectName("label_4");
         label_4->setFont(font1);
 
         verticalLayout_2->addWidget(label_4);
 
-        label_5 = new QLabel(widget);
+        label_5 = new QLabel(layoutWidget);
         label_5->setObjectName("label_5");
         label_5->setFont(font1);
 
         verticalLayout_2->addWidget(label_5);
 
-        label_6 = new QLabel(widget);
+        label_6 = new QLabel(layoutWidget);
         label_6->setObjectName("label_6");
         label_6->setFont(font1);
 
         verticalLayout_2->addWidget(label_6);
 
-        label_7 = new QLabel(widget);
+        label_7 = new QLabel(layoutWidget);
         label_7->setObjectName("label_7");
         label_7->setFont(font1);
 
         verticalLayout_2->addWidget(label_7);
 
-        form_phone = new QLineEdit(signup);
-        form_phone->setObjectName("form_phone");
-        form_phone->setGeometry(QRect(211, 175, 221, 31));
-        form_name = new QLineEdit(signup);
-        form_name->setObjectName("form_name");
-        form_name->setGeometry(QRect(210, 123, 221, 31));
-        form_dob = new QLineEdit(signup);
-        form_dob->setObjectName("form_dob");
-        form_dob->setGeometry(QRect(211, 285, 221, 31));
-        form_cpass = new QLineEdit(signup);
-        form_cpass->setObjectName("form_cpass");
-        form_cpass->setGeometry(QRect(211, 395, 221, 31));
-        formemail = new QLineEdit(signup);
-        formemail->setObjectName("formemail");
-        formemail->setGeometry(QRect(211, 230, 221, 31));
-        form_pass = new QLineEdit(signup);
-        form_pass->setObjectName("form_pass");
-        form_pass->setGeometry(QRect(211, 340, 221, 31));
+        line_phone = new QLineEdit(signup);
+        line_phone->setObjectName("line_phone");
+        line_phone->setGeometry(QRect(211, 175, 221, 31));
+        line_name = new QLineEdit(signup);
+        line_name->setObjectName("line_name");
+        line_name->setGeometry(QRect(210, 123, 221, 31));
+        line_confirmpass = new QLineEdit(signup);
+        line_confirmpass->setObjectName("line_confirmpass");
+        line_confirmpass->setGeometry(QRect(211, 395, 221, 31));
+        line_email = new QLineEdit(signup);
+        line_email->setObjectName("line_email");
+        line_email->setGeometry(QRect(211, 230, 221, 31));
+        line_password = new QLineEdit(signup);
+        line_password->setObjectName("line_password");
+        line_password->setGeometry(QRect(211, 340, 221, 31));
+        btn_confirm = new QPushButton(signup);
+        btn_confirm->setObjectName("btn_confirm");
+        btn_confirm->setGeometry(QRect(350, 470, 80, 24));
+        btn_confirm->setFont(font1);
+        date_dob = new QDateEdit(signup);
+        date_dob->setObjectName("date_dob");
+        date_dob->setGeometry(QRect(210, 284, 221, 31));
+        eyeButton = new QToolButton(signup);
+        eyeButton->setObjectName("eyeButton");
+        eyeButton->setGeometry(QRect(410, 346, 20, 20));
+        eyeButton_2 = new QToolButton(signup);
+        eyeButton_2->setObjectName("eyeButton_2");
+        eyeButton_2->setGeometry(QRect(410, 400, 20, 21));
 
         retranslateUi(signup);
 
@@ -130,6 +146,9 @@ public:
         label_5->setText(QCoreApplication::translate("signup", "Date Of Birth:", nullptr));
         label_6->setText(QCoreApplication::translate("signup", "Password:", nullptr));
         label_7->setText(QCoreApplication::translate("signup", "Confirm Password:", nullptr));
+        btn_confirm->setText(QCoreApplication::translate("signup", "Confirm", nullptr));
+        eyeButton->setText(QCoreApplication::translate("signup", "...", nullptr));
+        eyeButton_2->setText(QCoreApplication::translate("signup", "...", nullptr));
     } // retranslateUi
 
 };
