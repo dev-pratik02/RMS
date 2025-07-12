@@ -1,23 +1,47 @@
 #ifndef POS_ADDORDER_H
 #define POS_ADDORDER_H
 
-#include <QDialog>
+#include <QWidget>
+#include <QScrollArea>
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QTableWidget>
+#include <QLabel>
+#include <QMap>
 
 namespace Ui {
-class pos_addorder;
+class POS_AddOrder;
 }
 
-class pos_addorder : public QDialog
+class POS_AddOrder : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit pos_addorder(QWidget *parent = nullptr);
-    explicit pos_addorder(QString table_no,QWidget *parent = nullptr);
-    ~pos_addorder();
+    explicit POS_AddOrder(QWidget *parent = nullptr);
+    explicit POS_AddOrder(QString table_no,QWidget *parent = nullptr);
+
+    ~POS_AddOrder();
+
+private slots:
+    void addItemToOrder();
 
 private:
-    Ui::pos_addorder *ui;
+    Ui::POS_AddOrder *ui;
+
+    // Left section
+    QVBoxLayout *categoryLayout;
+    QGridLayout *itemsLayout;
+
+    // Right section
+    QLabel *orderInfoLabel;
+    QTableWidget *orderTable;
+    QPushButton *resetButton;
+    QPushButton *saveButton;
+
+    QMap<QString, int> orderItems;
+    void updateOrderTable();
 };
 
 #endif // POS_ADDORDER_H

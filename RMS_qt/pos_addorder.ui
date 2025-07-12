@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>pos_addorder</class>
- <widget class="QDialog" name="pos_addorder">
+ <class>POS_AddOrder</class>
+ <widget class="QDialog" name="POS_AddOrder">
   <property name="geometry">
    <rect>
     <x>0</x>

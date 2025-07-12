@@ -55,7 +55,9 @@ void pos::on_btn_place_order_clicked()
 {
     QString table_no = ui->pos_table_dropdown->currentText();
     qDebug() << "The table no. is: " << table_no;
-    ptraddorder = new pos_addorder(table_no,this);
+    ptraddorder = new POS_AddOrder(table_no);
+    ptraddorder->setAttribute(Qt::WA_DeleteOnClose); // Optional: Auto-delete on close
     ptraddorder->show();
+
 }
 
