@@ -28,36 +28,36 @@ class POS_AddOrder : public QWidget
     Q_OBJECT
 
 public:
-    explicit POS_AddOrder(QString table_no,QWidget *parent = nullptr);
-
+    explicit POS_AddOrder(QString table_no, QWidget *parent = nullptr);
     ~POS_AddOrder();
+
+protected:
+    bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
     void addItemToOrder();
     void decreaseItemQuantity();
 
-
 private:
     Ui::POS_AddOrder *ui;
 
-    // Left section
-    QVBoxLayout *categoryLayout;
+    // Layouts and widgets
     QGridLayout *itemsLayout;
-
-    // Right section
     QLabel *orderInfoLabel;
     QTableWidget *orderTable;
+    QLabel *subtotalLabel;
+    QLabel *serviceChargeLabel;
+    QLabel *totalLabel;
     QPushButton *resetButton;
     QPushButton *saveButton;
-    void updateOrderTable();
+
+    // Data
     QSqlDatabase db;
-
-    void loadItemsForCategory(const QString &category);
-    bool eventFilter(QObject *watched, QEvent *event) override;
-
     QMap<QString, OrderItem> orderItems;
 
-
+    // Logic
+    void updateOrderTable();
+    void loadItemsForCategory(const QString &category);
 };
 
 #endif // POS_ADDORDER_H

@@ -25,6 +25,25 @@ POS_AddOrder::POS_AddOrder(QString table_no,QWidget *parent)
         qDebug() << db.lastError();
     }
 
+    //db table status check
+    QSqlQuery query_table(db);
+    QString table_status, order_id;
+    query_table.prepare("SELECT status,order_id from tables where table_no = ?");
+    query_table.addBindValue(table_no);
+    if(query_table.exec()){
+        while(query_table.next()){
+            table_status = query_table.value(0).toString();
+            order_id= query_table.value(1).toString();
+        }
+
+        if(order_id.isEmpty()){
+            qDebug() << "Null";
+
+        }
+    }
+    else {
+        qDebug() << query_table.lastError();
+    }
     QHBoxLayout *mainLayout = new QHBoxLayout(this);
 
     // ==========================
@@ -122,17 +141,80 @@ POS_AddOrder::POS_AddOrder(QString table_no,QWidget *parent)
     // ==========================
     QVBoxLayout *rightContainer = new QVBoxLayout();
 
-    // Top: Order Info
-    orderInfoLabel = new QLabel("Table No: "+table_no+"\nOrder ID: "+"\n");
-    orderInfoLabel->setStyleSheet("font-weight: bold; font-size: 16px;");
+    // ---------------------------
+    // Order Info Header
+    // ---------------------------
+    orderInfoLabel = new QLabel("Table No: " + table_no + "\n\nOrder ID: " + order_id);
+    orderInfoLabel->setStyleSheet(R"(
+        font-size: 14px;
+        font-weight: bold;
+        padding: 6px;
+        margin-bottom: 15px;
+    )");
     rightContainer->addWidget(orderInfoLabel);
 
-    // Middle: Order Table
-    orderTable = new QTableWidget(0, 4);
-    orderTable->setHorizontalHeaderLabels({"Item", "No.", "Price", ""});
+    // ---------------------------
+    // Order List Scroll Area (custom, replaces QTableWidget)
+    // ---------------------------
+    // ---------------------------
+    // Order Table Setup
+    // ---------------------------
+    orderTable = new QTableWidget(0, 4, this);
+    orderTable->setHorizontalHeaderLabels({"Item", "No.", "Price", "Action"});
 
+    // Resize policy
     orderTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    orderTable->verticalHeader()->setVisible(false);
+    orderTable->setShowGrid(false);
+    orderTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    orderTable->setSelectionMode(QAbstractItemView::NoSelection);
+    orderTable->setFocusPolicy(Qt::NoFocus);
+    orderTable->setStyleSheet(R"(
+        QTableWidget {
+            background-color: #1e1e1e;
+            border: none;
+            font-size: 14px;
+        }
+        QHeaderView::section {
+            background-color: #2a2a2a;
+            font-weight: bold;
+            padding: 8px;
+            font-size: 14px;
+            border-bottom: 1px solid #ccc;
+        }
+        QTableWidget::item {
+            padding: 8px;
+        }
+        QTableWidget::item {
+            padding: 8px;
+            background-color: transparent;
+        }
+
+        QTableWidget::item:selected {
+            background-color: #444444;
+        }
+    )");
+
+    orderTable->setFixedHeight(300);  // or setSizePolicy if dynamic is needed
+    orderTable->verticalHeader()->setDefaultSectionSize(40);  // Fixed row height
+
     rightContainer->addWidget(orderTable);
+
+
+    // ---------------------------
+    // Subtotal, Service Charge, Total
+    // ---------------------------
+    subtotalLabel = new QLabel("Subtotal:\tRs. 0");
+    serviceChargeLabel = new QLabel("Service Charge:\tRs. 0");
+    totalLabel = new QLabel("<b>Total:\tRs. 0</b>");
+    subtotalLabel->setStyleSheet("font-size: 16px; margin-bottom: 2px;");
+    serviceChargeLabel->setStyleSheet("font-size: 12px; margin-bottom: 2px;");
+    totalLabel->setStyleSheet("font-size: 20px; font-weight:bold; margin-bottom: 6px;");
+
+    rightContainer->addWidget(subtotalLabel);
+    rightContainer->addWidget(serviceChargeLabel);
+    rightContainer->addWidget(totalLabel);
+
 
     // Bottom: Buttons
     QHBoxLayout *buttonLayout = new QHBoxLayout();
@@ -165,7 +247,7 @@ void POS_AddOrder::addItemToOrder()
 
 void POS_AddOrder::updateOrderTable()
 {
-    orderTable->setRowCount(0);
+    orderTable->setRowCount(0);  // Clear previous table rows
     double total = 0;
 
     for (auto it = orderItems.begin(); it != orderItems.end(); ++it) {
@@ -175,31 +257,42 @@ void POS_AddOrder::updateOrderTable()
         const QString &itemName = it.key();
         const OrderItem &item = it.value();
 
+        double subtotal = item.price * item.quantity;
+        total += subtotal;
+
         // Column 0: Item name
-        orderTable->setItem(row, 0, new QTableWidgetItem(itemName));
+        QTableWidgetItem *itemCell = new QTableWidgetItem(itemName);
+        itemCell->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
         // Column 1: Quantity
-        orderTable->setItem(row, 1, new QTableWidgetItem(QString::number(item.quantity)));
+        QTableWidgetItem *qtyCell = new QTableWidgetItem(QString::number(item.quantity));
+        qtyCell->setTextAlignment(Qt::AlignCenter);
 
-        // Column 2: Price (subtotal)
-        double subtotal = item.price * item.quantity;
-        orderTable->setItem(row, 2, new QTableWidgetItem(QString::number(subtotal)));
+        // Column 2: Price
+        QTableWidgetItem *priceCell = new QTableWidgetItem(QString::number(subtotal));
+        priceCell->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
-        // Column 3: Decrease (-) button
-        QPushButton *minusBtn = new QPushButton("Delete");
-        minusBtn->setStyleSheet("font-weight: bold; background-color: #000000; color: white; border-radius: 5px;");
-        orderTable->setCellWidget(row, 3, minusBtn);
+        // Column 3: Delete button
+        QPushButton *deleteBtn = new QPushButton("Delete");
+        deleteBtn->setProperty("itemName", itemName);
+        deleteBtn->setStyleSheet("background-color: black; color: white; border-radius: 5px;");
+        connect(deleteBtn, &QPushButton::clicked, this, &POS_AddOrder::decreaseItemQuantity);
 
-        // Store item name in button
-        minusBtn->setProperty("itemName", itemName);
-
-        connect(minusBtn, &QPushButton::clicked, this, &POS_AddOrder::decreaseItemQuantity);
-
-        total += subtotal;
+        // Add items to table
+        orderTable->setItem(row, 0, itemCell);
+        orderTable->setItem(row, 1, qtyCell);
+        orderTable->setItem(row, 2, priceCell);
+        orderTable->setCellWidget(row, 3, deleteBtn);
     }
 
-    orderInfoLabel->setText("Table No: 01\nOrder ID: 10745\nTotal: Rs. " + QString::number(total));
+    double serviceCharge = 100;
+    double finalTotal = total + serviceCharge;
+
+    subtotalLabel->setText("Subtotal:\tRs. " + QString::number(total));
+    serviceChargeLabel->setText("Service Charge:\tRs. " + QString::number(serviceCharge));
+    totalLabel->setText("<b>Total:\tRs. " + QString::number(finalTotal) + "</b>");
 }
+
 
 
 void POS_AddOrder::loadItemsForCategory(const QString &category) {
