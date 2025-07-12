@@ -2,6 +2,15 @@
 #define EDITMENUITEM_H
 
 #include <QDialog>
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QDebug>
+#include <QTableWidgetItem>
+#include <QPushButton>
+#include <QMessageBox>
+#include <QFileDialog>
+#include <QPixmap>
 
 namespace Ui {
 class editmenuitem;
@@ -22,6 +31,8 @@ private slots:
     void on_btn_save_clicked();
     void on_btn_reset_clicked();
 
+
+    void on_image_upload_clicked();
 
 private:
     Ui::editmenuitem *ui;
