@@ -1,13 +1,7 @@
 #include "addmenuitem.h"
 #include "ui_addmenuitem.h"
-#include <QSqlQuery>
-#include <QSqlError>
-#include <QMessageBox>
-#include <QDebug>
-#include <QSqlDatabase>
-#include <QIntValidator>
-#include <QDoubleValidator>
 
+QByteArray imageData;
 addmenuitem::addmenuitem(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::addmenuitem)
@@ -31,12 +25,14 @@ addmenuitem::addmenuitem(QWidget *parent)
     priceValidator->setNotation(QDoubleValidator::StandardNotation);
     ui->item_price->setValidator(priceValidator);
 
+
 }
 
 addmenuitem::~addmenuitem()
 {
     delete ui;
 }
+
 void addmenuitem::on_btn_save_clicked()
 {
     QString name = ui->item_name->text();
@@ -60,12 +56,13 @@ void addmenuitem::on_btn_save_clicked()
 
 
     QSqlQuery query;
-    query.prepare("INSERT INTO menu ([menu_item_id],[item_name], [category] ,[price],[description]) "
-                  "VALUES (:itemid, :name, :category, :price, :description)");
+    query.prepare("INSERT INTO menu ([menu_item_id],[item_name], [category] ,[price],[description],[image]) "
+                  "VALUES (:itemid, :name, :category, :price, :description, :image)");
     query.bindValue(":name", name);
     query.bindValue(":category", category);
     query.bindValue(":price", price);
     query.bindValue(":description", description);
+    query.bindValue(":image", imageData);
 
     if (!query.exec()) {
         QMessageBox::critical(this, "Database Error", query.lastError().text());
@@ -88,3 +85,21 @@ void addmenuitem::on_btn_reset_clicked()
     ui->item_price->clear();
     ui->item_description->clear();
 }
+
+void addmenuitem::on_image_upload_clicked()
+{
+
+    //Image
+    QString imagePath = QFileDialog::getOpenFileName(this, "Select Image", "", "Images (*.png *.jpg *.bmp)");
+    if (!imagePath.isEmpty()) {
+        QPixmap pix(imagePath);
+        ui->image_preview->setPixmap(pix.scaled(100, 100, Qt::KeepAspectRatio));  // Optional preview
+    }
+
+    QFile file(imagePath);
+    if (file.open(QIODevice::ReadOnly)) {
+        imageData = file.readAll();
+        file.close();
+    }
+}
+
