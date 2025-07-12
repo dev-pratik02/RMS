@@ -82,7 +82,7 @@
     <rect>
      <x>70</x>
      <y>190</y>
-     <width>109</width>
+     <width>133</width>
      <height>18</height>
     </rect>
    </property>
@@ -93,7 +93,7 @@
     </font>
    </property>
    <property name="text">
-    <string>NO OF ITEMS:</string>
+    <string>DISPLAY ORDER:</string>
    </property>
   </widget>
   <widget class="QLabel" name="DESCRIPTION">
@@ -144,7 +144,7 @@
     <string>CATEGORY NAME:</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="CANCEL">
+  <widget class="QPushButton" name="btn_reset">
    <property name="geometry">
     <rect>
      <x>208</x>
@@ -162,7 +162,7 @@
     </font>
    </property>
    <property name="text">
-    <string>CANCEL</string>
+    <string>RESET</string>
    </property>
   </widget>
   <widget class="QLabel" name="ITEMNAME">

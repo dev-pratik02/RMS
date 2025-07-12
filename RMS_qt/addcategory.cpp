@@ -17,6 +17,12 @@ addcategory::addcategory(QWidget *parent)
     // Validator for item_no (only integers)
     QIntValidator* itemNoValidator = new QIntValidator(1, 999, this);  // Adjust range as needed
     ui->item_no->setValidator(itemNoValidator);
+
+    ui->category_name->setPlaceholderText("Enter Category Name");
+    ui->category_id->setPlaceholderText("Generated Automatically");
+    ui->item_no->setPlaceholderText("Enter No Of Items");
+    ui->category_description->setPlaceholderText("Enter Description");
+    ui->category_id->setReadOnly(true);
 }
 
 addcategory::~addcategory()
@@ -27,20 +33,18 @@ addcategory::~addcategory()
 void addcategory::on_btn_add_clicked()
 {
     QString name = ui->category_name->text().trimmed();
-    QString id = ui->category_id->text().trimmed();
     QString num = ui->item_no->text().trimmed();
     QString desc = ui->category_description->toPlainText().trimmed();
 
-    if (name.isEmpty() || id.isEmpty() || num.isEmpty() || desc.isEmpty()) {
+    if (name.isEmpty()|| num.isEmpty()) {
         QMessageBox::warning(this, "Input Error", "Please fill in all fields.");
         return;
     }
 
     QSqlQuery query;
-    query.prepare("INSERT INTO category ([category_name], [category_id], [display_order], [description]) "
-                  "VALUES (:name, :id, :num, :desc)");
+    query.prepare("INSERT INTO category ([category_name], [display_order], [description]) "
+                  "VALUES (:name,:num, :desc)");
     query.bindValue(":name", name);
-    query.bindValue(":id", id);
     query.bindValue(":num", num);
     query.bindValue(":desc", desc);
 
@@ -53,6 +57,14 @@ void addcategory::on_btn_add_clicked()
     accept();
     emit categoryUpdated();
 
+}
+
+void addcategory::on_btn_reset_clicked()
+{
+    ui->category_name->clear();
+    ui->category_id->clear();
+    ui->item_no->clear();
+    ui->category_description->clear();
 }
 
 void addcategory::setValues(QString name, QString id, QString itemCount, QString description)

@@ -18,6 +18,8 @@ editcategory::editcategory(QString name, QString id, QString itemCount, QString 
     ui->item_no->setText(itemCount);
      ui->category_description->setPlainText(description);
 
+    ui->category_id->setReadOnly(true);
+
 
      // Validator for category_id (integers only)
      QIntValidator *idValidator = new QIntValidator(1, 9999, this); // Customize range as needed
@@ -60,4 +62,10 @@ void editcategory::on_btn_edit_clicked()
     QMessageBox::information(this, "Updated", "Category updated successfully.");
     emit categoryUpdated();
     accept();
+}
+void editcategory::on_btn_reset_clicked()
+{
+    ui->category_name->clear();
+    ui->item_no->clear();
+    ui->category_description->clear();
 }

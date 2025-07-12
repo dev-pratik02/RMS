@@ -14,10 +14,12 @@ addmenuitem::addmenuitem(QWidget *parent)
 {
     ui->setupUi(this);
 
-    ui->item_id->setPlaceholderText("Enter Item ID");
+    ui->item_id->setPlaceholderText("Generated Automatically");
     ui->item_name->setPlaceholderText("Enter Item Name");
     ui->item_price->setPlaceholderText("Enter Price");
     ui->item_description->setPlaceholderText("Enter Description");
+    ui->item_id->setReadOnly(true);
+
 
     // Validator for item_id (only integers)
     QIntValidator *idValidator = new QIntValidator(1, 9999, this); // Adjust range if needed
@@ -36,12 +38,11 @@ addmenuitem::~addmenuitem()
 }
 void addmenuitem::on_btn_save_clicked()
 {
-    QString itemid = ui->item_id->text();
     QString name = ui->item_name->text();
     QString price = ui->item_price->text();
     QString description = ui->item_description->toPlainText();
 
-    if (itemid.isEmpty() || name.isEmpty() || price.isEmpty()) {
+    if ( name.isEmpty() || price.isEmpty()) {
         QMessageBox::warning(this, "Input Error", "Please fill all required fields.");
         return;
     }
@@ -59,7 +60,6 @@ void addmenuitem::on_btn_save_clicked()
     QSqlQuery query;
     query.prepare("INSERT INTO menu ([menu_item_id],[item_name],[price],[description]) "
                   "VALUES (:itemid, :name, :price, :description)");
-    query.bindValue(":itemid", itemid);
     query.bindValue(":name", name);
     query.bindValue(":price", price);
     query.bindValue(":description", description);
@@ -77,4 +77,11 @@ void addmenuitem::on_btn_save_clicked()
     }
     emit itemSaved();
     this->accept();
+}
+void addmenuitem::on_btn_reset_clicked()
+{
+    ui->item_id->clear();
+    ui->item_name->clear();
+    ui->item_price->clear();
+    ui->item_description->clear();
 }

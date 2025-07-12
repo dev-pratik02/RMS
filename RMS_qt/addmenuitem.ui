@@ -158,7 +158,7 @@
     <string>ADD</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="CANCEL">
+  <widget class="QPushButton" name="btn_reset">
    <property name="geometry">
     <rect>
      <x>220</x>
@@ -176,7 +176,7 @@
     </font>
    </property>
    <property name="text">
-    <string>CANCEL</string>
+    <string>RESET</string>
    </property>
   </widget>
   <widget class="QLabel" name="label">

@@ -20,6 +20,7 @@ signals:
 
 private slots:
     void on_btn_save_clicked();
+    void on_btn_reset_clicked();
 
 private:
     Ui::addmenuitem *ui;
