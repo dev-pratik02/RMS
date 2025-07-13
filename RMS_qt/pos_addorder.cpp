@@ -37,11 +37,31 @@ POS_AddOrder::POS_AddOrder(QString table_no, QWidget *parent)
             table_status = query_table.value(0).toString();
             order_id = query_table.value(1).toString();
         }
-        if (order_id.isEmpty()) {
-            qDebug() << "Null";
-        }
     } else {
         qDebug() << query_table.lastError();
+    }
+
+
+    //checking if the table currently has any orders or not
+    if(!order_id.isNull()){
+        qDebug() << "The table: " << table_no << "has order: " <<order_id << "and the status is: " << table_status;
+    }
+    else{
+        qDebug() << "The order is Null";
+        qDebug() << "The table: " << table_no << "has order: " <<order_id << "and the status is: " << table_status;
+
+        QSqlQuery seq(db);
+        seq.prepare("SELECT seq from sqlite_sequence where name= 'orders'");
+        if(seq.exec()){
+            while(seq.next()){
+                int sequence= seq.value(0).toInt();
+                qDebug() << "the seq is " << sequence;
+                order_id = QString::number(sequence+1);
+            }
+        }
+        else{
+            qDebug() << "the seq could not be fetched \n " << seq.lastError();
+        }
     }
 
     //Assigning value to member data functions
@@ -412,6 +432,31 @@ void POS_AddOrder::sendOrder()
 
     qDebug() << "Sending order for Table:" << m_tableNo << "Order ID:" << m_orderId;
 
+
+    QSqlQuery updateTables(db);
+    updateTables.prepare("UPDATE tables set order_id = ?");
+    updateTables.addBindValue(m_orderId);
+
+    if(updateTables.exec()){
+        qDebug() << "Added order_id in tables after clicking send button";
+    }
+    else {
+        qDebug() << "could not update order id in  tables \n " << updateTables.lastError();
+    }
+
+
+    QSqlQuery updateOrders(db);
+    updateOrders.prepare("INSERT INTO orders(table_no,order_id) VALUES('?','?')");
+    updateOrders.addBindValue(m_tableNo);
+    updateOrders.addBindValue(m_orderId);
+
+    if(updateOrders.exec()){
+        qDebug() << "Added new orders record after clicking send button";
+    }
+    else{
+        qDebug() << "Could not insert new order record \n " << updateOrders.lastError();
+    }
+
     // Iterate over orderItems
     for (auto it = orderItems.begin(); it != orderItems.end(); ++it) {
         const QString &itemName = it.key();
@@ -425,6 +470,28 @@ void POS_AddOrder::sendOrder()
 
         // Use these to insert into DB or send to server
 
+        QSqlQuery insertQuery(db);
+        insertQuery.prepare("INSERT INTO order_items (order_id, menu_item_id, quantity) VALUES (?, ?, ?)");
+        insertQuery.addBindValue(m_orderId);
+        insertQuery.addBindValue(menuItemId);
+        insertQuery.addBindValue(quantity);
+        if (insertQuery.exec()) {
+            qDebug() << "Insertion completed successfully";
+        }
+        else{
+            qDebug() << "Insert failed:" << insertQuery.lastError();
+            return;
+        }
+    }
+
+    QSqlQuery updateQuery(db);
+    updateQuery.prepare("UPDATE orders set status = 'Preparing' where order_id = ?");
+    updateQuery.addBindValue(m_orderId);
+    if(updateQuery.exec()){
+        qDebug() << "updated orders successfully; set new status";
+    }
+    else {
+        qDebug() << "Could not change order status: \n" << updateQuery.lastError();
     }
 }
 
