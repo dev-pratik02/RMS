@@ -41,9 +41,6 @@ login_page::login_page(QWidget *parent)
         qDebug() << "Failed to load chef hat image";
     }
 
-
-    setupPasswordToggle(ui->input_password);
-
     QString hashed = hashPassword("mypassword");
 
 }

@@ -161,8 +161,8 @@ color: white;
   <widget class="QLabel" name="label_pic">
    <property name="geometry">
     <rect>
-     <x>372</x>
-     <y>-1</y>
+     <x>360</x>
+     <y>30</y>
      <width>421</width>
      <height>571</height>
     </rect>
@@ -187,7 +187,7 @@ color: white;
   <widget class="QLabel" name="label_forgotpass">
    <property name="geometry">
     <rect>
-     <x>120</x>
+     <x>170</x>
      <y>430</y>
      <width>96</width>
      <height>16</height>
@@ -200,7 +200,7 @@ color: white;
   <widget class="QLabel" name="label_signup">
    <property name="geometry">
     <rect>
-     <x>230</x>
+     <x>200</x>
      <y>510</y>
      <width>42</width>
      <height>16</height>
@@ -210,17 +210,17 @@ color: white;
     <string>Sign Up</string>
    </property>
   </widget>
-  <widget class="QToolButton" name="eyeButton">
+  <widget class="QToolButton" name="eyeButton_2">
    <property name="geometry">
     <rect>
-     <x>296</x>
+     <x>300</x>
      <y>395</y>
      <width>20</width>
      <height>21</height>
     </rect>
    </property>
    <property name="text">
-    <string>...</string>
+    <string/>
    </property>
   </widget>
  </widget>

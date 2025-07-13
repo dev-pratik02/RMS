@@ -35,7 +35,7 @@ public:
     QLabel *label_pic1;
     QLabel *label_forgotpass;
     QLabel *label_signup;
-    QToolButton *eyeButton;
+    QToolButton *eyeButton_2;
 
     void setupUi(QDialog *login_page)
     {
@@ -87,19 +87,19 @@ public:
         label_4->setGeometry(QRect(190, 570, 63, 20));
         label_pic = new QLabel(login_page);
         label_pic->setObjectName("label_pic");
-        label_pic->setGeometry(QRect(372, -1, 421, 571));
+        label_pic->setGeometry(QRect(360, 30, 421, 571));
         label_pic1 = new QLabel(login_page);
         label_pic1->setObjectName("label_pic1");
         label_pic1->setGeometry(QRect(132, 20, 161, 101));
         label_forgotpass = new QLabel(login_page);
         label_forgotpass->setObjectName("label_forgotpass");
-        label_forgotpass->setGeometry(QRect(120, 430, 96, 16));
+        label_forgotpass->setGeometry(QRect(170, 430, 96, 16));
         label_signup = new QLabel(login_page);
         label_signup->setObjectName("label_signup");
-        label_signup->setGeometry(QRect(230, 510, 42, 16));
-        eyeButton = new QToolButton(login_page);
-        eyeButton->setObjectName("eyeButton");
-        eyeButton->setGeometry(QRect(296, 395, 20, 21));
+        label_signup->setGeometry(QRect(200, 510, 42, 16));
+        eyeButton_2 = new QToolButton(login_page);
+        eyeButton_2->setObjectName("eyeButton_2");
+        eyeButton_2->setGeometry(QRect(300, 395, 20, 21));
 
         retranslateUi(login_page);
 
@@ -120,7 +120,7 @@ public:
         label_pic1->setText(QString());
         label_forgotpass->setText(QCoreApplication::translate("login_page", "Forget Password ?", nullptr));
         label_signup->setText(QCoreApplication::translate("login_page", "Sign Up", nullptr));
-        eyeButton->setText(QCoreApplication::translate("login_page", "...", nullptr));
+        eyeButton_2->setText(QString());
     } // retranslateUi
 
 };

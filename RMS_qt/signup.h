@@ -22,6 +22,8 @@ private slots:
 private:
     Ui::signup *ui;
     bool openDatabase();
+    bool passwordVisible = false;
+    void setupEyeButtone();
 };
 
 #endif // SIGNUP_H

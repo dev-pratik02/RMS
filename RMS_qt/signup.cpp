@@ -5,13 +5,17 @@
 #include <QSqlQuery>
 #include <QMessageBox>
 #include <QSqlError>
+#include <QLineEdit>
 #include <QDebug>
 #include <QToolButton>
+#include <QIcon>
 #include <QStyle>
 #include <QCryptographicHash>
 #include <QRegularExpressionValidator>
 #include <QIntValidator>
+#include <QEvent>
 
+void setupEyeButton(QLineEdit *passwordEdit);
 
 signup::signup(QWidget *parent)
     : QDialog(parent)
@@ -26,12 +30,40 @@ signup::signup(QWidget *parent)
     ui->line_name->setValidator(nameValidator);
 
     QString hashed = hashPassword("mypassword");
+    setupEyeButton(ui->line_password);
+    setupEyeButton(ui->line_confirmpass);
+    qDebug() << "line_password valid:" << ui->line_password;
+    qDebug() << "line_confirmpass valid:" << ui->line_confirmpass;
+
 
     if (!isValidEmail(ui->line_email->text())) {
         // show warning
     }
 
 }
+class ResizeFilter : public QObject {
+public:
+    QToolButton *button;
+    QLineEdit *lineEdit;
+    int frameWidth;
+    int buttonWidth;
+
+    ResizeFilter(QToolButton *btn, QLineEdit *le, int fw, int bw)
+        : QObject(le), button(btn), lineEdit(le), frameWidth(fw), buttonWidth(bw) {}
+
+protected:
+    bool eventFilter(QObject *obj, QEvent *event) override {
+        if (obj == lineEdit && event->type() == QEvent::Resize) {
+            button->setGeometry(
+                lineEdit->rect().right() - buttonWidth - frameWidth,
+                (lineEdit->rect().height() - button->sizeHint().height()) / 2,
+                buttonWidth,
+                button->sizeHint().height()
+                );
+        }
+        return QObject::eventFilter(obj, event);
+    }
+};
 
 signup::~signup()
 {
@@ -95,4 +127,59 @@ void signup::on_btn_confirm_clicked()
     }
 
     QSqlDatabase::database().close();
+}
+
+void setupEyeButton(QLineEdit *passwordEdit) {
+    // Set echo mode to Password
+    passwordEdit->setEchoMode(QLineEdit::Password);
+
+    // Create eye button
+    QToolButton *eyeButton = new QToolButton(passwordEdit);
+    QPixmap pixmap("C:/Users/Swift/RMS/RMS-assets/eye.png");
+
+    if (pixmap.isNull()) {
+        qDebug() << "Eye image not found.";
+    } else {
+        eyeButton->setIcon(QIcon(pixmap));
+    }
+
+    eyeButton->setCursor(Qt::PointingHandCursor);
+    eyeButton->setStyleSheet("QToolButton { border: none; padding: 0px; }");
+
+    // Adjust margins to make space for the button
+    int frameWidth = passwordEdit->style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
+    int buttonWidth = eyeButton->sizeHint().width();
+    passwordEdit->setTextMargins(0, 0, buttonWidth + frameWidth, 0);
+
+    // Position button inside the QLineEdit
+    eyeButton->setGeometry(
+        passwordEdit->rect().right() - buttonWidth - frameWidth,
+        (passwordEdit->rect().height() - eyeButton->sizeHint().height()) / 2,
+        buttonWidth,
+        eyeButton->sizeHint().height()
+        );
+    eyeButton->show();
+
+    // Handle press to show password
+    QObject::connect(eyeButton, &QToolButton::pressed, [=]() {
+        passwordEdit->setEchoMode(QLineEdit::Normal);
+    });
+
+    QObject::connect(eyeButton, &QToolButton::released, [=]() {
+        passwordEdit->setEchoMode(QLineEdit::Password);
+    });
+
+    // Reposition on resize
+    QObject::connect(passwordEdit, &QLineEdit::textChanged, [=]() {
+        eyeButton->setGeometry(
+            passwordEdit->rect().right() - buttonWidth - frameWidth,
+            (passwordEdit->rect().height() - eyeButton->sizeHint().height()) / 2,
+            buttonWidth,
+            eyeButton->sizeHint().height()
+            );
+    qDebug() << "Setting up eye button for" << passwordEdit->objectName();
+
+    });
+    ResizeFilter *filter = new ResizeFilter(eyeButton, passwordEdit, frameWidth, buttonWidth);
+    passwordEdit->installEventFilter(filter);
 }

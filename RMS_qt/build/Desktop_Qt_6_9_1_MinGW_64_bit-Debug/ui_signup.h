@@ -42,7 +42,6 @@ public:
     QPushButton *btn_confirm;
     QDateEdit *date_dob;
     QToolButton *eyeButton;
-    QToolButton *eyeButton_2;
 
     void setupUi(QDialog *signup)
     {
@@ -127,9 +126,6 @@ public:
         eyeButton = new QToolButton(signup);
         eyeButton->setObjectName("eyeButton");
         eyeButton->setGeometry(QRect(410, 346, 20, 20));
-        eyeButton_2 = new QToolButton(signup);
-        eyeButton_2->setObjectName("eyeButton_2");
-        eyeButton_2->setGeometry(QRect(410, 400, 20, 21));
 
         retranslateUi(signup);
 
@@ -147,8 +143,7 @@ public:
         label_6->setText(QCoreApplication::translate("signup", "Password:", nullptr));
         label_7->setText(QCoreApplication::translate("signup", "Confirm Password:", nullptr));
         btn_confirm->setText(QCoreApplication::translate("signup", "Confirm", nullptr));
-        eyeButton->setText(QCoreApplication::translate("signup", "...", nullptr));
-        eyeButton_2->setText(QCoreApplication::translate("signup", "...", nullptr));
+        eyeButton->setText(QString());
     } // retranslateUi
 
 };
