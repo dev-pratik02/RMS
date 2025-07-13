@@ -14,6 +14,7 @@
 #include <QHeaderView>
 #include <QPixmap>
 #include <QMessageBox>
+#include <QInputDialog>
 
 namespace Ui {
 class POS_AddOrder;
@@ -40,6 +41,7 @@ private slots:
     void addItemToOrder();
     void decreaseItemQuantity();
     void sendOrder();
+    void onAddNotesClicked();
 
 
 private:
@@ -60,6 +62,7 @@ private:
     QString m_tableNo;
     QString m_orderId;
     QMap<QString, OrderItem> orderItems;
+    QString notes;  // To store the notes text
 
     // Logic
     void updateOrderTable();

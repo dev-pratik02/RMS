@@ -169,6 +169,10 @@ POS_AddOrder::POS_AddOrder(QString table_no, QWidget *parent)
     )");
     rightContainer->addWidget(orderInfoLabel,0);
 
+    QPushButton *btnAddNotes = new QPushButton("Add Notes");
+    rightContainer->addWidget(btnAddNotes);
+    connect(btnAddNotes, &QPushButton::clicked, this, &POS_AddOrder::onAddNotesClicked);
+
     // Create table to show ordered items
     orderTable = new QTableWidget(0, 4, this);
     orderTable->setHorizontalHeaderLabels({"Item", "No.", "Price", "Action"});
@@ -463,10 +467,11 @@ void POS_AddOrder::sendOrder()
     if (!orderExists) {
         // 1. Insert into orders table
         QSqlQuery insertOrder(db);
-        insertOrder.prepare("INSERT INTO orders(order_id, table_no, status) VALUES (?, ?, ?)");
+        insertOrder.prepare("INSERT INTO orders(order_id, table_no, status, notes) VALUES (?, ?, ?,?)");
         insertOrder.addBindValue(m_orderId);
         insertOrder.addBindValue(m_tableNo);
         insertOrder.addBindValue("Preparing");
+        insertOrder.addBindValue(notes);
 
         if (!insertOrder.exec()) {
             qDebug() << "Failed to insert into orders: " << insertOrder.lastError();
@@ -573,4 +578,17 @@ bool POS_AddOrder::eventFilter(QObject *watched, QEvent *event)
         return true;
     }
     return QWidget::eventFilter(watched, event);
+}
+
+void POS_AddOrder::onAddNotesClicked()
+{
+    bool ok;
+    QString text = QInputDialog::getMultiLineText(this, "Add Notes",
+                                                  "Enter notes:",
+                                                  notes,  // prefill with existing notes if any
+                                                  &ok);
+    if (ok) {
+        notes = text;  // Save the entered notes in the member variable
+        QMessageBox::information(this, "Notes Saved", "Notes have been saved.");
+    }
 }
