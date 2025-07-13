@@ -242,7 +242,7 @@ POS_AddOrder::POS_AddOrder(QString table_no, QWidget *parent)
     connect(saveButton, &QPushButton::clicked, this, &POS_AddOrder::sendOrder);
 
     // Set individual styles
-        resetButton->setStyleSheet(R"(
+    resetButton->setStyleSheet(R"(
         QPushButton {
             background-color: #6C6868;
             color: white;
@@ -429,73 +429,112 @@ void POS_AddOrder::loadItemsForCategory(const QString &category)
 void POS_AddOrder::sendOrder()
 {
     qDebug() << "Send Order button clicked";
-
     qDebug() << "Sending order for Table:" << m_tableNo << "Order ID:" << m_orderId;
 
-
-    QSqlQuery updateTables(db);
-    updateTables.prepare("UPDATE tables set order_id = ?");
-    updateTables.addBindValue(m_orderId);
-
-    if(updateTables.exec()){
-        qDebug() << "Added order_id in tables after clicking send button";
-    }
-    else {
-        qDebug() << "could not update order id in  tables \n " << updateTables.lastError();
+    // Early return if order is empty
+    if (orderItems.isEmpty()) {
+        QMessageBox::warning(this, "Empty Order", "Please add items before sending the order.");
+        return;
     }
 
 
-    QSqlQuery updateOrders(db);
-    updateOrders.prepare("INSERT INTO orders(table_no,order_id) VALUES('?','?')");
-    updateOrders.addBindValue(m_tableNo);
-    updateOrders.addBindValue(m_orderId);
+    //  Confirmation dialog
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "Confirm Send Order",
+                                  "Are you sure you want to send this order?",
+                                  QMessageBox::Yes | QMessageBox::No);
 
-    if(updateOrders.exec()){
-        qDebug() << "Added new orders record after clicking send button";
-    }
-    else{
-        qDebug() << "Could not insert new order record \n " << updateOrders.lastError();
+    if (reply != QMessageBox::Yes) {
+        qDebug() << "User cancelled the order send.";
+        return;  // Exit if user chooses No
     }
 
-    // Iterate over orderItems
+
+    bool orderExists = false;
+
+    // Check if order already exists in orders table
+    QSqlQuery checkOrder(db);
+    checkOrder.prepare("SELECT COUNT(*) FROM orders WHERE order_id = ?");
+    checkOrder.addBindValue(m_orderId);
+    if (checkOrder.exec() && checkOrder.next()) {
+        orderExists = (checkOrder.value(0).toInt() > 0);
+    }
+
+    if (!orderExists) {
+        // 1. Insert into orders table
+        QSqlQuery insertOrder(db);
+        insertOrder.prepare("INSERT INTO orders(order_id, table_no, status) VALUES (?, ?, ?)");
+        insertOrder.addBindValue(m_orderId);
+        insertOrder.addBindValue(m_tableNo);
+        insertOrder.addBindValue("Preparing");
+
+        if (!insertOrder.exec()) {
+            qDebug() << "Failed to insert into orders: " << insertOrder.lastError();
+            return;
+        }
+
+        // 2. Update tables table with new order_id
+        QSqlQuery updateTable(db);
+        updateTable.prepare("UPDATE tables SET order_id = ? WHERE table_no = ?");
+        updateTable.addBindValue(m_orderId);
+        updateTable.addBindValue(m_tableNo);
+
+        if (!updateTable.exec()) {
+            qDebug() << "Failed to update table with order_id: " << updateTable.lastError();
+            return;
+        }
+
+        qDebug() << "Inserted new order and linked to table";
+
+        QSqlQuery updateTableStatus(db);
+        updateTableStatus.prepare("UPDATE tables SET status = 'occupied' WHERE table_no = ?");
+        updateTableStatus.addBindValue(m_tableNo);
+
+        if (!updateTableStatus.exec()) {
+            qDebug() << "Failed to update table status: " << updateTableStatus.lastError();
+            return;
+        }
+
+        qDebug() << "Updated table status";
+
+    } else {
+        qDebug() << "Appending items to existing order";
+    }
+
+    // Insert order items (whether new or existing order)
     for (auto it = orderItems.begin(); it != orderItems.end(); ++it) {
         const QString &itemName = it.key();
         const OrderItem &item = it.value();
 
-        int menuItemId = item.id;
-        int quantity = item.quantity;
-        double unit_price = item.price;
+        QSqlQuery insertItem(db);
+        insertItem.prepare(R"(
+            INSERT INTO order_items (order_id, menu_item_id, quantity)
+            VALUES (?, ?, ?)
+        )");
+        insertItem.addBindValue(m_orderId);
+        insertItem.addBindValue(item.id);
+        insertItem.addBindValue(item.quantity);
 
-        qDebug() << "ID:" << menuItemId << ", Item:" << itemName << ", Qty:" << quantity << ", Price:" << unit_price;
-
-        // Use these to insert into DB or send to server
-
-        QSqlQuery insertQuery(db);
-        insertQuery.prepare("INSERT INTO order_items (order_id, menu_item_id, quantity) VALUES (?, ?, ?)");
-        insertQuery.addBindValue(m_orderId);
-        insertQuery.addBindValue(menuItemId);
-        insertQuery.addBindValue(quantity);
-        if (insertQuery.exec()) {
-            qDebug() << "Insertion completed successfully";
-        }
-        else{
-            qDebug() << "Insert failed:" << insertQuery.lastError();
+        if (!insertItem.exec()) {
+            qDebug() << "Failed to insert item: " << insertItem.lastError();
             return;
         }
     }
 
-    QSqlQuery updateQuery(db);
-    updateQuery.prepare("UPDATE orders set status = 'Preparing' where order_id = ?");
-    updateQuery.addBindValue(m_orderId);
-    if(updateQuery.exec()){
-        qDebug() << "updated orders successfully; set new status";
-    }
-    else {
-        qDebug() << "Could not change order status: \n" << updateQuery.lastError();
-    }
+    // Optional: update status again if needed
+    QSqlQuery updateStatus(db);
+    updateStatus.prepare("UPDATE orders SET status = 'Preparing' WHERE order_id = ?");
+    updateStatus.addBindValue(m_orderId);
+    updateStatus.exec();
+
+    qDebug() << "Order submission completed";
+    // Final UI updates after successful submission
+    QMessageBox::information(this, "Order Sent", "The order has been successfully sent to the kitchen.");
+    orderItems.clear();
+    updateOrderTable();
+    this->close();  // Optional: Close window after sending
+
 }
-
-
 
 // Decreases the quantity of an item or removes it from the order
 void POS_AddOrder::decreaseItemQuantity()

@@ -13,6 +13,7 @@
 #include <QButtonGroup>
 #include <QHeaderView>
 #include <QPixmap>
+#include <QMessageBox>
 
 namespace Ui {
 class POS_AddOrder;
