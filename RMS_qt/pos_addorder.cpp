@@ -1,11 +1,10 @@
 #include "pos_addorder.h"
 #include "ui_pos_addorder.h"
 #include "mainwindow.h"
-
-
+#include "databasemanager.h"
 // Constructor for POS_AddOrder
-POS_AddOrder::POS_AddOrder(QString table_no, QWidget *parent)
-    : QWidget(parent), ui(nullptr)
+POS_AddOrder::POS_AddOrder(QString table_no,class pos *posWindow, MainWindow *mainWindow, QWidget *parent)
+    : QWidget(parent), ui(nullptr), m_posWindow(posWindow), m_mainWindow(mainWindow)
 {
     // Set window title and size
     setWindowTitle("POS - Add Order");
@@ -13,62 +12,11 @@ POS_AddOrder::POS_AddOrder(QString table_no, QWidget *parent)
     resize(1280, 800);
     qDebug() << "The received table no. is " << table_no;
 
-    // Setup database connection
-    if (!QSqlDatabase::contains("qt_sql_default_connection")) {
-        db = QSqlDatabase::addDatabase("QSQLITE");
-        db.setDatabaseName("/Users/pratik/Programming/RMS/RMS_qt/RmsApp.db");
-    } else {
-        db = QSqlDatabase::database("qt_sql_default_connection");
-    }
+    QSqlDatabase mydb = DatabaseManager::getDatabase();
 
-    // Open database and check status
-    if (db.open()) {
-        qDebug() << "Database connected successfully by POS";
-    } else {
-        qDebug() << db.lastError();
-    }
-
-    // Query the table's current status and order_id
-    QSqlQuery query_table(db);
-    QString table_status, order_id;
-    query_table.prepare("SELECT status,order_id from tables where table_no = ?");
-    query_table.addBindValue(table_no);
-
-    if (query_table.exec()) {
-        while (query_table.next()) {
-            table_status = query_table.value(0).toString();
-            order_id = query_table.value(1).toString();
-        }
-    } else {
-        qDebug() << query_table.lastError();
-    }
+    db = mydb;
 
 
-    //checking if the table currently has any orders or not
-    if(!order_id.isNull()){
-        qDebug() << "The table: " << table_no << "has order: " <<order_id << "and the status is: " << table_status;
-    }
-    else{
-        qDebug() << "The order is Null";
-        qDebug() << "The table: " << table_no << "has order: " <<order_id << "and the status is: " << table_status;
-
-        QSqlQuery seq(db);
-        seq.prepare("SELECT seq from sqlite_sequence where name= 'orders'");
-        if(seq.exec()){
-            while(seq.next()){
-                int sequence= seq.value(0).toInt();
-                qDebug() << "the seq is " << sequence;
-                order_id = QString::number(sequence+1);
-            }
-        }
-        else{
-            qDebug() << "the seq could not be fetched \n " << seq.lastError();
-        }
-    }
-
-    //Assigning value to member data functions
-    m_orderId = order_id;
-    m_tableNo = table_no;
 
     // Main layout of the screen (horizontal split)
     QHBoxLayout *mainLayout = new QHBoxLayout(this);
@@ -86,60 +34,6 @@ POS_AddOrder::POS_AddOrder(QString table_no, QWidget *parent)
     QButtonGroup *categoryGroup = new QButtonGroup(this);
     categoryGroup->setExclusive(true);
 
-    // Fetch categories from the database
-    QSqlQuery query(db);
-    query.prepare("SELECT category_name FROM category ORDER BY display_order ASC");
-
-    QPushButton *firstCategoryBtn = nullptr;
-
-    if (query.exec()) {
-        qDebug() << "Successfully accessed categories";
-
-        while (query.next()) {
-            QString categoryName = query.value(0).toString();
-
-            // Create button for each category
-            QPushButton *btn = new QPushButton(categoryName);
-            btn->setFixedSize(120, 40);
-            btn->setCheckable(true);
-            categoryLayout->addWidget(btn);
-            categoryGroup->addButton(btn);
-
-            // Set category button styles
-            btn->setStyleSheet(R"(
-                QPushButton {
-                    background-color: #000000;
-                    color: white;
-                    border-radius: 8px;
-                }
-                QPushButton:checked {
-                    background-color: #0078d7;
-                    color: white;
-                    font-weight: bold;
-                }
-            )");
-
-            // Connect category button click to item loading
-            connect(btn, &QPushButton::clicked, this, [=]() {
-                qDebug() << "Category clicked:" << categoryName;
-                loadItemsForCategory(categoryName);
-            });
-
-            // Remember the first button for default selection
-            if (!firstCategoryBtn) {
-                firstCategoryBtn = btn;
-            }
-        }
-
-        // Auto-select and load first category
-        if (firstCategoryBtn) {
-            firstCategoryBtn->setChecked(true);
-            emit firstCategoryBtn->clicked();
-        }
-    } else {
-        qDebug() << "Could not access categories";
-        qDebug() << query.lastError();
-    }
 
     // Scroll area for categories
     QScrollArea *categoryScroll = new QScrollArea();
@@ -162,6 +56,7 @@ POS_AddOrder::POS_AddOrder(QString table_no, QWidget *parent)
     QVBoxLayout *rightContainer = new QVBoxLayout();
 
     // Display table and order ID information
+    QString table_status, order_id;
     orderInfoLabel = new QLabel("Table No: " + table_no + "\n\nOrder ID: " + order_id);
     orderInfoLabel->setStyleSheet(R"(
         font-size: 14px;
@@ -282,7 +177,160 @@ POS_AddOrder::POS_AddOrder(QString table_no, QWidget *parent)
     // Combine both containers into the main layout
     mainLayout->addLayout(leftContainer, 3); // weight 3
     mainLayout->addLayout(rightContainer, 2); // weight 2
+
+
+    // ========== QUERY 1: Fetching categories ==========
+    if (db.transaction()) {
+        QSqlQuery query(db);
+        query.prepare("SELECT category_name FROM category ORDER BY display_order ASC");
+
+        QPushButton *firstCategoryBtn = nullptr;
+
+        if (query.exec()) {
+            qDebug() << "Successfully accessed categories";
+
+            while (query.next()) {
+                QString categoryName = query.value(0).toString();
+
+                QPushButton *btn = new QPushButton(categoryName);
+                btn->setFixedSize(120, 40);
+                btn->setCheckable(true);
+                categoryLayout->addWidget(btn);
+                categoryGroup->addButton(btn);
+
+                btn->setStyleSheet(R"(
+                QPushButton {
+                    background-color: #000000;
+                    color: white;
+                    border-radius: 8px;
+                }
+                QPushButton:checked {
+                    background-color: #0078d7;
+                    color: white;
+                    font-weight: bold;
+                }
+            )");
+
+                connect(btn, &QPushButton::clicked, this, [=]() {
+                    qDebug() << "Category clicked:" << categoryName;
+                    loadItemsForCategory(categoryName);
+                });
+
+                if (!firstCategoryBtn) {
+                    firstCategoryBtn = btn;
+                }
+            }
+
+            if (firstCategoryBtn) {
+                firstCategoryBtn->setChecked(true);
+                emit firstCategoryBtn->clicked();
+            }
+
+            db.commit();
+        } else {
+            qDebug() << "Could not access categories";
+            qDebug() << query.lastError();
+            db.rollback();
+        }
+    } else {
+        qDebug() << "Failed to start transaction for categories";
+    }
+
+
+
+    // ========== QUERY 2: Checking table status + generating order ID ==========
+    if (db.transaction()) {
+        QSqlQuery query_table(db);
+        query_table.prepare("SELECT status, order_id FROM tables WHERE table_no = ?");
+        query_table.addBindValue(table_no);
+
+        qDebug() << "Running DB command to get status and order id";
+        if (query_table.exec()) {
+            while (query_table.next()) {
+                table_status = query_table.value(0).toString();
+                order_id = query_table.value(1).toString();
+            }
+            qDebug() << "Successfully accessed order id and table status";
+        } else {
+            qDebug() << query_table.lastError();
+            db.rollback();
+            return; // Don't continue if we can't even get table status
+        }
+
+        if (!order_id.isNull()) {
+            qDebug() << "Just before the loadExistingOrderItems function";
+            loadExistingOrderItems(order_id);
+            qDebug() << "The table: " << table_no << " has order: " << order_id << " and the status is: " << table_status;
+        } else {
+            qDebug() << "The order is Null";
+            qDebug() << "The table: " << table_no << " has order: " << order_id << " and the status is: " << table_status;
+
+            QSqlQuery seq(db);
+            seq.prepare("SELECT seq FROM sqlite_sequence WHERE name = 'orders'");
+            if (seq.exec()) {
+                while (seq.next()) {
+                    int sequence = seq.value(0).toInt();
+                    qDebug() << "The seq is " << sequence;
+                    order_id = QString::number(sequence + 1);
+                }
+            } else {
+                qDebug() << "The seq could not be fetched\n" << seq.lastError();
+                db.rollback();
+                return;
+            }
+        }
+
+
+        db.commit();
+    } else {
+        qDebug() << "Failed to start transaction for table status + order_id";
+    }
+
+    orderInfoLabel->setText("Table No: " + table_no + "\n\nOrder ID: " + order_id);
+
+    //Assigning value to member data functions
+    m_orderId = order_id;
+    m_tableNo = table_no;
+
 }
+
+void POS_AddOrder::loadExistingOrderItems(const QString &orderId)
+{
+    qDebug() << "inside the load existing order items function";
+    QSqlQuery query(db);
+    query.prepare(R"(
+        SELECT m.item_name, m.menu_item_id, m.price, oi.quantity
+        FROM order_items oi
+        JOIN menu m ON oi.menu_item_id = m.menu_item_id
+        WHERE oi.order_id = ?
+    )");
+    query.addBindValue(orderId);
+
+    qDebug() << "Before the execution of query";
+    if (!query.exec()) {
+        qDebug() << "Failed to load existing order items:" << query.lastError();
+        return;
+    }
+    qDebug() << "Successful execution of query";
+    while (query.next()) {
+        QString itemName = query.value(0).toString();
+        int itemId = query.value(1).toInt();
+        double price = query.value(2).toDouble();
+        int quantity = query.value(3).toInt();
+
+        qDebug() << "Accessed values as itemId: " << itemId << "quantity: "<< quantity << "price: " <<price;
+        if (orderItems.contains(itemName)) {
+            orderItems[itemName].quantity += quantity;
+        } else {
+            orderItems[itemName] = {itemId, quantity, price};
+        }
+
+    }
+
+    qDebug() << "Before calling the update order table";
+    updateOrderTable();
+}
+
 
 // Destructor
 POS_AddOrder::~POS_AddOrder()
@@ -304,10 +352,17 @@ void POS_AddOrder::addItemToOrder()
 // Updates the order table with current items and totals
 void POS_AddOrder::updateOrderTable()
 {
+    qDebug() << "orderTable pointer:" << orderTable;
+    if (!orderTable) {
+        qDebug() << "Error: orderTable is nullptr!";
+        return;
+    }
+    qDebug() << "inside the update order table function";
     orderTable->setRowCount(0);
     double total = 0;
-
+    qDebug() << "before the for loop of the updateordertable function";
     for (auto it = orderItems.begin(); it != orderItems.end(); ++it) {
+
         int row = orderTable->rowCount();
         orderTable->insertRow(row);
 
@@ -337,12 +392,16 @@ void POS_AddOrder::updateOrderTable()
         orderTable->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
     }
 
+    qDebug() << "After the for loop of update order table function";
+    qDebug() << "Total rows inserted in orderTable:" << orderTable->rowCount();
+
     double serviceCharge = 0.1 * total;
     double finalTotal = total + serviceCharge;
 
     subtotalLabel->setText("Subtotal:\tRs. " + QString::number(total));
     serviceChargeLabel->setText("Service Charge (10%) :\tRs. " + QString::number(serviceCharge));
     totalLabel->setText("<b>Total:\tRs. " + QString::number(finalTotal) + "</b>");
+    qDebug() << "ending of the update order table function";
 }
 
 // Loads items belonging to the selected category
@@ -458,6 +517,7 @@ void POS_AddOrder::sendOrder()
 
     bool orderExists = false;
 
+
     // Check if order already exists in orders table
     QSqlQuery checkOrder(db);
     checkOrder.prepare("SELECT COUNT(*) FROM orders WHERE order_id = ?");
@@ -465,6 +525,12 @@ void POS_AddOrder::sendOrder()
     if (checkOrder.exec() && checkOrder.next()) {
         orderExists = (checkOrder.value(0).toInt() > 0);
     }
+
+    if (!db.transaction()) {
+        qDebug() << "Failed to start transaction: " << db.lastError();
+        return;
+    }
+    bool success = true;
 
     if (!orderExists) {
         // 1. Insert into orders table
@@ -477,7 +543,7 @@ void POS_AddOrder::sendOrder()
 
         if (!insertOrder.exec()) {
             qDebug() << "Failed to insert into orders: " << insertOrder.lastError();
-            return;
+            success = false;
         }
 
         // 2. Update tables table with new order_id
@@ -486,63 +552,99 @@ void POS_AddOrder::sendOrder()
         updateTable.addBindValue(m_orderId);
         updateTable.addBindValue(m_tableNo);
 
-        if (!updateTable.exec()) {
+        if (success && !updateTable.exec()) {
             qDebug() << "Failed to update table with order_id: " << updateTable.lastError();
-            return;
+            success = false;
         }
-
-        qDebug() << "Inserted new order and linked to table";
 
         QSqlQuery updateTableStatus(db);
         updateTableStatus.prepare("UPDATE tables SET status = 'occupied' WHERE table_no = ?");
         updateTableStatus.addBindValue(m_tableNo);
 
-        if (!updateTableStatus.exec()) {
+        if (success && !updateTableStatus.exec()) {
             qDebug() << "Failed to update table status: " << updateTableStatus.lastError();
-            return;
+            success = false;
         }
 
-        qDebug() << "Updated table status";
 
     } else {
         qDebug() << "Appending items to existing order";
     }
 
-    // Insert order items (whether new or existing order)
-    for (auto it = orderItems.begin(); it != orderItems.end(); ++it) {
-        const QString &itemName = it.key();
-        const OrderItem &item = it.value();
+    // Delete old items
+    if (success) {
+        QSqlQuery deleteItems(db);
+        deleteItems.prepare("DELETE FROM order_items WHERE order_id = ?");
+        deleteItems.addBindValue(m_orderId);
 
-        QSqlQuery insertItem(db);
-        insertItem.prepare(R"(
-            INSERT INTO order_items (order_id, menu_item_id, quantity)
-            VALUES (?, ?, ?)
-        )");
-        insertItem.addBindValue(m_orderId);
-        insertItem.addBindValue(item.id);
-        insertItem.addBindValue(item.quantity);
-
-        if (!insertItem.exec()) {
-            qDebug() << "Failed to insert item: " << insertItem.lastError();
-            return;
+        if (!deleteItems.exec()) {
+            qDebug() << "Failed to delete old items: " << deleteItems.lastError();
+            success = false;
         }
     }
 
-    // Optional: update status again if needed
-    QSqlQuery updateStatus(db);
-    updateStatus.prepare("UPDATE orders SET status = 'Preparing' WHERE order_id = ?");
-    updateStatus.addBindValue(m_orderId);
-    updateStatus.exec();
+    // Insert new order items
+    if (success) {
+        for (auto it = orderItems.begin(); it != orderItems.end(); ++it) {
+            const OrderItem &item = it.value();
 
-    qDebug() << "Order submission completed";
+            QSqlQuery insertItem(db);
+            insertItem.prepare("INSERT INTO order_items (order_id, menu_item_id, quantity) VALUES (?, ?, ?)");
+            insertItem.addBindValue(m_orderId);
+            insertItem.addBindValue(item.id);
+            insertItem.addBindValue(item.quantity);
+
+            if (!insertItem.exec()) {
+                qDebug() << "Failed to insert item: " << insertItem.lastError();
+                success = false;
+                break;
+            }
+        }
+    }
+
+    // Update order status
+    if (success) {
+        QSqlQuery updateStatus(db);
+        updateStatus.prepare("UPDATE orders SET status = 'Preparing' WHERE order_id = ?");
+        updateStatus.addBindValue(m_orderId);
+        if (!updateStatus.exec()) {
+            qDebug() << "Failed to update order status: " << updateStatus.lastError();
+            success = false;
+        }
+    }
+
+
+    // Commit or rollback
+    if (success) {
+        if (!db.commit()) {
+            qDebug() << "Failed to commit transaction: " << db.lastError();
+            db.rollback();
+            return;
+        }
+    } else {
+        db.rollback();
+        return;
+    }
+
     // Final UI updates after successful submission
     QMessageBox::information(this, "Order Sent", "The order has been successfully sent to the kitchen.");
     orderItems.clear();
     updateOrderTable();
-    // Launch new MainWindow
+
+    // Close previous windows if they exist
+    if (m_posWindow) {
+        m_posWindow->close();
+    }
+    if (m_mainWindow) {
+        m_mainWindow->close();
+    }
+
+    // Launch a new main window
     MainWindow *mainWin = new MainWindow();
     mainWin->show();
-    this->close();  // Optional: Close window after sending
+
+    // Close this order window
+    this->close();
 
 }
 

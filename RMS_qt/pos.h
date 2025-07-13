@@ -9,6 +9,8 @@ namespace Ui {
 class pos;
 }
 
+class POS_AddOrder;
+
 class pos : public QMainWindow
 {
     Q_OBJECT

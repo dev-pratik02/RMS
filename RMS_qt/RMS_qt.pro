@@ -14,6 +14,7 @@ TEMPLATE = app
 
 SOURCES += \
     OrdersWidget.cpp \
+    databasemanager.cpp \
     main.cpp \
     mainwindow.cpp \
     orders.cpp   \
@@ -24,6 +25,7 @@ SOURCES += \
 
 HEADERS += \
     OrdersWidget.h \
+    databasemanager.h \
     mainwindow.h \
     orders.h    \
     checkout.h  \

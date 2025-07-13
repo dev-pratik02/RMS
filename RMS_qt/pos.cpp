@@ -1,5 +1,9 @@
 #include "pos.h"
 #include "ui_pos.h"
+#include "mainwindow.h"
+#include "databasemanager.h"
+
+extern MainWindow *g_mainWindow;
 
 pos::pos(QWidget *parent)
     : QMainWindow(parent)
@@ -7,43 +11,25 @@ pos::pos(QWidget *parent)
 {
     ui->setupUi(this);
     this->resize(1280, 800);
-    // Only add the database if it doesn't already exist
-    if (!QSqlDatabase::contains("qt_sql_default_connection")) {
-        mydb = QSqlDatabase::addDatabase("QSQLITE");
-        mydb.setDatabaseName("/Users/pratik/Programming/RMS/RMS_qt/RmsApp.db");
-    } else {
-        mydb = QSqlDatabase::database("qt_sql_default_connection");
-    }
+    QSqlDatabase mydb = DatabaseManager::getDatabase();
 
-    if(mydb.open()){
-        qDebug() <<"Database is connected by orders page";
-    }
-    else{
-        qDebug() << "Database connection failed" ;
-        qDebug() << "Error:"<< mydb.lastError();
-    }
+
+    QStringList table_list;
+    int row = 0;
 
     QSqlQuery query(mydb);
-    query.prepare("SELECT * FROM tables");
-    int row = 0;
-    if(query.exec()){
-        qDebug() << "Successfully accessed tables";
-        while(query.next()){
+    if (query.exec("SELECT table_no FROM tables")) {
+        while (query.next()) {
+            table_list.append(query.value(0).toString());
             row++;
         }
         qDebug() << "No. of tables: " << row;
-    }
-    else {
-        qDebug() << "Could not access tables";
+        ui->pos_table_dropdown->addItems(table_list);
+    } else {
+        qDebug() << "Failed to fetch tables:" << query.lastError();
     }
 
-    QStringList table_list;
 
-    for(int i=1;i<=row;i++){
-        QString temp = QString::number(i);
-        table_list.append(temp);
-    }
-    ui->pos_table_dropdown->addItems(table_list);
 }
 
 pos::~pos()
@@ -55,8 +41,8 @@ void pos::on_btn_place_order_clicked()
 {
     QString table_no = ui->pos_table_dropdown->currentText();
     qDebug() << "The table no. is: " << table_no;
-    ptraddorder = new POS_AddOrder(table_no);
-    ptraddorder->setAttribute(Qt::WA_DeleteOnClose); // Optional: Auto-delete on close
+    ptraddorder = new POS_AddOrder(table_no, this, g_mainWindow);
+    ptraddorder->setAttribute(Qt::WA_DeleteOnClose);
     ptraddorder->show();
 
 }

@@ -1,6 +1,6 @@
 #ifndef POS_ADDORDER_H
 #define POS_ADDORDER_H
-
+#include "pos.h"
 #include <QWidget>
 #include <QScrollArea>
 #include <QPushButton>
@@ -15,6 +15,11 @@
 #include <QPixmap>
 #include <QMessageBox>
 #include <QInputDialog>
+
+
+class MainWindow; // Forward declaration
+class pos;
+
 
 namespace Ui {
 class POS_AddOrder;
@@ -31,7 +36,7 @@ class POS_AddOrder : public QWidget
     Q_OBJECT
 
 public:
-    explicit POS_AddOrder(QString table_no, QWidget *parent = nullptr);
+    explicit POS_AddOrder(QString table_no, class pos *posWindow = nullptr, MainWindow *mainWindow = nullptr, QWidget *parent = nullptr);
     ~POS_AddOrder();
 
 protected:
@@ -46,6 +51,9 @@ private slots:
 
 private:
     Ui::POS_AddOrder *ui;
+    class pos *m_posWindow = nullptr;
+    MainWindow *m_mainWindow = nullptr;
+
 
     // Layouts and widgets
     QGridLayout *itemsLayout;
@@ -67,6 +75,7 @@ private:
     // Logic
     void updateOrderTable();
     void loadItemsForCategory(const QString &category);
+    void loadExistingOrderItems(const QString &orderId);
 };
 
 #endif // POS_ADDORDER_H

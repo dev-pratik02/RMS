@@ -1,6 +1,6 @@
 #include "edit_order.h"
 #include "ui_edit_order.h"
-
+#include "databasemanager.h"
 
 edit_order::edit_order(QWidget *parent)
     : QDialog(parent)
@@ -30,21 +30,9 @@ edit_order::edit_order(const QString &orderId, const QString &table, const QStri
         delete oldLayout;
     }
 
-    // Only add the database if it doesn't already exist
-    if (!QSqlDatabase::contains("qt_sql_default_connection")) {
-        mydb = QSqlDatabase::addDatabase("QSQLITE");
-        mydb.setDatabaseName("/Users/pratik/Programming/RMS/RMS_qt/RmsApp.db");
-    } else {
-        mydb = QSqlDatabase::database("qt_sql_default_connection");
-    }
+    mydb = DatabaseManager::getDatabase();
 
-    if(mydb.open()){
-        qDebug() <<"Database is connected by edit orders page";
-    }
-    else{
-        qDebug() << "Database connection failed" ;
-        qDebug() << "Error:"<< mydb.lastError();
-    }
+
 
 
     // --- Card Layout ---
@@ -175,7 +163,7 @@ edit_order::edit_order(const QString &orderId, const QString &table, const QStri
         QString menu_item_name=queryMenuList.value(1).toString();
         menuList.append(menu_item_name);
     }
-    qDebug() << "Number of records:" << records;
+    qDebug() << "Number of menu items:" << records;
     queryMenuList.first();
 
     for (int i = 0; i < items.size(); ++i) {
@@ -292,25 +280,58 @@ edit_order::edit_order(const QString &orderId, const QString &table, const QStri
     connect(readyBtn, &QPushButton::clicked, this, [=]() { updateStatus("Ready"); });
     connect(servedBtn, &QPushButton::clicked, this, [=]() { updateStatus("Served"); });
     connect(delBtn, &QPushButton::clicked, this, [=]() {
-        QSqlQuery querydelitems(mydb);
-        querydelitems.prepare("delete from order_items where order_id= ?");
-        querydelitems.addBindValue(orderId);
-        if(querydelitems.exec()){
-            qDebug()<<"Order: "<<orderId<<"deleted successfully";
-        }
-        else{
-            qDebug()<<"Order: "<<orderId<<"could not be deleted";
+
+
+
+
+        if (!mydb.transaction()) {
+            qDebug() << "Failed to start transaction:" << mydb.lastError();
+            return;
         }
 
+        QSqlQuery querydelitems(mydb);
+        querydelitems.prepare("DELETE FROM order_items WHERE order_id = ?");
+        querydelitems.addBindValue(orderId);
+        bool ok1 = querydelitems.exec();
+        if (!ok1)
+            qDebug() << "Delete order_items failed:" << querydelitems.lastError();
+
         QSqlQuery querydelorder(mydb);
-        querydelorder.prepare("delete from orders where order_id= ?");
+        querydelorder.prepare("DELETE FROM orders WHERE order_id = ?");
         querydelorder.addBindValue(orderId);
-        if(querydelorder.exec()){
-            qDebug()<<"Order: "<<orderId<<"deleted successfully";
+        bool ok2 = querydelorder.exec();
+        if (!ok2)
+            qDebug() << "Delete orders failed:" << querydelorder.lastError();
+
+        QSqlQuery querytableStatus(mydb);
+        querytableStatus.prepare("UPDATE tables SET status = 'available' WHERE order_id = ?");
+        querytableStatus.addBindValue(orderId);
+        bool ok4 = querytableStatus.exec();
+
+        QSqlQuery querydeltable(mydb);
+        querydeltable.prepare("UPDATE tables SET order_id = NULL WHERE order_id = ?");
+        querydeltable.addBindValue(orderId);
+        bool ok3 = querydeltable.exec();
+        if (!ok3)
+            qDebug() << "Update tables (order_id=NULL) failed:" << querydeltable.lastError();
+
+        if (!ok4)
+            qDebug() << "Update tables (status=available) failed:" << querytableStatus.lastError();
+
+        if (ok1 && ok2 && ok3 && ok4) {
+            if (!mydb.commit()) {
+                qDebug() << "Failed to commit transaction:" << mydb.lastError();
+                mydb.rollback();
+            } else {
+                qDebug() << "All queries committed successfully";
+            }
+        } else {
+            mydb.rollback();
+            qDebug() << "Transaction failed, rolled back";
         }
-        else{
-            qDebug()<<"Order: "<<orderId<<"could not be deleted";
-        }
+
+
+
         this->accept();
     });
 
