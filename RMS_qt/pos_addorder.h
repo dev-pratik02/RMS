@@ -19,8 +19,9 @@ class POS_AddOrder;
 }
 
 struct OrderItem {
-    int quantity = 0;
-    double price = 0.0;
+    int id;           // menu_item_id
+    int quantity;
+    double price;
 };
 
 class POS_AddOrder : public QWidget
@@ -37,6 +38,8 @@ protected:
 private slots:
     void addItemToOrder();
     void decreaseItemQuantity();
+    void sendOrder();
+
 
 private:
     Ui::POS_AddOrder *ui;
@@ -53,6 +56,8 @@ private:
 
     // Data
     QSqlDatabase db;
+    QString m_tableNo;
+    QString m_orderId;
     QMap<QString, OrderItem> orderItems;
 
     // Logic

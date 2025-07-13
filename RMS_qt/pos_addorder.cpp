@@ -44,6 +44,9 @@ POS_AddOrder::POS_AddOrder(QString table_no, QWidget *parent)
         qDebug() << query_table.lastError();
     }
 
+    //Assigning value to member data functions
+    m_orderId = order_id;
+    m_tableNo = table_no;
 
     // Main layout of the screen (horizontal split)
     QHBoxLayout *mainLayout = new QHBoxLayout(this);
@@ -210,7 +213,13 @@ POS_AddOrder::POS_AddOrder(QString table_no, QWidget *parent)
     // Buttons for reset and save order
     QHBoxLayout *buttonLayout = new QHBoxLayout();
     resetButton = new QPushButton("Reset");
+    connect(resetButton, &QPushButton::clicked, this, [this]() {
+        orderItems.clear();     // Clear all ordered items
+        updateOrderTable();     // Refresh the table and totals
+    });
+
     saveButton = new QPushButton("Send Order");
+    connect(saveButton, &QPushButton::clicked, this, &POS_AddOrder::sendOrder);
 
     // Set individual styles
         resetButton->setStyleSheet(R"(
@@ -238,6 +247,7 @@ POS_AddOrder::POS_AddOrder(QString table_no, QWidget *parent)
             background-color: #340DD8;
         }
     )");
+
 
     buttonLayout->addWidget(resetButton);
     buttonLayout->addWidget(saveButton);
@@ -322,7 +332,7 @@ void POS_AddOrder::loadItemsForCategory(const QString &category)
     }
 
     QSqlQuery itemQuery(db);
-    itemQuery.prepare("SELECT item_name, price, image FROM menu WHERE category = :category");
+    itemQuery.prepare("SELECT menu_item_id, item_name, price, image FROM menu WHERE category = :category");
     itemQuery.bindValue(":category", category.trimmed());
 
     if (!itemQuery.exec()) {
@@ -333,9 +343,10 @@ void POS_AddOrder::loadItemsForCategory(const QString &category)
     int index = 0;
 
     while (itemQuery.next()) {
-        QString itemName = itemQuery.value(0).toString();
-        double price = itemQuery.value(1).toDouble();
-        QByteArray imageData = itemQuery.value(2).toByteArray();
+        int id = itemQuery.value(0).toInt();
+        QString itemName = itemQuery.value(1).toString();
+        double price = itemQuery.value(2).toDouble();
+        QByteArray imageData = itemQuery.value(3).toByteArray();
 
         QLabel *imageLabel = new QLabel;
         imageLabel->setFixedSize(100, 100);
@@ -384,6 +395,7 @@ void POS_AddOrder::loadItemsForCategory(const QString &category)
 
         card->setProperty("itemName", itemName);
         card->setProperty("price", price);
+        card->setProperty("itemId", id);
         card->installEventFilter(this);
 
         int row = index / 5;
@@ -393,25 +405,30 @@ void POS_AddOrder::loadItemsForCategory(const QString &category)
     }
 }
 
-// Event filter to detect clicks on item cards
-bool POS_AddOrder::eventFilter(QObject *watched, QEvent *event)
-{
-    if (event->type() == QEvent::MouseButtonPress) {
-        QString itemName = watched->property("itemName").toString();
-        double price = watched->property("price").toDouble();
 
-        if (!itemName.isEmpty()) {
-            if (!orderItems.contains(itemName)) {
-                orderItems[itemName] = {1, price};
-            } else {
-                orderItems[itemName].quantity++;
-            }
-            updateOrderTable();
-        }
-        return true;
+void POS_AddOrder::sendOrder()
+{
+    qDebug() << "Send Order button clicked";
+
+    qDebug() << "Sending order for Table:" << m_tableNo << "Order ID:" << m_orderId;
+
+    // Iterate over orderItems
+    for (auto it = orderItems.begin(); it != orderItems.end(); ++it) {
+        const QString &itemName = it.key();
+        const OrderItem &item = it.value();
+
+        int menuItemId = item.id;
+        int quantity = item.quantity;
+        double unit_price = item.price;
+
+        qDebug() << "ID:" << menuItemId << ", Item:" << itemName << ", Qty:" << quantity << ", Price:" << unit_price;
+
+        // Use these to insert into DB or send to server
+
     }
-    return QWidget::eventFilter(watched, event);
 }
+
+
 
 // Decreases the quantity of an item or removes it from the order
 void POS_AddOrder::decreaseItemQuantity()
@@ -429,4 +446,25 @@ void POS_AddOrder::decreaseItemQuantity()
         }
         updateOrderTable();
     }
+}
+
+// Event filter to detect clicks on item cards
+bool POS_AddOrder::eventFilter(QObject *watched, QEvent *event)
+{
+    if (event->type() == QEvent::MouseButtonPress) {
+        QString itemName = watched->property("itemName").toString();
+        double price = watched->property("price").toDouble();
+        int id = watched->property("itemId").toInt();
+
+        if (!itemName.isEmpty()) {
+            if (!orderItems.contains(itemName)) {
+                orderItems[itemName] = {id, 1, price};
+            } else {
+                orderItems[itemName].quantity++;
+            }
+            updateOrderTable();
+        }
+        return true;
+    }
+    return QWidget::eventFilter(watched, event);
 }
