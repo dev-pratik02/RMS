@@ -39,6 +39,8 @@ private:
     QList<QSpinBox*> spinBoxes;
     QString orderIdGlobal;
 
+
+     void deleteItemRow(QTableWidget *table, int row);
 };
 
 #endif // EDIT_ORDER_H
