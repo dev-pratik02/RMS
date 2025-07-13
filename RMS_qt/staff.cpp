@@ -21,8 +21,8 @@ staff::staff(QWidget *parent)
 
     if (!QSqlDatabase::contains("qt_sql_default_connection")) {
         mydb = QSqlDatabase::addDatabase("QSQLITE");
-        QString dbPath = "C:/Users/VICTUS/OneDrive/Desktop/database/staff.db";
-        mydb.setDatabaseName(dbPath);
+        mydb.setDatabaseName("C:/Users/VICTUS/OneDrive/Desktop/database/staff.db");
+        // mydb.setDatabaseName("/Users/pratik/Programming/RMS/RMS_qt/RmsApp.db");
     } else {
         mydb = QSqlDatabase::database("qt_sql_default_connection");
     }
@@ -129,6 +129,8 @@ void staff::loadStaffData()
 
     ui->totalstaff->setText("Total no. of staff: " + QString::number(row));
     ui->totalstaff->setAlignment(Qt::AlignCenter);
+
+    // ui->table_staff->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
 void staff::on_ADDSTAFF_clicked()

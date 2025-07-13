@@ -13,9 +13,8 @@ addstaff::addstaff(QWidget *parent)
 
     if (!QSqlDatabase::contains("qt_sql_default_connection")) {
         mydb = QSqlDatabase::addDatabase("QSQLITE");
-        QString dbPath = QCoreApplication::applicationDirPath() + "/your_database_path.db"; // Correct DB path
-        dbPath = QDir::cleanPath(dbPath);
-        mydb.setDatabaseName(dbPath);
+        // mydb.setDatabaseName("C:/Users/VICTUS/OneDrive/Desktop/database/staff.db");
+        mydb.setDatabaseName("/Users/pratik/Programming/RMS/RMS_qt/RmsApp.db");
     } else {
         mydb = QSqlDatabase::database("qt_sql_default_connection");
     }
