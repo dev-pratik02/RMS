@@ -1,5 +1,7 @@
 #include "pos_addorder.h"
 #include "ui_pos_addorder.h"
+#include "mainwindow.h"
+
 
 // Constructor for POS_AddOrder
 POS_AddOrder::POS_AddOrder(QString table_no, QWidget *parent)
@@ -537,6 +539,9 @@ void POS_AddOrder::sendOrder()
     QMessageBox::information(this, "Order Sent", "The order has been successfully sent to the kitchen.");
     orderItems.clear();
     updateOrderTable();
+    // Launch new MainWindow
+    MainWindow *mainWin = new MainWindow();
+    mainWin->show();
     this->close();  // Optional: Close window after sending
 
 }
