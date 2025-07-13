@@ -25,6 +25,7 @@ category::category(QWidget *parent)
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName("C:/Users/Swift/RMS/RMS_qt/RmsApp.db");
+    // db.setDatabaseName("/Users/pratik/Programming/RMS/RMS_qt/RmsApp.db");
 
     if (!db.open()) {
         qDebug() << "Database connection failed:" << db.lastError().text();
