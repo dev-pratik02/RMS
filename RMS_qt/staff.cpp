@@ -21,7 +21,7 @@ staff::staff(QWidget *parent)
 
     if (!QSqlDatabase::contains("qt_sql_default_connection")) {
         mydb = QSqlDatabase::addDatabase("QSQLITE");
-        mydb.setDatabaseName("C:/Users/VICTUS/OneDrive/Desktop/database/staff.db");
+        mydb.setDatabaseName("C:/Users/VICTUS/OneDrive/Desktop/sanat/RMS_qt/RmsApp.db");
         // mydb.setDatabaseName("/Users/pratik/Programming/RMS/RMS_qt/RmsApp.db");
     } else {
         mydb = QSqlDatabase::database("qt_sql_default_connection");
