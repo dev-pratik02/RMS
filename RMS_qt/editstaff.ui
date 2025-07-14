@@ -10,6 +10,11 @@
     <height>600</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <family>Arial</family>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
@@ -21,6 +26,12 @@
      <width>171</width>
      <height>20</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>12</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>CONTACT:</string>
@@ -34,6 +45,12 @@
      <width>81</width>
      <height>20</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>12</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>NAME:</string>
@@ -53,9 +70,10 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>10</pointsize>
-     <italic>true</italic>
-     <bold>true</bold>
+     <family>Arial</family>
+     <pointsize>12</pointsize>
+     <italic>false</italic>
+     <bold>false</bold>
     </font>
    </property>
    <property name="text">
@@ -93,7 +111,8 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>11</pointsize>
+     <family>Arial</family>
+     <pointsize>12</pointsize>
     </font>
    </property>
    <property name="text">
@@ -111,9 +130,10 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>10</pointsize>
-     <italic>true</italic>
-     <bold>true</bold>
+     <family>Arial</family>
+     <pointsize>12</pointsize>
+     <italic>false</italic>
+     <bold>false</bold>
     </font>
    </property>
    <property name="text">
@@ -141,9 +161,10 @@
    </property>
    <property name="font">
     <font>
+     <family>Arial</family>
      <pointsize>16</pointsize>
-     <italic>true</italic>
-     <bold>true</bold>
+     <italic>false</italic>
+     <bold>false</bold>
     </font>
    </property>
    <property name="text">
@@ -162,6 +183,12 @@
      <height>20</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
    <property name="text">
     <string>SALARY:</string>
    </property>
@@ -175,6 +202,12 @@
      <height>26</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
   </widget>
   <widget class="QLineEdit" name="input_salary">
    <property name="geometry">
@@ -185,6 +218,12 @@
      <height>26</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
   </widget>
   <widget class="QLabel" name="position">
    <property name="geometry">
@@ -194,6 +233,12 @@
      <width>121</width>
      <height>20</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>12</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>POSITION:</string>
@@ -208,6 +253,12 @@
      <height>26</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
   </widget>
   <widget class="QLabel" name="age">
    <property name="geometry">
@@ -217,6 +268,12 @@
      <width>121</width>
      <height>20</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>12</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>AGE:</string>

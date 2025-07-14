@@ -17,7 +17,7 @@
    <widget class="QLabel" name="staffmanagement">
     <property name="geometry">
      <rect>
-      <x>260</x>
+      <x>240</x>
       <y>0</y>
       <width>341</width>
       <height>31</height>
@@ -25,9 +25,10 @@
     </property>
     <property name="font">
      <font>
+      <family>Arial</family>
       <pointsize>16</pointsize>
-      <italic>true</italic>
-      <bold>true</bold>
+      <italic>false</italic>
+      <bold>false</bold>
      </font>
     </property>
     <property name="text">
@@ -42,13 +43,15 @@
      <rect>
       <x>30</x>
       <y>60</y>
-      <width>136</width>
-      <height>16</height>
+      <width>181</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <bold>true</bold>
+      <family>Arial</family>
+      <pointsize>12</pointsize>
+      <bold>false</bold>
      </font>
     </property>
     <property name="text">
@@ -58,16 +61,17 @@
    <widget class="QLabel" name="staffmembers_2">
     <property name="geometry">
      <rect>
-      <x>40</x>
+      <x>30</x>
       <y>100</y>
-      <width>151</width>
+      <width>161</width>
       <height>20</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>10</pointsize>
-      <bold>true</bold>
+      <family>Arial</family>
+      <pointsize>12</pointsize>
+      <bold>false</bold>
      </font>
     </property>
     <property name="text">
@@ -77,16 +81,16 @@
    <widget class="QPushButton" name="ADDSTAFF">
     <property name="geometry">
      <rect>
-      <x>670</x>
+      <x>637</x>
       <y>50</y>
-      <width>88</width>
+      <width>121</width>
       <height>32</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Arial</family>
-      <pointsize>9</pointsize>
+      <pointsize>12</pointsize>
       <bold>false</bold>
      </font>
     </property>
@@ -103,16 +107,23 @@
       <height>431</height>
      </rect>
     </property>
+    <property name="maximumSize">
+     <size>
+      <width>761</width>
+      <height>16777215</height>
+     </size>
+    </property>
     <property name="font">
      <font>
-      <pointsize>10</pointsize>
+      <family>Arial</family>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="columnCount">
      <number>6</number>
     </property>
     <attribute name="horizontalHeaderDefaultSectionSize">
-     <number>190</number>
+     <number>105</number>
     </attribute>
     <column>
      <property name="text">

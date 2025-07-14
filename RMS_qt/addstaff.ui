@@ -26,8 +26,8 @@
     <font>
      <family>Arial</family>
      <pointsize>16</pointsize>
-     <italic>true</italic>
-     <bold>true</bold>
+     <italic>false</italic>
+     <bold>false</bold>
     </font>
    </property>
    <property name="text">
@@ -46,9 +46,22 @@
      <height>463</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
    <layout class="QFormLayout" name="formLayout_2">
     <item row="8" column="0" colspan="2">
-     <widget class="QLineEdit" name="input_salary"/>
+     <widget class="QLineEdit" name="input_salary">
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+     </widget>
     </item>
     <item row="11" column="0" colspan="2">
      <widget class="QLabel" name="position">
@@ -64,7 +77,14 @@
      </widget>
     </item>
     <item row="12" column="0" colspan="2">
-     <widget class="QLineEdit" name="input_position"/>
+     <widget class="QLineEdit" name="input_position">
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+     </widget>
     </item>
     <item row="15" column="0" colspan="2">
      <widget class="QLabel" name="age">
@@ -80,7 +100,14 @@
      </widget>
     </item>
     <item row="16" column="0" colspan="2">
-     <widget class="QLineEdit" name="input_age"/>
+     <widget class="QLineEdit" name="input_age">
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+     </widget>
     </item>
     <item row="19" column="0" colspan="2">
      <widget class="QLabel" name="contact">
@@ -96,7 +123,14 @@
      </widget>
     </item>
     <item row="20" column="0" colspan="2">
-     <widget class="QLineEdit" name="input_contact"/>
+     <widget class="QLineEdit" name="input_contact">
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+     </widget>
     </item>
     <item row="1" column="0">
      <widget class="QLabel" name="name">
@@ -129,6 +163,12 @@
     </item>
     <item row="3" column="0" colspan="2">
      <widget class="QLineEdit" name="input_name">
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -152,8 +192,8 @@
        <font>
         <family>Arial</family>
         <pointsize>12</pointsize>
-        <italic>true</italic>
-        <bold>true</bold>
+        <italic>false</italic>
+        <bold>false</bold>
        </font>
       </property>
       <property name="text">
@@ -167,8 +207,8 @@
        <font>
         <family>Arial</family>
         <pointsize>12</pointsize>
-        <italic>true</italic>
-        <bold>true</bold>
+        <italic>false</italic>
+        <bold>false</bold>
        </font>
       </property>
       <property name="text">

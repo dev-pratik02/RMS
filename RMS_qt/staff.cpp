@@ -1,7 +1,8 @@
-// staff.cpp
 #include "staff.h"
 #include "ui_staff.h"
 #include "editstaff.h"
+#include "addstaff.h"
+
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QTableWidgetItem>
@@ -10,6 +11,7 @@
 #include <QDebug>
 #include <QPushButton>
 #include <QHBoxLayout>
+#include <QHeaderView>
 
 staff::staff(QWidget *parent)
     : QMainWindow(parent)
@@ -22,14 +24,13 @@ staff::staff(QWidget *parent)
     if (!QSqlDatabase::contains("qt_sql_default_connection")) {
         mydb = QSqlDatabase::addDatabase("QSQLITE");
         mydb.setDatabaseName("C:/Users/VICTUS/OneDrive/Desktop/sanat/RMS_qt/RmsApp.db");
-        // mydb.setDatabaseName("/Users/pratik/Programming/RMS/RMS_qt/RmsApp.db");
     } else {
         mydb = QSqlDatabase::database("qt_sql_default_connection");
     }
+
     if (mydb.open()) {
         qDebug() << "Database is accessed by staff page";
-    }
-    else {
+    } else {
         qDebug() << "Database connection failed";
         qDebug() << "Error:" << mydb.lastError();
     }
@@ -47,7 +48,6 @@ void staff::loadStaffData()
     ui->table_staff->setColumnCount(7); // 6 data columns + 1 action column
     QStringList headers = {"ID", "Name", "Position", "Salary", "Age", "Contact", "Action"};
     ui->table_staff->setHorizontalHeaderLabels(headers);
-
     ui->table_staff->setRowCount(0); // Clear existing rows
 
     QSqlQuery query(mydb);
@@ -56,16 +56,28 @@ void staff::loadStaffData()
         return;
     }
 
+    QColor columnColors[6] = {
+        QColor("#FFF2CC"), // ID - light yellow
+        QColor("#D9EAD3"), // Name - light green
+        QColor("#CFE2F3"), // Position - light blue
+        QColor("#F4CCCC"), // Salary - light red
+        QColor("#EAD1DC"), // Age - light pink
+        QColor("#D9D2E9")  // Contact - light purple
+    };
+
     int row = 0;
     while (query.next()) {
         ui->table_staff->insertRow(row);
 
+        // Add colored items
         for (int col = 0; col < 6; ++col) {
             QTableWidgetItem *item = new QTableWidgetItem(query.value(col).toString());
             item->setTextAlignment(Qt::AlignCenter);
+            item->setBackground(columnColors[col]);
             ui->table_staff->setItem(row, col, item);
         }
 
+        // Create action buttons
         QPushButton *editBtn = new QPushButton("Edit");
         QPushButton *deleteBtn = new QPushButton("Delete");
 
@@ -130,7 +142,8 @@ void staff::loadStaffData()
     ui->totalstaff->setText("Total no. of staff: " + QString::number(row));
     ui->totalstaff->setAlignment(Qt::AlignCenter);
 
-    // ui->table_staff->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    // Stretch columns to fit window
+    ui->table_staff->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
 void staff::on_ADDSTAFF_clicked()
