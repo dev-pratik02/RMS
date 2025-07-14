@@ -48,6 +48,14 @@ void staff::loadStaffData()
     ui->table_staff->setColumnCount(7); // 6 data columns + 1 action column
     QStringList headers = {"ID", "Name", "Position", "Salary", "Age", "Contact", "Action"};
     ui->table_staff->setHorizontalHeaderLabels(headers);
+
+    // Set font for "Action" header column (index 6)
+    QFont headerFont("Arial", 12, QFont::Normal);
+    QTableWidgetItem *actionHeaderItem = ui->table_staff->horizontalHeaderItem(6);
+    if (actionHeaderItem) {
+        actionHeaderItem->setFont(headerFont);
+    }
+
     ui->table_staff->setRowCount(0); // Clear existing rows
 
     QSqlQuery query(mydb);

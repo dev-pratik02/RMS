@@ -129,30 +129,66 @@
      <property name="text">
       <string>ID</string>
      </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
     </column>
     <column>
      <property name="text">
       <string>NAME</string>
+     </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+       <pointsize>12</pointsize>
+      </font>
      </property>
     </column>
     <column>
      <property name="text">
       <string>SALARY</string>
      </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
     </column>
     <column>
      <property name="text">
       <string>POSITION</string>
+     </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+       <pointsize>12</pointsize>
+      </font>
      </property>
     </column>
     <column>
      <property name="text">
       <string>AGE</string>
      </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
     </column>
     <column>
      <property name="text">
       <string>CONTACT</string>
+     </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+       <pointsize>12</pointsize>
+      </font>
      </property>
     </column>
    </widget>
