@@ -41,7 +41,7 @@ void editcategory::on_btn_edit_clicked()
     QString newItem = ui->item_no->text().trimmed();
     QString newDesc = ui->category_description->toPlainText().trimmed();
 
-    if (newName.isEmpty() || newId.isEmpty() || newItem.isEmpty() || newDesc.isEmpty()) {
+    if (newName.isEmpty() || newId.isEmpty() || newItem.isEmpty()) {
         QMessageBox::warning(this, "Input Error", "Please fill in all fields.");
         return;
     }

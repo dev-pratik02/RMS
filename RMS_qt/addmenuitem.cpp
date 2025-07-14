@@ -7,10 +7,20 @@ addmenuitem::addmenuitem(QWidget *parent)
     , ui(new Ui::addmenuitem)
 {
     ui->setupUi(this);
+    QSqlQuery query;
+    if (query.exec("SELECT [category_name] FROM category")) {
+        while (query.next()) {
+            QString categoryName = query.value(0).toString();
+            ui->combo_category->addItem(categoryName);
+        }
+    } else {
+        qDebug() << "Failed to load categories:" << query.lastError().text();
+    }
+
 
     ui->item_id->setPlaceholderText("Generated Automatically");
     ui->item_name->setPlaceholderText("Enter Item Name");
-    ui->item_category->setPlaceholderText("Enter Item Category");
+
     ui->item_price->setPlaceholderText("Enter Price");
     ui->item_description->setPlaceholderText("Enter Description");
     ui->item_id->setReadOnly(true);
@@ -21,7 +31,7 @@ addmenuitem::addmenuitem(QWidget *parent)
     ui->item_id->setValidator(idValidator);
 
     // Validator for item_price (only decimal numbers with 2 digits after decimal point)
-    QDoubleValidator *priceValidator = new QDoubleValidator(0.0, 99999.99, 2, this);
+    QDoubleValidator *priceValidator = new QDoubleValidator(0.0, 9999.99, 2, this);
     priceValidator->setNotation(QDoubleValidator::StandardNotation);
     ui->item_price->setValidator(priceValidator);
 
@@ -36,7 +46,7 @@ addmenuitem::~addmenuitem()
 void addmenuitem::on_btn_save_clicked()
 {
     QString name = ui->item_name->text();
-    QString category = ui->item_category->text();
+   QString category = ui->combo_category->currentText();
     QString price = ui->item_price->text();
     QString description = ui->item_description->toPlainText();
 
@@ -72,20 +82,22 @@ void addmenuitem::on_btn_save_clicked()
     } else {
         QMessageBox::information(this, "Success", "Menu item added successfully!");
 
-        ui->item_category->clear();
+        ui->combo_category->clear();
         ui->item_name->clear();
         ui->item_price->clear();
         ui->item_description->clear();
+        ui->image_preview->clear();
     }
     emit itemSaved();
     this->accept();
 }
 void addmenuitem::on_btn_reset_clicked()
 {
-    ui->item_category->clear();
     ui->item_name->clear();
     ui->item_price->clear();
     ui->item_description->clear();
+    ui->image_preview->clear();
+
 }
 
 void addmenuitem::on_image_upload_clicked()
