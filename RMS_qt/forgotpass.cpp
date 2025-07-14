@@ -1,11 +1,20 @@
 #include "forgotpass.h"
 #include "ui_forgotpass.h"
-#include "utils.h"  // for hashPassword()
+#include "utils.h"
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QMessageBox>
 #include <QSqlError>
+#include <QLineEdit>
 #include <QDebug>
+#include <QToolButton>
+#include <QIcon>
+#include <QStyle>
+#include <QCryptographicHash>
+#include <QRegularExpressionValidator>
+#include <QIntValidator>
+#include <QEvent>
+
 
 forgotpass::forgotpass(QWidget *parent)
     : QDialog(parent)
@@ -16,12 +25,15 @@ forgotpass::forgotpass(QWidget *parent)
     // Hide password inputs
     ui->line_newpass->setEchoMode(QLineEdit::Password);
     ui->line_confirmpass->setEchoMode(QLineEdit::Password);
+    setupEyeButton(ui->line_newpass);
+    setupEyeButton(ui->line_confirmpass);
 }
 
 forgotpass::~forgotpass()
 {
     delete ui;
 }
+
 
 void forgotpass::on_btn_confirm_clicked()
 {

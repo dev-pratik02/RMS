@@ -16,7 +16,6 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
-#include <QtWidgets/QToolButton>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
@@ -41,7 +40,6 @@ public:
     QLineEdit *line_password;
     QPushButton *btn_confirm;
     QDateEdit *date_dob;
-    QToolButton *eyeButton;
 
     void setupUi(QDialog *signup)
     {
@@ -123,9 +121,6 @@ public:
         date_dob = new QDateEdit(signup);
         date_dob->setObjectName("date_dob");
         date_dob->setGeometry(QRect(210, 284, 221, 31));
-        eyeButton = new QToolButton(signup);
-        eyeButton->setObjectName("eyeButton");
-        eyeButton->setGeometry(QRect(410, 346, 20, 20));
 
         retranslateUi(signup);
 
@@ -143,7 +138,6 @@ public:
         label_6->setText(QCoreApplication::translate("signup", "Password:", nullptr));
         label_7->setText(QCoreApplication::translate("signup", "Confirm Password:", nullptr));
         btn_confirm->setText(QCoreApplication::translate("signup", "Confirm", nullptr));
-        eyeButton->setText(QString());
     } // retranslateUi
 
 };

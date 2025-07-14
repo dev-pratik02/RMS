@@ -19,6 +19,8 @@ private slots:
 private:
      void setupUiLinks();
      Ui::login_page *ui;
+     bool passwordVisible = false;
+     void setupEyeButtone();
 
 public:
 

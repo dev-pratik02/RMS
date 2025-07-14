@@ -15,11 +15,15 @@ public:
     explicit forgotpass(QWidget *parent = nullptr);
     ~forgotpass();
 
-private:
-    Ui::forgotpass *ui;
 
 private slots:
     void on_btn_confirm_clicked();
+
+private:
+    Ui::forgotpass *ui;
+    bool passwordVisible = false;
+    void setupEyeButtone();
+
 
 };
 

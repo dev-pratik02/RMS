@@ -15,7 +15,8 @@ SOURCES += \
     login_page.cpp \
     main.cpp \
     mainwindow.cpp \
-    signup.cpp
+    signup.cpp \
+    utils.cpp
 
 HEADERS += \
     forgotpass.h \

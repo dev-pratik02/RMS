@@ -22,6 +22,7 @@ login_page::login_page(QWidget *parent)
     ui->label_signup->setStyleSheet("QLabel { color: blue; text-decoration: underline; }");
     ui->label_forgotpass->setStyleSheet("QLabel { color: blue; text-decoration: underline; }");
     ui->input_password->setEchoMode(QLineEdit::Password);
+    setupEyeButton(ui->input_password);
 
     // First image
     QPixmap loginPix("C:/Users/Swift/RMS/RMS-assets/login_page_image.png");

@@ -3,6 +3,7 @@ release/login_page.o
 release/main.o
 release/mainwindow.o
 release/signup.o
+release/utils.o
 release/qrc_resources.o
 release/moc_forgotpass.o
 release/moc_login_page.o

@@ -202,19 +202,6 @@
     </rect>
    </property>
   </widget>
-  <widget class="QToolButton" name="eyeButton">
-   <property name="geometry">
-    <rect>
-     <x>410</x>
-     <y>346</y>
-     <width>20</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
  </widget>
  <resources/>
  <connections/>

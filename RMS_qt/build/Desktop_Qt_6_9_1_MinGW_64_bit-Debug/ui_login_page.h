@@ -15,7 +15,6 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
-#include <QtWidgets/QToolButton>
 
 QT_BEGIN_NAMESPACE
 
@@ -35,7 +34,6 @@ public:
     QLabel *label_pic1;
     QLabel *label_forgotpass;
     QLabel *label_signup;
-    QToolButton *eyeButton_2;
 
     void setupUi(QDialog *login_page)
     {
@@ -97,9 +95,6 @@ public:
         label_signup = new QLabel(login_page);
         label_signup->setObjectName("label_signup");
         label_signup->setGeometry(QRect(200, 510, 42, 16));
-        eyeButton_2 = new QToolButton(login_page);
-        eyeButton_2->setObjectName("eyeButton_2");
-        eyeButton_2->setGeometry(QRect(300, 395, 20, 21));
 
         retranslateUi(login_page);
 
@@ -120,7 +115,6 @@ public:
         label_pic1->setText(QString());
         label_forgotpass->setText(QCoreApplication::translate("login_page", "Forget Password ?", nullptr));
         label_signup->setText(QCoreApplication::translate("login_page", "Sign Up", nullptr));
-        eyeButton_2->setText(QString());
     } // retranslateUi
 
 };
