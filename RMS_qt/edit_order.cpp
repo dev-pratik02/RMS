@@ -1,6 +1,6 @@
 #include "edit_order.h"
 #include "ui_edit_order.h"
-
+#include "databasemanager.h"
 
 edit_order::edit_order(QWidget *parent)
     : QDialog(parent)
@@ -30,21 +30,9 @@ edit_order::edit_order(const QString &orderId, const QString &table, const QStri
         delete oldLayout;
     }
 
-    // Only add the database if it doesn't already exist
-    if (!QSqlDatabase::contains("qt_sql_default_connection")) {
-        mydb = QSqlDatabase::addDatabase("QSQLITE");
-        mydb.setDatabaseName("/Users/pratik/Programming/RMS/RMS_qt/RmsApp.db");
-    } else {
-        mydb = QSqlDatabase::database("qt_sql_default_connection");
-    }
+    mydb = DatabaseManager::getDatabase();
 
-    if(mydb.open()){
-        qDebug() <<"Database is connected by edit orders page";
-    }
-    else{
-        qDebug() << "Database connection failed" ;
-        qDebug() << "Error:"<< mydb.lastError();
-    }
+
 
 
     // --- Card Layout ---
@@ -91,52 +79,46 @@ edit_order::edit_order(const QString &orderId, const QString &table, const QStri
 
     mainLayout->addWidget(topSection);
 
-    // --- Table Header as Labels ---
-    QWidget *headerWidget = new QWidget(card);
-    QHBoxLayout *headerLayout = new QHBoxLayout(headerWidget);
-    headerLayout->setContentsMargins(0, 0, 0, 0);
-    headerLayout->setSpacing(0); // No spacing between header widgets
+    // Order Table
+    QTableWidget *orderTable = new QTableWidget(items.size(), 4, card);
 
-    // Set more width for Name column and increase gap between Name and Quantity
-    int nameColWidth = 150;
-    int qtyColWidth = 100;
-    int priceColWidth = 80;
-    int nameQtyGap = 200;
-    int qtyPriceGap=100;
+    // Show horizontal headers (default is visible, but be explicit)
+    orderTable->horizontalHeader()->setVisible(true);
 
-    QLabel *nameLabel = new QLabel("Name", headerWidget);
-    QLabel *qtyLabel = new QLabel("Quantity", headerWidget);
-    QLabel *priceLabel = new QLabel("Price", headerWidget);
-
-    nameLabel->setStyleSheet("color: white; background: transparent; font-size: 16px; font-weight: bold; padding: 6px 8px;");
-    qtyLabel->setStyleSheet("color: white; background: transparent; font-size: 16px; font-weight: bold; padding: 6px 8px;");
-    priceLabel->setStyleSheet("color: white; background: transparent; font-size: 16px; font-weight: bold; padding: 6px 8px;");
-
-    nameLabel->setAlignment(Qt::AlignCenter | Qt::AlignVCenter);
-    qtyLabel->setAlignment(Qt::AlignCenter);
-    priceLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-
-    nameLabel->setFixedWidth(nameColWidth);
-    qtyLabel->setFixedWidth(qtyColWidth);
-    priceLabel->setFixedWidth(priceColWidth);
-
-    headerLayout->addWidget(nameLabel);
-    headerLayout->addSpacing(nameQtyGap);
-    headerLayout->addWidget(qtyLabel);
-    headerLayout->addSpacing(qtyPriceGap);
-    headerLayout->addWidget(priceLabel);
-
-    mainLayout->addWidget(headerWidget);
-
-    // --- Order Table (no headers) ---
-    QTableWidget *orderTable = new QTableWidget(items.size(), 3, card);
-    orderTable->horizontalHeader()->setVisible(false);
+    // Optionally, hide vertical headers (row numbers)
     orderTable->verticalHeader()->setVisible(false);
+
+    // Set header labels
+    QStringList headerLabels = {"Name", "Quantity", "Price", "Action"};
+    orderTable->setHorizontalHeaderLabels(headerLabels);
+
+    // Disable editing for the cells (you can allow editing on widgets inside cells)
     orderTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+
+    // Ensure horizontal header is visible
+    orderTable->horizontalHeader()->setVisible(true);
+
+    // Set the horizontal header text alignment and style if needed
+    orderTable->horizontalHeader()->setHighlightSections(false);
+
+    // Optionally force a style to make the header text visible and background contrasting
+    orderTable->horizontalHeader()->setStyleSheet(
+        "QHeaderView::section {"
+        "font-weight: bold;"
+        "font-size: 15px;"
+        "padding: 2px;"
+        "border: none;"
+        "}"
+        );
+    // Selection modes, grid, et
+    orderTable->horizontalHeader()->setFixedHeight(50);
     orderTable->setFocusPolicy(Qt::NoFocus);
     orderTable->setSelectionMode(QAbstractItemView::NoSelection);
     orderTable->setShowGrid(false);
     orderTable->setMinimumHeight(300);
+    orderTable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
     orderTable->setStyleSheet(
         "QTableWidget {"
         " background-color: #333;"
@@ -149,11 +131,14 @@ edit_order::edit_order(const QString &orderId, const QString &table, const QStri
         " padding: 6px;"
         " background: transparent;"
         "}"
-    );
-    // Increase spacing between order items column and quantity column by making name column wider
-    orderTable->setColumnWidth(0, nameColWidth + nameQtyGap);
-    orderTable->setColumnWidth(1, qtyColWidth + qtyPriceGap);
-    orderTable->setColumnWidth(2, priceColWidth);
+        );
+
+    // Set column widths
+    orderTable->setColumnWidth(0, 250);
+    orderTable->setColumnWidth(1, 180);
+    orderTable->setColumnWidth(2, 80);
+    orderTable->setColumnWidth(3, 100);
+
 
 
     //Creating a menu list by fetching menu from database
@@ -175,7 +160,7 @@ edit_order::edit_order(const QString &orderId, const QString &table, const QStri
         QString menu_item_name=queryMenuList.value(1).toString();
         menuList.append(menu_item_name);
     }
-    qDebug() << "Number of records:" << records;
+    qDebug() << "Number of menu items:" << records;
     queryMenuList.first();
 
     for (int i = 0; i < items.size(); ++i) {
@@ -236,6 +221,29 @@ edit_order::edit_order(const QString &orderId, const QString &table, const QStri
         comboBoxes.append(combo);
         spinBoxes.append(spin);
 
+        // --- Delete Button ---
+        QPushButton *deleteRowBtn = new QPushButton("Delete");
+        deleteRowBtn->setStyleSheet("background-color: #dc3545; color: white; border-radius: 4px; padding: 4px 8px;");
+        orderTable->setCellWidget(i, 3, deleteRowBtn);
+
+        // Needed to find out which row to delete
+        connect(deleteRowBtn, &QPushButton::clicked, this, [=]() {
+            QPushButton* btn = qobject_cast<QPushButton*>(sender());
+            if (!btn) return;
+            // Find row by searching for widget
+            int row = -1;
+            for (int r = 0; r < orderTable->rowCount(); ++r) {
+                if (orderTable->cellWidget(r, 3) == btn) {
+                    row = r;
+                    break;
+                }
+            }
+            if (row >= 0) {
+                deleteItemRow(orderTable, row);
+            }
+        });
+
+
     }
 
     mainLayout->addWidget(orderTable);
@@ -292,25 +300,58 @@ edit_order::edit_order(const QString &orderId, const QString &table, const QStri
     connect(readyBtn, &QPushButton::clicked, this, [=]() { updateStatus("Ready"); });
     connect(servedBtn, &QPushButton::clicked, this, [=]() { updateStatus("Served"); });
     connect(delBtn, &QPushButton::clicked, this, [=]() {
-        QSqlQuery querydelitems(mydb);
-        querydelitems.prepare("delete from order_items where order_id= ?");
-        querydelitems.addBindValue(orderId);
-        if(querydelitems.exec()){
-            qDebug()<<"Order: "<<orderId<<"deleted successfully";
-        }
-        else{
-            qDebug()<<"Order: "<<orderId<<"could not be deleted";
+
+
+
+
+        if (!mydb.transaction()) {
+            qDebug() << "Failed to start transaction:" << mydb.lastError();
+            return;
         }
 
+        QSqlQuery querydelitems(mydb);
+        querydelitems.prepare("DELETE FROM order_items WHERE order_id = ?");
+        querydelitems.addBindValue(orderId);
+        bool ok1 = querydelitems.exec();
+        if (!ok1)
+            qDebug() << "Delete order_items failed:" << querydelitems.lastError();
+
         QSqlQuery querydelorder(mydb);
-        querydelorder.prepare("delete from orders where order_id= ?");
+        querydelorder.prepare("DELETE FROM orders WHERE order_id = ?");
         querydelorder.addBindValue(orderId);
-        if(querydelorder.exec()){
-            qDebug()<<"Order: "<<orderId<<"deleted successfully";
+        bool ok2 = querydelorder.exec();
+        if (!ok2)
+            qDebug() << "Delete orders failed:" << querydelorder.lastError();
+
+        QSqlQuery querytableStatus(mydb);
+        querytableStatus.prepare("UPDATE tables SET status = 'available' WHERE order_id = ?");
+        querytableStatus.addBindValue(orderId);
+        bool ok4 = querytableStatus.exec();
+
+        QSqlQuery querydeltable(mydb);
+        querydeltable.prepare("UPDATE tables SET order_id = NULL WHERE order_id = ?");
+        querydeltable.addBindValue(orderId);
+        bool ok3 = querydeltable.exec();
+        if (!ok3)
+            qDebug() << "Update tables (order_id=NULL) failed:" << querydeltable.lastError();
+
+        if (!ok4)
+            qDebug() << "Update tables (status=available) failed:" << querytableStatus.lastError();
+
+        if (ok1 && ok2 && ok3 && ok4) {
+            if (!mydb.commit()) {
+                qDebug() << "Failed to commit transaction:" << mydb.lastError();
+                mydb.rollback();
+            } else {
+                qDebug() << "All queries committed successfully";
+            }
+        } else {
+            mydb.rollback();
+            qDebug() << "Transaction failed, rolled back";
         }
-        else{
-            qDebug()<<"Order: "<<orderId<<"could not be deleted";
-        }
+
+
+
         this->accept();
     });
 
@@ -321,12 +362,45 @@ edit_order::edit_order(const QString &orderId, const QString &table, const QStri
     ui->frame->setLayout(frameLayout);
 }
 
+
+void edit_order::deleteItemRow(QTableWidget *table, int row)
+{
+    if (row < 0 || row >= table->rowCount())
+        return;
+
+    // Remove widgets from comboBoxes and spinBoxes
+    if (row < comboBoxes.size())
+        comboBoxes.removeAt(row);
+    if (row < spinBoxes.size())
+        spinBoxes.removeAt(row);
+
+    // Remove row from the table
+    table->removeRow(row);
+}
+
 edit_order::~edit_order()
 {
     delete ui;
 }
 
 void edit_order::onSaveClicked() {
+    // Start transaction for safety
+    if (!mydb.transaction()) {
+        qDebug() << "Failed to start transaction:" << mydb.lastError();
+        return;
+    }
+
+    // Step 1: Delete all existing order_items for this order
+    QSqlQuery deleteQuery(mydb);
+    deleteQuery.prepare("DELETE FROM order_items WHERE order_id = ?");
+    deleteQuery.addBindValue(orderIdGlobal);
+    if (!deleteQuery.exec()) {
+        qDebug() << "Failed to delete existing order items:" << deleteQuery.lastError();
+        mydb.rollback();
+        return;
+    }
+
+    // Step 2: Insert all current rows from UI
     for (int i = 0; i < comboBoxes.size(); ++i) {
         QString itemName = comboBoxes[i]->currentText();
         int quantity = spinBoxes[i]->value();
@@ -340,26 +414,30 @@ void edit_order::onSaveClicked() {
             menuId = query.value(0).toString();
         }
 
-        // You can now update or insert into order_items
-        QSqlQuery upsert(mydb);
-        upsert.prepare("UPDATE order_items SET menu_item_id = ?, quantity = ? "
-                       "WHERE order_id = ? AND item_id = ("
-                       "  SELECT item_id FROM order_items WHERE order_id = ? LIMIT 1 OFFSET ?)");
-        upsert.addBindValue(menuId);
-        upsert.addBindValue(quantity);
-        upsert.addBindValue(orderIdGlobal);
-        upsert.addBindValue(orderIdGlobal);
-        upsert.addBindValue(i);
+        QSqlQuery insertQuery(mydb);
+        insertQuery.prepare("INSERT INTO order_items (order_id, menu_item_id, quantity) VALUES (?, ?, ?)");
+        insertQuery.addBindValue(orderIdGlobal);
+        insertQuery.addBindValue(menuId);
+        insertQuery.addBindValue(quantity);
 
-        if (!upsert.exec()) {
-            qDebug() << "Failed to update row" << i << ":" << upsert.lastError();
+        if (!insertQuery.exec()) {
+            qDebug() << "Failed to insert order item:" << insertQuery.lastError();
+            mydb.rollback();
+            return;
         }
+    }
+
+    // Commit transaction
+    if (!mydb.commit()) {
+        qDebug() << "Failed to commit transaction:" << mydb.lastError();
+        mydb.rollback();
+        return;
     }
 
     qDebug() << "Order updated successfully.";
     this->accept();
-
 }
+
 
 void edit_order::updateStatus(const QString &newStatus) {
     QSqlQuery updateStatus(mydb);

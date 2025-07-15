@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="btn_orders">
+   <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
       <x>310</x>
@@ -24,7 +24,20 @@
      </rect>
     </property>
     <property name="text">
-     <string>orders</string>
+     <string>Orders</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_2">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>220</y>
+      <width>101</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>POS</string>
     </property>
    </widget>
   </widget>

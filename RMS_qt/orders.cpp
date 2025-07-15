@@ -1,28 +1,15 @@
 // orders.cpp
 #include "orders.h"
 #include "ui_orders.h"
-
+#include "databasemanager.h"
 orders::orders(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::orders)
 {
     ui->setupUi(this);
 
-    // Only add the database if it doesn't already exist
-    if (!QSqlDatabase::contains("qt_sql_default_connection")) {
-        mydb = QSqlDatabase::addDatabase("QSQLITE");
-        mydb.setDatabaseName("/Users/pratik/Programming/RMS/RMS_qt/RmsApp.db");
-    } else {
-        mydb = QSqlDatabase::database("qt_sql_default_connection");
-    }
+    QSqlDatabase mydb = DatabaseManager::getDatabase();
 
-    if(mydb.open()){
-        qDebug() <<"Database is connected by orders page";
-    }
-    else{
-        qDebug() << "Database connection failed" ;
-        qDebug() << "Error:"<< mydb.lastError();
-    }
 
     // Remove any widget previously set in the scroll area
     if (QWidget *oldWidget = ui->scrollArea->widget()) {
@@ -35,12 +22,14 @@ orders::orders(QWidget *parent)
 
     QSqlQuery queryInsert(mydb);
     if(queryInsert.exec("SELECT * FROM orders where status!='Billed'")){
-        qDebug()<<"Successfully fetched order details";
+        // qDebug()<<"Successfully fetched order details";
     }
     else{
         qDebug()<< "Can't fetch order details";
         qDebug() << "Error:" << queryInsert.lastError();
     }
+
+
 
     // For SQLite, count rows manually:
     int records = 0;
@@ -82,6 +71,8 @@ orders::orders(QWidget *parent)
         gridLayout->addWidget(card, row, col);
         ++i;
     }while(queryInsert.next());
+
+    queryInsert.finish();
 
     // Set a minimum size for the container so the scroll area works
     dynamicCardContainer->setMinimumSize(
@@ -185,7 +176,7 @@ QWidget* orders::createOrderCard(const QString &orderId, const QString &table, c
     queryOrders.addBindValue(orderId);
 
     if(queryOrders.exec()){
-        qDebug() << "Successfully fetched order items for order_id:" << orderId;
+        // qDebug() << "Successfully fetched order items for order_id:" << orderId;
     }
     else {
         qDebug() << "Failed to obtain the order items for order_id:" << orderId;
@@ -196,7 +187,7 @@ QWidget* orders::createOrderCard(const QString &orderId, const QString &table, c
     while (queryOrders.next()) {
         ++orders_row;
     }
-    qDebug() << "Number of order items:" << orders_row;
+    // qDebug() << "Number of order items:" << orders_row;
 
     // Reset query to first record for reading data
     if (orders_row > 0)
@@ -239,7 +230,7 @@ QWidget* orders::createOrderCard(const QString &orderId, const QString &table, c
             queryMenu.prepare("SELECT item_name, price FROM menu WHERE menu_item_id = ?");
             QString menuItemId = queryOrders.value(2).toString().trimmed();
             queryMenu.addBindValue(menuItemId);
-            qDebug() << "Looking up menu_item_id:" << menuItemId;
+            // qDebug() << "Looking up menu_item_id:" << menuItemId;
 
             QString itemname;
             double price = 0.0;
@@ -277,6 +268,8 @@ QWidget* orders::createOrderCard(const QString &orderId, const QString &table, c
 
         } while (queryOrders.next());
     }
+    queryOrders.finish();
+    queryMenu.finish();
 
     mainLayout->addWidget(orderTable);
 

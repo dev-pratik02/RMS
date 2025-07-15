@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>POS_AddOrder</class>
+ <widget class="QDialog" name="POS_AddOrder">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1280</width>
+    <height>800</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Add order</string>
+  </property>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

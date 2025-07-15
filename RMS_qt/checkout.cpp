@@ -1,6 +1,7 @@
 #include "checkout.h"
 #include "ui_checkout.h"
 
+#include "databasemanager.h"
 
 checkout::checkout(const QString &orderId, const QString &table, const QString &time, const QString &status,
                    const QList<QList<QString>> &items, QWidget *parent)
@@ -219,32 +220,44 @@ checkout::checkout(const QString &orderId, const QString &table, const QString &
 
     // Connect button to close dialog
     connect(completeBtn, &QPushButton::clicked, this, [=]() {
-        // Only add the database if it doesn't already exist
-        if (!QSqlDatabase::contains("qt_sql_default_connection")) {
-            mydb = QSqlDatabase::addDatabase("QSQLITE");
-            mydb.setDatabaseName("/Users/pratik/Programming/RMS/RMS_qt/RmsApp.db");
-        } else {
-            mydb = QSqlDatabase::database("qt_sql_default_connection");
+        QSqlDatabase mydb = DatabaseManager::getDatabase();
+
+        if (!mydb.transaction()) {
+            qDebug() << "Failed to start transaction:" << mydb.lastError();
+            return;
         }
 
-        if(mydb.open()){
-            qDebug() <<"Database is connected by checkout page";
-        }
-        else{
-            qDebug() << "Database connection failed" ;
-            qDebug() << "Error:"<< mydb.lastError();
-        }
         QSqlQuery updateStatus(mydb);
         updateStatus.prepare("UPDATE orders SET status = ? WHERE order_id = ?");
         updateStatus.addBindValue("Billed");
         updateStatus.addBindValue(orderId);
-        if (updateStatus.exec()) {
-            qDebug() << "Order status updated to Billed";
-        } else {
-            qDebug() << "Failed to update status:" << updateStatus.lastError();
+
+        if (!updateStatus.exec()) {
+            qDebug() << "Failed to update order status:" << updateStatus.lastError();
+            mydb.rollback();
+            return;
         }
-        this->accept();    // closes the dialog
+
+        QSqlQuery updateTable(mydb);
+        updateTable.prepare("UPDATE tables SET status = 'available', order_id = NULL WHERE order_id = ?");
+        updateTable.addBindValue(orderId);
+
+        if (!updateTable.exec()) {
+            qDebug() << "Failed to update table status:" << updateTable.lastError();
+            mydb.rollback();
+            return;
+        }
+
+        if (!mydb.commit()) {
+            qDebug() << "Failed to commit transaction:" << mydb.lastError();
+            mydb.rollback();
+            return;
+        }
+
+        qDebug() << "Order completed and table status updated successfully.";
+        this->accept();  // closes the dialog
     });
+
 
 
     // Apply layout to frame
