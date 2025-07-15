@@ -35,7 +35,7 @@ edit::~edit()
 
 void edit::loadTableView()
 {
-    QSqlQuery query("SELECT table_no, seats, location, orientation, quality, description FROM table_list");
+    QSqlQuery query("SELECT table_no, seats, location, table_type, description FROM table_assign");
     if (query.lastError().isValid()) {
         qDebug() << "Query error:" << query.lastError().text();
         return;
@@ -43,10 +43,9 @@ void edit::loadTableView()
 
     // Clear existing contents and set up columns (6 data + 1 action)
     ui->table_view->clear();
-    ui->table_view->setColumnCount(7);
+    ui->table_view->setColumnCount(6);
     ui->table_view->setRowCount(0);
-
-    QStringList headers = {"Table No", "Seats", "Location", "Orientation", "Quality", "Description", "Actions"};
+    QStringList headers = {"Table No", "Seats", "Location", "Table Type", "Description", "Actions"};
     ui->table_view->setHorizontalHeaderLabels(headers);
 
     int row = 0;
@@ -54,7 +53,7 @@ void edit::loadTableView()
         ui->table_view->insertRow(row);
 
         // Insert data columns
-        for (int col = 0; col < 6; ++col) {
+        for (int col = 0; col < 5; ++col) {
             QTableWidgetItem *item = new QTableWidgetItem(query.value(col).toString());
             ui->table_view->setItem(row, col, item);
         }
@@ -68,7 +67,7 @@ void edit::loadTableView()
         layout->addWidget(delBtn);
         layout->setContentsMargins(0, 0, 0, 0);
         actionWidget->setLayout(layout);
-        ui->table_view->setCellWidget(row, 6, actionWidget);
+        ui->table_view->setCellWidget(row, 5, actionWidget);
 
         // Store row number in button properties for reference
         editBtn->setProperty("row", row);
@@ -80,13 +79,12 @@ void edit::loadTableView()
 
             int tableNo = ui->table_view->item(r, 0)->text().toInt();
             QString seats = ui->table_view->item(r, 1)->text();
-            QString location = ui->table_view->item(r, 2)->text();
-            QString orientation = ui->table_view->item(r, 3)->text();
-            QString quality = ui->table_view->item(r, 4)->text();
-            QString description = ui->table_view->item(r, 5)->text();
+            QString type = ui->table_view->item(r, 2)->text();
+            QString location = ui->table_view->item(r, 3)->text();
+            QString description = ui->table_view->item(r, 4)->text();
 
             editing_table *editForm = new editing_table(this);
-            editForm->setData(QString::number(tableNo), seats, location, orientation, quality, description);
+            editForm->setData(QString::number(tableNo), seats, type, location, description);
             connect(editForm, &editing_table::dataUpdated, this, &edit::refreshTableView);
             editForm->show();
         });
@@ -105,10 +103,14 @@ void edit::loadTableView()
 
             if (reply == QMessageBox::Yes) {
                 QSqlQuery delQuery;
-                delQuery.prepare("DELETE FROM table_list WHERE table_no = ?");
+                delQuery.prepare("DELETE FROM table_assign WHERE table_no = ?");
                 delQuery.addBindValue(tableNo.toInt());
 
-                if (!delQuery.exec()) {
+                QSqlQuery queryTables;
+                queryTables.prepare("DELETE FROM tables WHERE table_no = ?");
+                queryTables.addBindValue(tableNo.toInt());
+
+                if (!delQuery.exec() || !delQuery.exec()) {
                     QMessageBox::critical(this, "Delete Error", "Database error: " + delQuery.lastError().text());
                 } else {
                     QMessageBox::information(this, "Deleted", "Deleted successfully.");
@@ -121,12 +123,11 @@ void edit::loadTableView()
     }
 
     ui->table_view->resizeColumnsToContents();
-    ui->table_view->setColumnWidth(0, 80);   // Table No
-    ui->table_view->setColumnWidth(1, 60);   // Seats
-    ui->table_view->setColumnWidth(2, 100);  // Location
-    ui->table_view->setColumnWidth(3, 100);  // Orientation
-    ui->table_view->setColumnWidth(4, 100);  // Quality
-    ui->table_view->setColumnWidth(5, 150);  // Description
+    ui->table_view->setColumnWidth(0, 80);
+    ui->table_view->setColumnWidth(1, 60);
+    ui->table_view->setColumnWidth(2, 100);
+    ui->table_view->setColumnWidth(4, 100);
+    ui->table_view->setColumnWidth(5, 150);
     ui->table_view->setColumnWidth(6, 150);
 }
 
@@ -144,7 +145,7 @@ void edit::on_btn_add_clicked()
     if (!addPage) {
         addPage = new add_tables(this);
     }
-    addPage->setNextTableNumber();
+    // addPage->setNextTableNumber();
     addPage->show();
     this->hide();
 
@@ -161,13 +162,12 @@ void edit::on_edit_button_clicked(int row)
 
     QString table_no = model->index(row, 0).data().toString();
     QString seats = model->index(row, 1).data().toString();
-    QString location = model->index(row, 2).data().toString();
-    QString orientation = model->index(row, 3).data().toString();
-    QString quality = model->index(row, 4).data().toString();
-    QString description = model->index(row, 5).data().toString();
+    QString type = model->index(row, 2).data().toString();
+    QString location = model->index(row, 3).data().toString();
+    QString description = model->index(row, 4).data().toString();
 
     editForm = new editing_table(this);
-    editForm->setData(table_no, seats, location, orientation, quality, description);
+    editForm->setData(table_no, seats, type, location, description);
     editForm->show();
 
     connect(editForm, &editing_table::dataUpdated, this, &edit::refreshTableView);
@@ -190,12 +190,22 @@ void edit::on_delete_button_clicked()
 
     if (reply == QMessageBox::Yes) {
         QSqlQuery query;
-        query.prepare("DELETE FROM table_list WHERE table_no = ?");
+        query.prepare("DELETE FROM table_assign WHERE table_no = ?");
         query.addBindValue(tableNo);
 
+        QSqlQuery queryTables;
+        queryTables.prepare("DELETE FROM tables WHERE table_no = ?");
+        queryTables.addBindValue(tableNo);
+
         if (!query.exec()) {
-            QMessageBox::critical(this, "Delete Error", "Database error: " + query.lastError().text());
-        } else {
+            QMessageBox::critical(this, "Error", "Failed to update table_assign: " + query.lastError().text());
+            return;
+        }
+        if (!queryTables.exec()) {
+            QMessageBox::critical(this, "Error", "Failed to update tables: " + queryTables.lastError().text());
+            return;
+        }
+        else {
             QMessageBox::information(this, "Deleted", "Deleted successfully.");
             query.finish();
             refreshTableView();

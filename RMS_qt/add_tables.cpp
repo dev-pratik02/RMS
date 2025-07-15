@@ -10,22 +10,17 @@ add_tables::add_tables(QWidget *parent) :
     ui(new Ui::add_tables)
 {
     ui->setupUi(this);
-    ui->lineEdit_1->setReadOnly(true);
     db = QSqlDatabase::database();
     QIntValidator *intValidator = new QIntValidator(1, 9999, this);
-    ui->lineEdit_1->setValidator(intValidator);  // Table No.
     ui->lineEdit_2->setValidator(intValidator);  // Seats
 
     QRegularExpression rx("[a-zA-Z\\s]+");
     QRegularExpressionValidator *stringValidator = new QRegularExpressionValidator(rx, this);
     ui->lineEdit_3->setValidator(stringValidator);
-    ui->lineEdit_4->setValidator(stringValidator);
     ui->lineEdit_5->setValidator(stringValidator);
-    ui->lineEdit_1->setPlaceholderText("Enter Table No. (numbers only)");
     ui->lineEdit_2->setPlaceholderText("Enter Seats (numbers only)");
     ui->lineEdit_3->setPlaceholderText("Enter Location");
-    ui->lineEdit_4->setPlaceholderText("Enter Orientation");
-    ui->lineEdit_5->setPlaceholderText("Enter Quality");
+    ui->lineEdit_5->setPlaceholderText("Enter table type");
     ui->textEdit_1->setPlaceholderText("#Description");
 }
 
@@ -33,58 +28,55 @@ add_tables::~add_tables()
 {
     delete ui;
 }
-void add_tables::setNextTableNumber()
-{
-    QSqlQuery query;
-    if (query.exec("SELECT MAX(table_no) FROM table_list")) {
-        if (query.next()) {
-            int nextTableNo = query.value(0).toInt() + 1;
-            ui->lineEdit_1->setText(QString::number(nextTableNo));
-        } else {
-            ui->lineEdit_1->setText("1");
-        }
-    } else {
-        ui->lineEdit_1->setText("1");
-    }
-}
+// void add_tables::setNextTableNumber()
+// {
+//     QSqlQuery query;
+//     if (query.exec("SELECT MAX(table_no) FROM table_assign")) {
+//         if (query.next()) {
+//             int nextTableNo = query.value(0).toInt() + 1;
+//             ui->lineEdit_1->setText(QString::number(nextTableNo));
+//         } else {
+//             ui->lineEdit_1->setText("1");
+//         }
+//     } else {
+//         ui->lineEdit_1->setText("1");
+//     }
+// }
 
 void add_tables::on_btn_save_clicked()
 {
-    QString Table_NO = ui->lineEdit_1->text();
     QString Seats = ui->lineEdit_2->text();
     QString Location = ui->lineEdit_3->text();
-    QString Orientation = ui->lineEdit_4->text();
-    QString Quality = ui->lineEdit_5->text();
+    QString Type = ui->lineEdit_5->text();
     QString Description = ui->textEdit_1->toPlainText();
-    QString Status = "Available";
 
-    if (Table_NO.isEmpty() || Seats.isEmpty() || Location.isEmpty() ||
-        Orientation.isEmpty() || Quality.isEmpty() || Description.isEmpty()) {
+    if (Type.isEmpty() || Seats.isEmpty() || Location.isEmpty() || Description.isEmpty()) {
         QMessageBox::warning(this, "Missing Fields", "Please fill in all fields before saving.");
         return;
     }
 
     // Validate numeric inputs
-    bool ok1, ok2;
-    int tableNoInt = Table_NO.toInt(&ok1);
-    int seatsInt = Seats.toInt(&ok2);
-    if (!ok1 || !ok2) {
-        QMessageBox::warning(this, "Input Error", "Table No. and Seats must be numbers.");
+    bool ok1;
+    int seatsInt = Seats.toInt(&ok1);
+    if (!ok1) {
+        QMessageBox::warning(this, "Input Error", "Seats must be numbers.");
         return;
     }
 
     QSqlQuery query;
-    query.prepare("INSERT INTO table_list (table_no, seats, location, orientation, quality, description, status) "
-                  "VALUES (?, ?, ?, ?, ?, ?, ?)");
-    query.addBindValue(tableNoInt);
+    query.prepare("INSERT INTO table_assign (seats, location, table_type, description) "
+                  "VALUES (?, ?, ?, ?)");
     query.addBindValue(seatsInt);
     query.addBindValue(Location);
-    query.addBindValue(Orientation);
-    query.addBindValue(Quality);
+    query.addBindValue(Type);
     query.addBindValue(Description);
-    query.addBindValue(Status);
 
-    if (!query.exec()) {
+    QSqlQuery queryTables;
+    queryTables.prepare("INSERT INTO tables(seats, status, order_id,remarks) VALUES(?,'available','',?)");
+    queryTables.addBindValue(seatsInt);
+    queryTables.addBindValue(Description);
+
+    if (!query.exec() || !queryTables.exec()) {
         QMessageBox::critical(this, "Error", "Failed to save data: " + query.lastError().text());
         return;
     }
@@ -95,19 +87,17 @@ void add_tables::on_btn_save_clicked()
     on_btn_reset_clicked();
 
     emit dataSaved();
-     setNextTableNumber();
+     // setNextTableNumber();
 }
 
 
 void add_tables::on_btn_reset_clicked()
 {
-    ui->lineEdit_1->clear();
     ui->lineEdit_2->clear();
      ui->lineEdit_3->clear();
-     ui->lineEdit_4->clear();
      ui->lineEdit_5->clear();
     ui->textEdit_1->clear();
-      setNextTableNumber();
+      // setNextTableNumber();
 }
 
 void add_tables::on_btn_back1_clicked()

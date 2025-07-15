@@ -24,7 +24,7 @@ private:
     QSqlDatabase db;
 
 public:
-    void setNextTableNumber();
+    // void setNextTableNumber();
 
 private slots:
     void on_btn_save_clicked();

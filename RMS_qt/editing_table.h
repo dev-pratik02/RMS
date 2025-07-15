@@ -17,7 +17,7 @@ public:
     ~editing_table();
 
     void setData(const QString &table_no, const QString &seats, const QString &location,
-                 const QString &orientation, const QString &quality, const QString &description);
+                const QString &type, const QString &description);
 
 signals:
     void dataUpdated();

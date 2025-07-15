@@ -32,7 +32,7 @@ table::table(QWidget *parent)
 
     loadTableList();
 
-    connect(ui->btn_edit, &QPushButton::clicked, this, &table::on_btn_edit_clicked);
+    // connect(ui->btn_edit, &QPushButton::clicked, this, &table::on_btn_edit_clicked);
 }
 
 table::~table()
@@ -43,7 +43,7 @@ table::~table()
 void table::loadTableList()
 {
     QSqlQueryModel *model = new QSqlQueryModel(this);
-    model->setQuery("SELECT * FROM table_list");
+    model->setQuery("SELECT * FROM tables");
 
     if (model->lastError().isValid()) {
         qDebug() << "Error loading table_list:" << model->lastError().text();
@@ -75,19 +75,19 @@ void table::refreshTableList()
     int totalTables = 0;
     int availableTables = 0;
 
-    QSqlQuery totalQuery("SELECT COUNT(*) FROM table_list");
+    QSqlQuery totalQuery("SELECT COUNT(*) FROM tables");
     if (totalQuery.next()) {
         totalTables = totalQuery.value(0).toInt();
         ui->label_t->setText(QString::number(totalTables));
     }
 
-    QSqlQuery availableQuery("SELECT COUNT(*) FROM table_list WHERE status = 'Available'");
+    QSqlQuery availableQuery("SELECT COUNT(*) FROM tables WHERE status = 'available'");
     if (availableQuery.next()) {
         availableTables = availableQuery.value(0).toInt();
         ui->label_a->setText(QString::number(availableTables));
     }
 
-    // 🔴 Only if available = 0, turn label red
+    //  Only if available = 0, turn label red
     if (availableTables == 0) {
         ui->available->setStyleSheet("background-color: rgb(220,20,60); color: rgb(255,255,255);font: 700 12pt Arial; padding: 4px; border-radius: 5px;");
     } else {
@@ -105,7 +105,7 @@ void table::refreshTableList()
 }
 void table::updateSeatLabels()
 {
-    QSqlQuery query("SELECT COUNT(*), SUM(CASE WHEN status = 'Available' THEN 1 ELSE 0 END) FROM table_list");
+    QSqlQuery query("SELECT COUNT(*), SUM(CASE WHEN status = 'available' THEN 1 ELSE 0 END) FROM tables");
 
     if (query.next()) {
         int Total = query.value(0).toInt();
