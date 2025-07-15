@@ -10,7 +10,9 @@ int main(int argc, char *argv[])
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
 
     // Use relative path: database file is in the same folder as .exe
-    db.setDatabaseName("rms_app.db");
+    // db.setDatabaseName("rms_app.db");
+    db.setDatabaseName("/Users/pratik/Programming/RMS/RMS_qt/RmsApp.db");
+
 
     qDebug() << "Trying to open database file at:" << db.databaseName();
 
