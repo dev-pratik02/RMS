@@ -121,7 +121,13 @@ void edit::loadTableView()
     }
 
     ui->table_view->resizeColumnsToContents();
-    ui->table_view->horizontalHeader()->setStretchLastSection(true);
+    ui->table_view->setColumnWidth(0, 80);   // Table No
+    ui->table_view->setColumnWidth(1, 60);   // Seats
+    ui->table_view->setColumnWidth(2, 100);  // Location
+    ui->table_view->setColumnWidth(3, 100);  // Orientation
+    ui->table_view->setColumnWidth(4, 100);  // Quality
+    ui->table_view->setColumnWidth(5, 150);  // Description
+    ui->table_view->setColumnWidth(6, 150);
 }
 
 

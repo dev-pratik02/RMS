@@ -15,12 +15,17 @@ add_tables::add_tables(QWidget *parent) :
     ui->lineEdit_1->setValidator(intValidator);  // Table No.
     ui->lineEdit_2->setValidator(intValidator);  // Seats
 
-    // String-only validator for Location, Orientation, Quality
-    QRegularExpression rx("[a-zA-Z\\s]+");  // Only letters and spaces
+    QRegularExpression rx("[a-zA-Z\\s]+");
     QRegularExpressionValidator *stringValidator = new QRegularExpressionValidator(rx, this);
     ui->lineEdit_3->setValidator(stringValidator);
     ui->lineEdit_4->setValidator(stringValidator);
     ui->lineEdit_5->setValidator(stringValidator);
+    ui->lineEdit_1->setPlaceholderText("Enter Table No. (numbers only)");
+    ui->lineEdit_2->setPlaceholderText("Enter Seats (numbers only)");
+    ui->lineEdit_3->setPlaceholderText("Enter Location");
+    ui->lineEdit_4->setPlaceholderText("Enter Orientation");
+    ui->lineEdit_5->setPlaceholderText("Enter Quality");
+    ui->textEdit_1->setPlaceholderText("#Description");
 }
 
 add_tables::~add_tables()
@@ -71,10 +76,9 @@ void add_tables::on_btn_save_clicked()
 
     QMessageBox::information(this, "Success", "Saved successfully!");
 
-    // ✅ Clear the form after saving
+
     on_btn_reset_clicked();
 
-    // ✅ Emit signal to refresh edit page
     emit dataSaved();
 }
 

@@ -11,6 +11,10 @@ table::table(QWidget *parent)
 {
     ui->setupUi(this);
 
+    ui->total->setStyleSheet("background-color: rgb(0,102,204); color: rgb(255,255,255); padding: 4px; border-radius: 5px;");
+
+
+
     // Setup SQLite connection
     db = QSqlDatabase::addDatabase("QSQLITE");
 
@@ -66,8 +70,36 @@ void table::on_btn_edit_clicked()
 }
 void table::refreshTableList()
 {
+
+    int totalTables = 0;
+    int availableTables = 0;
+
+    QSqlQuery totalQuery("SELECT COUNT(*) FROM table_list");
+    if (totalQuery.next()) {
+        totalTables = totalQuery.value(0).toInt();
+        ui->label_t->setText(QString::number(totalTables));
+    }
+
+    QSqlQuery availableQuery("SELECT COUNT(*) FROM table_list WHERE status = 'Available'");
+    if (availableQuery.next()) {
+        availableTables = availableQuery.value(0).toInt();
+        ui->label_a->setText(QString::number(availableTables));
+    }
+
+    // 🔴 Only if available = 0, turn label red
+    if (availableTables == 0) {
+        ui->available->setStyleSheet("background-color: rgb(220,20,60); color: rgb(255,255,255);font: 700 12pt Arial; padding: 4px; border-radius: 5px;");
+    } else {
+        ui->available->setStyleSheet("background-color: rgb(0,208,0); color: rgb(255,255,255);font: 700 12pt Arial; padding: 4px; border-radius: 5px;");
+    }
+
+
+
+
     loadTableList();
     updateSeatLabels();
+
+
 
 }
 void table::updateSeatLabels()
@@ -78,8 +110,8 @@ void table::updateSeatLabels()
         int Total = query.value(0).toInt();
         int Available = query.value(1).toInt();
 
-        ui->label_3->setText(QString::number(Total));
-        ui->available_2->setText(QString::number(Available));
+        ui->label_t->setText(QString::number(Total));
+        ui->label_a->setText(QString::number(Available));
     } else {
         qDebug() << "Failed to query table counts:" << query.lastError().text();
     }

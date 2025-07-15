@@ -88,13 +88,14 @@ font: 700 12pt &quot;Arial&quot;;</string>
      <rect>
       <x>510</x>
       <y>60</y>
-      <width>171</width>
+      <width>181</width>
       <height>41</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">color:black;
-font: 700 12pt &quot;Arial&quot;;</string>
+     <string notr="true">
+font: 700 12pt &quot;Arial&quot;;
+</string>
     </property>
     <property name="text">
      <string>     Available Table:</string>
@@ -136,7 +137,7 @@ font: 700 12pt &quot;Arial&quot;;</string>
      <string>Table List</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_3">
+   <widget class="QLabel" name="label_t">
     <property name="geometry">
      <rect>
       <x>230</x>
@@ -146,13 +147,14 @@ font: 700 12pt &quot;Arial&quot;;</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 700 14pt &quot;Arial&quot;;</string>
+     <string notr="true">font: 700 14pt &quot;Arial&quot;;
+color:white</string>
     </property>
     <property name="text">
      <string/>
     </property>
    </widget>
-   <widget class="QLabel" name="available_2">
+   <widget class="QLabel" name="label_a">
     <property name="geometry">
      <rect>
       <x>660</x>
@@ -162,7 +164,8 @@ font: 700 12pt &quot;Arial&quot;;</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 700 14pt &quot;Arial&quot;;</string>
+     <string notr="true">font: 700 14pt &quot;Arial&quot;;
+color:white;</string>
     </property>
     <property name="text">
      <string/>
