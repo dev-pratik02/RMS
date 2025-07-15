@@ -30,7 +30,7 @@ edit_order::edit_order(const QString &orderId, const QString &table, const QStri
         delete oldLayout;
     }
 
-    mydb = DatabaseManager::getDatabase();
+    db = DatabaseManager::getDatabase();
 
 
 
@@ -143,7 +143,7 @@ edit_order::edit_order(const QString &orderId, const QString &table, const QStri
 
     //Creating a menu list by fetching menu from database
 
-    QSqlQuery queryMenuList(mydb);
+    QSqlQuery queryMenuList(db);
     if(queryMenuList.exec("SELECT * FROM menu")){
         qDebug()<<"Successfully fetched menu details";
     }
@@ -304,31 +304,31 @@ edit_order::edit_order(const QString &orderId, const QString &table, const QStri
 
 
 
-        if (!mydb.transaction()) {
-            qDebug() << "Failed to start transaction:" << mydb.lastError();
+        if (!db.transaction()) {
+            qDebug() << "Failed to start transaction:" << db.lastError();
             return;
         }
 
-        QSqlQuery querydelitems(mydb);
+        QSqlQuery querydelitems(db);
         querydelitems.prepare("DELETE FROM order_items WHERE order_id = ?");
         querydelitems.addBindValue(orderId);
         bool ok1 = querydelitems.exec();
         if (!ok1)
             qDebug() << "Delete order_items failed:" << querydelitems.lastError();
 
-        QSqlQuery querydelorder(mydb);
+        QSqlQuery querydelorder(db);
         querydelorder.prepare("DELETE FROM orders WHERE order_id = ?");
         querydelorder.addBindValue(orderId);
         bool ok2 = querydelorder.exec();
         if (!ok2)
             qDebug() << "Delete orders failed:" << querydelorder.lastError();
 
-        QSqlQuery querytableStatus(mydb);
+        QSqlQuery querytableStatus(db);
         querytableStatus.prepare("UPDATE tables SET status = 'available' WHERE order_id = ?");
         querytableStatus.addBindValue(orderId);
         bool ok4 = querytableStatus.exec();
 
-        QSqlQuery querydeltable(mydb);
+        QSqlQuery querydeltable(db);
         querydeltable.prepare("UPDATE tables SET order_id = NULL WHERE order_id = ?");
         querydeltable.addBindValue(orderId);
         bool ok3 = querydeltable.exec();
@@ -339,14 +339,14 @@ edit_order::edit_order(const QString &orderId, const QString &table, const QStri
             qDebug() << "Update tables (status=available) failed:" << querytableStatus.lastError();
 
         if (ok1 && ok2 && ok3 && ok4) {
-            if (!mydb.commit()) {
-                qDebug() << "Failed to commit transaction:" << mydb.lastError();
-                mydb.rollback();
+            if (!db.commit()) {
+                qDebug() << "Failed to commit transaction:" << db.lastError();
+                db.rollback();
             } else {
                 qDebug() << "All queries committed successfully";
             }
         } else {
-            mydb.rollback();
+            db.rollback();
             qDebug() << "Transaction failed, rolled back";
         }
 
@@ -385,18 +385,18 @@ edit_order::~edit_order()
 
 void edit_order::onSaveClicked() {
     // Start transaction for safety
-    if (!mydb.transaction()) {
-        qDebug() << "Failed to start transaction:" << mydb.lastError();
+    if (!db.transaction()) {
+        qDebug() << "Failed to start transaction:" << db.lastError();
         return;
     }
 
     // Step 1: Delete all existing order_items for this order
-    QSqlQuery deleteQuery(mydb);
+    QSqlQuery deleteQuery(db);
     deleteQuery.prepare("DELETE FROM order_items WHERE order_id = ?");
     deleteQuery.addBindValue(orderIdGlobal);
     if (!deleteQuery.exec()) {
         qDebug() << "Failed to delete existing order items:" << deleteQuery.lastError();
-        mydb.rollback();
+        db.rollback();
         return;
     }
 
@@ -406,7 +406,7 @@ void edit_order::onSaveClicked() {
         int quantity = spinBoxes[i]->value();
 
         // Look up menu_item_id from item name
-        QSqlQuery query(mydb);
+        QSqlQuery query(db);
         query.prepare("SELECT menu_item_id FROM menu WHERE item_name = ?");
         query.addBindValue(itemName);
         QString menuId = "unknown";
@@ -414,7 +414,7 @@ void edit_order::onSaveClicked() {
             menuId = query.value(0).toString();
         }
 
-        QSqlQuery insertQuery(mydb);
+        QSqlQuery insertQuery(db);
         insertQuery.prepare("INSERT INTO order_items (order_id, menu_item_id, quantity) VALUES (?, ?, ?)");
         insertQuery.addBindValue(orderIdGlobal);
         insertQuery.addBindValue(menuId);
@@ -422,15 +422,15 @@ void edit_order::onSaveClicked() {
 
         if (!insertQuery.exec()) {
             qDebug() << "Failed to insert order item:" << insertQuery.lastError();
-            mydb.rollback();
+            db.rollback();
             return;
         }
     }
 
     // Commit transaction
-    if (!mydb.commit()) {
-        qDebug() << "Failed to commit transaction:" << mydb.lastError();
-        mydb.rollback();
+    if (!db.commit()) {
+        qDebug() << "Failed to commit transaction:" << db.lastError();
+        db.rollback();
         return;
     }
 
@@ -440,7 +440,7 @@ void edit_order::onSaveClicked() {
 
 
 void edit_order::updateStatus(const QString &newStatus) {
-    QSqlQuery updateStatus(mydb);
+    QSqlQuery updateStatus(db);
     updateStatus.prepare("UPDATE orders SET status = ? WHERE order_id = ?");
     updateStatus.addBindValue(newStatus);
     updateStatus.addBindValue(orderIdGlobal);

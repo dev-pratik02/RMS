@@ -11,6 +11,7 @@
 #include <QCryptographicHash>
 #include <QToolButton>
 #include <QStyle>
+#include "databasemanager.h"
 
 
 login_page::login_page(QWidget *parent)
@@ -87,8 +88,7 @@ void login_page::on_btn_login_clicked()
     }
 
     // Open Database
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("C:/Users/Swift/RMS/RMS_qt/RmsApp.db");
+    QSqlDatabase db = DatabaseManager::getDatabase();
 
     if (!db.open()) {
         QMessageBox::critical(this, "Database Error", db.lastError().text());

@@ -29,7 +29,7 @@ private slots:
 private:
     Ui::menu *ui;
     addmenuitem *ptraddmenuitem;
-private:
+
     void connectDatabase();
     void loadDataIntoTable();
     QVector<QPushButton*> editButtons;

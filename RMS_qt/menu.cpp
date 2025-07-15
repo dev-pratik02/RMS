@@ -12,6 +12,8 @@
 #include <QTableWidgetItem>
 #include <QPushButton>
 
+#include "databasemanager.h"
+
 menu::menu(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::menu)
@@ -19,9 +21,7 @@ menu::menu(QWidget *parent)
     ui->setupUi(this);
     ptraddmenuitem = new addmenuitem();
 
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("C:/Users/Swift/RMS/RMS_qt/RmsApp.db");
-    // db.setDatabaseName("/Users/pratik/Programming/RMS/RMS_qt/RmsApp.db");
+    QSqlDatabase db = DatabaseManager::getDatabase();
     if (!db.open()) {
         qDebug() << "Database connection failed:" << db.lastError().text();
     } else {

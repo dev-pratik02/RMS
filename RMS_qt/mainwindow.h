@@ -2,6 +2,9 @@
 #define MAINWINDOW_H
 #include "orders.h"
 #include "pos.h"
+#include "menu.h"
+#include "staff.h"
+#include "table.h"
 #include <QMainWindow>
 #include <QtSql>
 
@@ -20,14 +23,26 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_pushButton_clicked();
 
-    void on_pushButton_2_clicked();
+
+    void on_btn_menu_clicked();
+
+    void on_btn_staff_clicked();
+
+    void on_btn_tables_clicked();
+
+    void on_btn_orders_clicked();
+
+    void on_btn_pos_clicked();
 
 private:
     Ui::MainWindow *ui;
     QSqlDatabase DB_connection;
+
     orders *ptrorders;
     class pos *ptrpos;
+    menu *ptrmenu;
+    staff *ptrstaff;
+    table *ptrtables;
 };
 #endif // MAINWINDOW_H

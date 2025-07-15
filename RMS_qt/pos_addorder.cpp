@@ -12,11 +12,7 @@ POS_AddOrder::POS_AddOrder(QString table_no,class pos *posWindow, MainWindow *ma
     resize(1280, 800);
     qDebug() << "The received table no. is " << table_no;
 
-    QSqlDatabase mydb = DatabaseManager::getDatabase();
-
-    db = mydb;
-
-
+    QSqlDatabase db = DatabaseManager::getDatabase();
 
     // Main layout of the screen (horizontal split)
     QHBoxLayout *mainLayout = new QHBoxLayout(this);

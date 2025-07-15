@@ -24,7 +24,7 @@ private slots:
 
 private:
     Ui::pos *ui;
-    QSqlDatabase mydb;
+    QSqlDatabase db;
     POS_AddOrder *ptraddorder;
 };
 

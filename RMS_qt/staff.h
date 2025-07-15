@@ -24,7 +24,7 @@ private slots:
 private:
     Ui::staff *ui;
     addstaff *ptraddstaff;
-    QSqlDatabase mydb;
+    QSqlDatabase db;
 };
 
 #endif // STAFF_H

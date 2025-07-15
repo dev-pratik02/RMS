@@ -8,7 +8,7 @@ orders::orders(QWidget *parent)
 {
     ui->setupUi(this);
 
-    QSqlDatabase mydb = DatabaseManager::getDatabase();
+    QSqlDatabase db = DatabaseManager::getDatabase();
 
 
     // Remove any widget previously set in the scroll area
@@ -20,7 +20,7 @@ orders::orders(QWidget *parent)
 
     //Fetching data from database
 
-    QSqlQuery queryInsert(mydb);
+    QSqlQuery queryInsert(db);
     if(queryInsert.exec("SELECT * FROM orders where status!='Billed'")){
         // qDebug()<<"Successfully fetched order details";
     }
@@ -169,8 +169,8 @@ QWidget* orders::createOrderCard(const QString &orderId, const QString &table, c
 
 
     //Fetching orders from Database
-    QSqlQuery queryOrders(mydb);
-    QSqlQuery queryMenu(mydb);
+    QSqlQuery queryOrders(db);
+    QSqlQuery queryMenu(db);
     // Use parameterized query to avoid SQL injection and ensure correct value substitution
     queryOrders.prepare("SELECT * FROM order_items WHERE order_id = ?");
     queryOrders.addBindValue(orderId);

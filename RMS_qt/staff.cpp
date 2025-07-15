@@ -2,7 +2,7 @@
 #include "ui_staff.h"
 #include "editstaff.h"
 #include "addstaff.h"
-
+#include "databasemanager.h"
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QTableWidgetItem>
@@ -21,18 +21,13 @@ staff::staff(QWidget *parent)
 
     qDebug() << "The application dir path is:\n" << QCoreApplication::applicationDirPath();
 
-    if (!QSqlDatabase::contains("qt_sql_default_connection")) {
-        mydb = QSqlDatabase::addDatabase("QSQLITE");
-        mydb.setDatabaseName("C:/Users/VICTUS/OneDrive/Desktop/sanat/RMS_qt/RmsApp.db");
-    } else {
-        mydb = QSqlDatabase::database("qt_sql_default_connection");
-    }
+    QSqlDatabase db = DatabaseManager::getDatabase();
 
-    if (mydb.open()) {
+    if (db.open()) {
         qDebug() << "Database is accessed by staff page";
     } else {
         qDebug() << "Database connection failed";
-        qDebug() << "Error:" << mydb.lastError();
+        qDebug() << "Error:" << db.lastError();
     }
 
     loadStaffData();
@@ -58,7 +53,7 @@ void staff::loadStaffData()
 
     ui->table_staff->setRowCount(0); // Clear existing rows
 
-    QSqlQuery query(mydb);
+    QSqlQuery query(db);
     if (!query.exec("SELECT staff_id, staff_name, position, salary, age, contact FROM staff")) {
         qDebug() << "Load staff query error:" << query.lastError().text();
         return;

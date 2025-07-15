@@ -15,6 +15,7 @@
 #include <QIntValidator>
 #include <QEvent>
 
+#include "databasemanager.h"
 
 forgotpass::forgotpass(QWidget *parent)
     : QDialog(parent)
@@ -54,17 +55,7 @@ void forgotpass::on_btn_confirm_clicked()
     }
 
     // Open DB (use shared/named connection to avoid "database locked")
-    QSqlDatabase db;
-    if (QSqlDatabase::contains("my_connection")) {
-        db = QSqlDatabase::database("my_connection");
-    } else {
-        db = QSqlDatabase::addDatabase("QSQLITE", "my_connection");
-        db.setDatabaseName("C:/Users/Swift/RMS/RMS_qt/RmsApp.db");
-        if (!db.open()) {
-            QMessageBox::critical(this, "Database Error", db.lastError().text());
-            return;
-        }
-    }
+    QSqlDatabase db = DatabaseManager::getDatabase();
 
     // Check if record exists
     QSqlQuery checkQuery(db);

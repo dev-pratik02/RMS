@@ -14,7 +14,7 @@
 #include <QRegularExpressionValidator>
 #include <QIntValidator>
 #include <QEvent>
-
+#include "databasemanager.h"
 
 signup::signup(QWidget *parent)
     : QDialog(parent)
@@ -56,8 +56,7 @@ signup::~signup()
 
 bool signup::openDatabase()
 {
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("C:/Users/Swift/RMS/RMS_qt/RmsApp.db");
+    QSqlDatabase db = DatabaseManager::getDatabase();
 
     if (!db.open()) {
         qDebug() << "Database error:" << db.lastError();

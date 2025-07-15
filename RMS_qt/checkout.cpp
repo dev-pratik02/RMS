@@ -220,37 +220,37 @@ checkout::checkout(const QString &orderId, const QString &table, const QString &
 
     // Connect button to close dialog
     connect(completeBtn, &QPushButton::clicked, this, [=]() {
-        QSqlDatabase mydb = DatabaseManager::getDatabase();
+        QSqlDatabase db = DatabaseManager::getDatabase();
 
-        if (!mydb.transaction()) {
-            qDebug() << "Failed to start transaction:" << mydb.lastError();
+        if (!db.transaction()) {
+            qDebug() << "Failed to start transaction:" << db.lastError();
             return;
         }
 
-        QSqlQuery updateStatus(mydb);
+        QSqlQuery updateStatus(db);
         updateStatus.prepare("UPDATE orders SET status = ? WHERE order_id = ?");
         updateStatus.addBindValue("Billed");
         updateStatus.addBindValue(orderId);
 
         if (!updateStatus.exec()) {
             qDebug() << "Failed to update order status:" << updateStatus.lastError();
-            mydb.rollback();
+            db.rollback();
             return;
         }
 
-        QSqlQuery updateTable(mydb);
+        QSqlQuery updateTable(db);
         updateTable.prepare("UPDATE tables SET status = 'available', order_id = NULL WHERE order_id = ?");
         updateTable.addBindValue(orderId);
 
         if (!updateTable.exec()) {
             qDebug() << "Failed to update table status:" << updateTable.lastError();
-            mydb.rollback();
+            db.rollback();
             return;
         }
 
-        if (!mydb.commit()) {
-            qDebug() << "Failed to commit transaction:" << mydb.lastError();
-            mydb.rollback();
+        if (!db.commit()) {
+            qDebug() << "Failed to commit transaction:" << db.lastError();
+            db.rollback();
             return;
         }
 

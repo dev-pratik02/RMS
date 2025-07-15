@@ -27,7 +27,7 @@ public:
 
 private:
     Ui::checkout *ui;
-    QSqlDatabase mydb;
+    QSqlDatabase db;
 };
 
 #endif // CHECKOUT_H

@@ -1,6 +1,6 @@
 #include "addmenuitem.h"
 #include "ui_addmenuitem.h"
-
+#include "databasemanager.h"
 QByteArray imageData;
 addmenuitem::addmenuitem(QWidget *parent)
     : QDialog(parent)
@@ -55,9 +55,7 @@ void addmenuitem::on_btn_save_clicked()
         return;
     }
 
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("C:/Users/Swift/RMS/RMS_qt/RmsApp.db");
-    // db.setDatabaseName("/Users/pratik/Programming/RMS/RMS_qt/RmsApp.db");
+    QSqlDatabase db = DatabaseManager::getDatabase();
 
 
     if (!db.open()) {

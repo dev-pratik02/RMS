@@ -23,7 +23,6 @@ private:
     Ui::table *ui;
     QSqlDatabase db;
     edit *editPage;
-
     void loadTableList();
 
 protected:

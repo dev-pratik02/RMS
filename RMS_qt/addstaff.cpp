@@ -5,32 +5,29 @@
 #include <QRegularExpression>
 #include <QRegularExpressionValidator>
 
+#include "databasemanager.h"
+
 addstaff::addstaff(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::addstaff)
 {
     ui->setupUi(this);
 
-    if (!QSqlDatabase::contains("qt_sql_default_connection")) {
-        mydb = QSqlDatabase::addDatabase("QSQLITE");
-        mydb.setDatabaseName("C:/Users/VICTUS/OneDrive/Desktop/sanat/RMS_qt/RmsApp.db");
-        // mydb.setDatabaseName("/Users/pratik/Programming/RMS/RMS_qt/RmsApp.db");
-    } else {
-        mydb = QSqlDatabase::database("qt_sql_default_connection");
+    QSqlDatabase db = DatabaseManager::getDatabase();
+
+    if (!db.open()) {
+        qDebug() << "Addstaff DB open error:" << db.lastError().text();
     }
 
-    if (!mydb.open()) {
-        qDebug() << "Addstaff DB open error:" << mydb.lastError().text();
-    }
-
-    // Setup validators (optional but recommended)
+    // Setup validators
+    QRegularExpression rx("^\\d{10}$");
+    ui->input_contact->setValidator(new QRegularExpressionValidator(rx, this));
     ui->input_age->setValidator(new QIntValidator(18, 99, this));
     ui->input_salary->setValidator(new QDoubleValidator(0, 1000000, 2, this));
-    ui->input_contact->setValidator(new QIntValidator(1000000000, 9999999999, this));
 
-    QRegularExpression rx("^[a-zA-Z\\s]*$");
-    ui->input_name->setValidator(new QRegularExpressionValidator(rx, this));
-    ui->input_position->setValidator(new QRegularExpressionValidator(rx, this));
+    QRegularExpression rx2("^[a-zA-Z\\s]*$");
+    ui->input_name->setValidator(new QRegularExpressionValidator(rx2, this));
+    ui->input_position->setValidator(new QRegularExpressionValidator(rx2, this));
 }
 
 addstaff::~addstaff()
@@ -51,7 +48,7 @@ void addstaff::on_btn_add_clicked()
         return;
     }
 
-    QSqlQuery query(mydb);
+    QSqlQuery query(db);
     query.prepare("INSERT INTO staff (staff_name, position, salary, age, contact) VALUES (?, ?, ?, ?, ?)");
     query.addBindValue(name);
     query.addBindValue(position);

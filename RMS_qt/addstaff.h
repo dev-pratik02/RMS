@@ -22,7 +22,7 @@ private slots:
 
 private:
     Ui::addstaff *ui;
-    QSqlDatabase mydb;
+    QSqlDatabase db;
 };
 
 #endif // ADDSTAFF_H

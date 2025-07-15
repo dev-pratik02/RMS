@@ -39,7 +39,7 @@ private:
     edit_order *ptredit_order;
 
     orders *ptrorders;
-    QSqlDatabase mydb;
+    QSqlDatabase db;
     QWidget* createOrderCard(const QString &orderId, const QString &table, const QString &time, const QString &status);
 };
 

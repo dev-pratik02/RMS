@@ -11,13 +11,13 @@ pos::pos(QWidget *parent)
 {
     ui->setupUi(this);
     this->resize(1280, 800);
-    QSqlDatabase mydb = DatabaseManager::getDatabase();
+    QSqlDatabase db = DatabaseManager::getDatabase();
 
 
     QStringList table_list;
     int row = 0;
 
-    QSqlQuery query(mydb);
+    QSqlQuery query(db);
     if (query.exec("SELECT table_no FROM tables")) {
         while (query.next()) {
             table_list.append(query.value(0).toString());

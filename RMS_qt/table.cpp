@@ -3,6 +3,7 @@
 #include <QSqlQueryModel>
 #include <QSqlError>
 #include <QDebug>
+#include "databasemanager.h"
 
 table::table(QWidget *parent)
     : QMainWindow(parent)
@@ -15,13 +16,7 @@ table::table(QWidget *parent)
 
 
 
-    // Setup SQLite connection
-    db = QSqlDatabase::addDatabase("QSQLITE");
-
-    // QString dbPath = "C:/Users/LENOVO/OneDrive/Desktop/database/rms_app.db";
-    // qDebug() << "Trying to open DB at path:" << dbPath;
-    // db.setDatabaseName(dbPath);
-    db.setDatabaseName("/Users/pratik/Programming/RMS/RMS_qt/RmsApp.db");
+    QSqlDatabase db = DatabaseManager::getDatabase();
 
 
     if (!db.open()) {

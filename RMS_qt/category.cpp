@@ -9,6 +9,9 @@
 #include <QMessageBox>
 #include <QHBoxLayout>
 
+#include "databasemanager.h"
+
+
 category::category(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::category)
@@ -23,9 +26,7 @@ category::category(QWidget *parent)
     loadCategories();
 
 
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("C:/Users/Swift/RMS/RMS_qt/RmsApp.db");
-    // db.setDatabaseName("/Users/pratik/Programming/RMS/RMS_qt/RmsApp.db");
+    QSqlDatabase db = DatabaseManager::getDatabase();
 
     if (!db.open()) {
         qDebug() << "Database connection failed:" << db.lastError().text();

@@ -32,7 +32,7 @@ private:
     QString m_orderId, m_table, m_time, m_status;
     QList<QList<QString>> m_items;
 
-    QSqlDatabase mydb;
+    QSqlDatabase db;
     void onSaveClicked();
     void updateStatus(const QString &newStatus);
     QList<QComboBox*> comboBoxes;

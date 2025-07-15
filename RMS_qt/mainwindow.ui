@@ -14,11 +14,11 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="btn_orders">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>90</y>
+      <x>90</x>
+      <y>200</y>
       <width>101</width>
       <height>32</height>
      </rect>
@@ -27,17 +27,56 @@
      <string>Orders</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_2">
+   <widget class="QPushButton" name="btn_pos">
     <property name="geometry">
      <rect>
-      <x>300</x>
-      <y>220</y>
+      <x>90</x>
+      <y>260</y>
       <width>101</width>
       <height>32</height>
      </rect>
     </property>
     <property name="text">
      <string>POS</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_menu">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>40</y>
+      <width>101</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Menu</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_staff">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>90</y>
+      <width>101</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Staff</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_tables">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>140</y>
+      <width>101</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Tables</string>
     </property>
    </widget>
   </widget>
