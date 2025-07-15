@@ -23,6 +23,9 @@ private:
     Ui::add_tables *ui;
     QSqlDatabase db;
 
+public:
+    void setNextTableNumber();
+
 private slots:
     void on_btn_save_clicked();
     void on_btn_reset_clicked();

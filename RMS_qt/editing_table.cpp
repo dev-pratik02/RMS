@@ -12,11 +12,14 @@ editing_table::editing_table(QWidget *parent) :
     ui->setupUi(this);
     db = QSqlDatabase::database();
 
-    // connect(ui->btn_cancel, &QPushButton::clicked, this, &editing_table::on_btn_cancel_clicked);
-    // connect(ui->btn_change, &QPushButton::clicked, this, &editing_table::on_btn_change_clicked);
+    // Make table_no field non-editable
+    ui->lineEdit_e1->setReadOnly(true);
+
+    // Validators
     QIntValidator *intValidator = new QIntValidator(1, 9999, this);
     ui->lineEdit_e1->setValidator(intValidator);
     ui->lineEdit_e2->setValidator(intValidator);
+
     QRegularExpression rx("[a-zA-Z\\s]+");
     QRegularExpressionValidator *stringValidator = new QRegularExpressionValidator(rx, this);
     ui->lineEdit_e3->setValidator(stringValidator);
@@ -50,30 +53,28 @@ void editing_table::on_btn_cancel_clicked()
 
 void editing_table::on_btn_change_clicked()
 {
-    QString Table_NO = ui->lineEdit_e1->text();
     QString Seats = ui->lineEdit_e2->text();
     QString Location = ui->lineEdit_e3->text();
     QString Orientation = ui->lineEdit_e4->text();
     QString Quality = ui->lineEdit_e5->text();
     QString Description = ui->textEdit_1->toPlainText();
 
-    if (Table_NO.isEmpty() || Seats.isEmpty() || Location.isEmpty() ||
-        Orientation.isEmpty() || Quality.isEmpty() || Description.isEmpty()) {
+    if (Seats.isEmpty() || Location.isEmpty() || Orientation.isEmpty() ||
+        Quality.isEmpty() || Description.isEmpty()) {
         QMessageBox::warning(this, "Missing Fields", "Please fill in all fields.");
         return;
     }
 
     QSqlQuery query;
-    query.prepare("UPDATE table_list SET table_no=?, seats=?, location=?, orientation=?, quality=?, description=? "
+    query.prepare("UPDATE table_list SET seats=?, location=?, orientation=?, quality=?, description=? "
                   "WHERE table_no=?");
 
-    query.addBindValue(Table_NO);
     query.addBindValue(Seats);
     query.addBindValue(Location);
     query.addBindValue(Orientation);
     query.addBindValue(Quality);
     query.addBindValue(Description);
-    query.addBindValue(original_table_no);
+    query.addBindValue(original_table_no); // Don't change table_no
 
     if (!query.exec()) {
         QMessageBox::critical(this, "Error", "Failed to update: " + query.lastError().text());
@@ -85,3 +86,4 @@ void editing_table::on_btn_change_clicked()
     emit dataUpdated();
     this->close();
 }
+

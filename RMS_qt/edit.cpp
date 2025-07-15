@@ -144,6 +144,7 @@ void edit::on_btn_add_clicked()
     if (!addPage) {
         addPage = new add_tables(this);
     }
+    addPage->setNextTableNumber();
     addPage->show();
     this->hide();
 

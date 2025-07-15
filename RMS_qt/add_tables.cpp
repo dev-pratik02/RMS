@@ -10,6 +10,7 @@ add_tables::add_tables(QWidget *parent) :
     ui(new Ui::add_tables)
 {
     ui->setupUi(this);
+    ui->lineEdit_1->setReadOnly(true);
     db = QSqlDatabase::database();
     QIntValidator *intValidator = new QIntValidator(1, 9999, this);
     ui->lineEdit_1->setValidator(intValidator);  // Table No.
@@ -31,6 +32,20 @@ add_tables::add_tables(QWidget *parent) :
 add_tables::~add_tables()
 {
     delete ui;
+}
+void add_tables::setNextTableNumber()
+{
+    QSqlQuery query;
+    if (query.exec("SELECT MAX(table_no) FROM table_list")) {
+        if (query.next()) {
+            int nextTableNo = query.value(0).toInt() + 1;
+            ui->lineEdit_1->setText(QString::number(nextTableNo));
+        } else {
+            ui->lineEdit_1->setText("1");
+        }
+    } else {
+        ui->lineEdit_1->setText("1");
+    }
 }
 
 void add_tables::on_btn_save_clicked()
@@ -80,6 +95,7 @@ void add_tables::on_btn_save_clicked()
     on_btn_reset_clicked();
 
     emit dataSaved();
+     setNextTableNumber();
 }
 
 
@@ -91,6 +107,7 @@ void add_tables::on_btn_reset_clicked()
      ui->lineEdit_4->clear();
      ui->lineEdit_5->clear();
     ui->textEdit_1->clear();
+      setNextTableNumber();
 }
 
 void add_tables::on_btn_back1_clicked()
@@ -99,4 +116,5 @@ void add_tables::on_btn_back1_clicked()
     if (parentWidget()) {
         parentWidget()->show();
     }
+
 }
