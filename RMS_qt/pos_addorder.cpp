@@ -299,7 +299,7 @@ POS_AddOrder::POS_AddOrder(QString table_no,class pos *posWindow, MainWindow *ma
 
 void POS_AddOrder::loadExistingOrderItems(const QString &orderId)
 {
-
+    QSqlDatabase &db = DatabaseManager::getDatabase();
     QSqlQuery query(db);
     query.prepare(R"(
         SELECT m.item_name, m.menu_item_id, m.price, oi.quantity
@@ -419,6 +419,7 @@ void POS_AddOrder::loadItemsForCategory(const QString &category)
         delete item;
     }
 
+    QSqlDatabase &db = DatabaseManager::getDatabase();
     QSqlQuery itemQuery(db);
     itemQuery.prepare("SELECT menu_item_id, item_name, price, image FROM menu WHERE category = :category");
     itemQuery.bindValue(":category", category.trimmed());
@@ -496,6 +497,7 @@ void POS_AddOrder::loadItemsForCategory(const QString &category)
 
 void POS_AddOrder::sendOrder()
 {
+    QSqlDatabase &db = DatabaseManager::getDatabase();
     qDebug() << "Send Order button clicked";
     qDebug() << "Sending order for Table:" << m_tableNo << "Order ID:" << m_orderId;
     qDebug() << QSqlDatabase::drivers();

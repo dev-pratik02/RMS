@@ -30,6 +30,7 @@ edit_order::edit_order(const QString &orderId, const QString &table, const QStri
         delete oldLayout;
     }
 
+    // Use non-const reference for db
     QSqlDatabase &db = DatabaseManager::getDatabase();
 
 
@@ -301,10 +302,7 @@ edit_order::edit_order(const QString &orderId, const QString &table, const QStri
     connect(readyBtn, &QPushButton::clicked, this, [=]() { updateStatus("Ready"); });
     connect(servedBtn, &QPushButton::clicked, this, [=]() { updateStatus("Served"); });
     connect(delBtn, &QPushButton::clicked, this, [=]() {
-
-
-
-
+        QSqlDatabase &db = DatabaseManager::getDatabase();
         if (!db.transaction()) {
             qDebug() << "Failed to start transaction:" << db.lastError();
             return;
@@ -385,6 +383,7 @@ edit_order::~edit_order()
 }
 
 void edit_order::onSaveClicked() {
+    QSqlDatabase &db = DatabaseManager::getDatabase();
     // Start transaction for safety
     if (!db.transaction()) {
         qDebug() << "Failed to start transaction:" << db.lastError();
@@ -441,6 +440,7 @@ void edit_order::onSaveClicked() {
 
 
 void edit_order::updateStatus(const QString &newStatus) {
+    QSqlDatabase &db = DatabaseManager::getDatabase();
     QSqlQuery updateStatus(db);
     updateStatus.prepare("UPDATE orders SET status = ? WHERE order_id = ?");
     updateStatus.addBindValue(newStatus);

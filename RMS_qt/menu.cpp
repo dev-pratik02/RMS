@@ -122,8 +122,7 @@ void menu::on_btn_addmenu_clicked()
 
     connect(addDialog, &addmenuitem::itemSaved, this, [=]() {
         this->close();
-        menu *newMenu = new menu();
-        newMenu->show();
+        loadData();
     });
 
     addDialog->exec();
