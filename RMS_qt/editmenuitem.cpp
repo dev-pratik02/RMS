@@ -108,7 +108,7 @@ void editmenuitem::on_btn_reset_clicked()
 
 void editmenuitem::on_image_upload_clicked()
 {
-    QString imagePath = QFileDialog::getOpenFileName(this, "Select Image", "", "Images (*.png *.jpg *.bmp *.jpeg)");
+    QString imagePath = QFileDialog::getOpenFileName(this, "Select Image", "", "Images (*.png *.jpg *.bmp *.jpeg *.webp)");
     if (!imagePath.isEmpty()) {
         QPixmap pix(imagePath);
         ui->image_preview->setPixmap(pix.scaled(100, 100, Qt::KeepAspectRatio));  // Optional preview
