@@ -20,7 +20,7 @@ addcategory::addcategory(QWidget *parent)
 
     ui->category_name->setPlaceholderText("Enter Category Name");
     ui->category_id->setPlaceholderText("Generated Automatically");
-    ui->item_no->setPlaceholderText("Enter No Of Items");
+    ui->item_no->setPlaceholderText("Enter the display order");
     ui->category_description->setPlaceholderText("Enter Description");
     ui->category_id->setReadOnly(true);
 }
