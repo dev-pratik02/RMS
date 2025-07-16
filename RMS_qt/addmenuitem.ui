@@ -94,23 +94,7 @@
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
-    <item row="0" column="0">
-     <widget class="QLabel" name="label">
-      <property name="font">
-       <font>
-        <family>Arial</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>ITEM ID:</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="1">
-     <widget class="QLineEdit" name="item_id"/>
-    </item>
-    <item row="2" column="0">
+    <item row="1" column="0">
      <widget class="QLabel" name="ITEMNAME">
       <property name="font">
        <font>
@@ -125,10 +109,10 @@
       </property>
      </widget>
     </item>
-    <item row="2" column="1">
+    <item row="1" column="1">
      <widget class="QLineEdit" name="item_name"/>
     </item>
-    <item row="4" column="0">
+    <item row="3" column="0">
      <widget class="QLabel" name="label_2">
       <property name="font">
        <font>
@@ -141,21 +125,21 @@
       </property>
      </widget>
     </item>
-    <item row="4" column="1">
+    <item row="3" column="1">
      <widget class="QLabel" name="image_preview">
       <property name="text">
        <string/>
       </property>
      </widget>
     </item>
-    <item row="5" column="1">
+    <item row="4" column="1">
      <widget class="QPushButton" name="image_upload">
       <property name="text">
        <string>Upload image</string>
       </property>
      </widget>
     </item>
-    <item row="6" column="0">
+    <item row="5" column="0">
      <widget class="QLabel" name="PRICE_2">
       <property name="font">
        <font>
@@ -168,10 +152,10 @@
       </property>
      </widget>
     </item>
-    <item row="6" column="1">
+    <item row="5" column="1">
      <widget class="QComboBox" name="combo_category"/>
     </item>
-    <item row="8" column="0">
+    <item row="7" column="0">
      <widget class="QLabel" name="PRICE">
       <property name="font">
        <font>
@@ -184,14 +168,14 @@
       </property>
      </widget>
     </item>
-    <item row="8" column="1">
+    <item row="7" column="1">
      <widget class="QLineEdit" name="item_price">
       <property name="text">
        <string/>
       </property>
      </widget>
     </item>
-    <item row="10" column="0">
+    <item row="9" column="0">
      <widget class="QLabel" name="DESCRIPTION">
       <property name="font">
        <font>
@@ -204,7 +188,7 @@
       </property>
      </widget>
     </item>
-    <item row="10" column="1">
+    <item row="9" column="1">
      <widget class="QPlainTextEdit" name="item_description">
       <property name="plainText">
        <string/>

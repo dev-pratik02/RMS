@@ -33,9 +33,12 @@ editmenuitem::editmenuitem(QString id, QString name, QString price, QString desc
     ui->item_name->setPlaceholderText("Enter item name");
     ui->combo_category->setPlaceholderText("Enter item category");
     ui->item_description->setPlaceholderText("Enter description");
-
     ui->item_id->setReadOnly(true);
 
+    int index = ui->combo_category->findText(category);
+    if (index != -1) {
+        ui->combo_category->setCurrentIndex(index);
+    }
 
     QSqlQuery imageQuery;
     imageQuery.prepare("SELECT image FROM menu WHERE menu_item_id = ?");

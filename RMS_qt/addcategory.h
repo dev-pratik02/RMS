@@ -26,7 +26,7 @@ signals:
     void categoryUpdated();
 
 public:
-    void setValues(QString name, QString id, QString itemCount, QString description);
+    void setValues(QString name, QString itemCount, QString description);
 
 };
 

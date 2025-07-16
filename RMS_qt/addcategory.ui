@@ -22,8 +22,8 @@
   <widget class="QLabel" name="DESCRIPTION">
    <property name="geometry">
     <rect>
-     <x>79</x>
-     <y>250</y>
+     <x>80</x>
+     <y>230</y>
      <width>114</width>
      <height>18</height>
     </rect>
@@ -36,27 +36,6 @@
    </property>
    <property name="text">
     <string>DESCRIPTION:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="ITEMNAME">
-   <property name="geometry">
-    <rect>
-     <x>80</x>
-     <y>125</y>
-     <width>113</width>
-     <height>18</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Arial</family>
-     <pointsize>12</pointsize>
-     <italic>false</italic>
-     <bold>false</bold>
-    </font>
-   </property>
-   <property name="text">
-    <string>CATEGORY ID:</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="category_name">
@@ -107,16 +86,6 @@
    </property>
    <property name="text">
     <string>RESET</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="category_id">
-   <property name="geometry">
-    <rect>
-     <x>80</x>
-     <y>150</y>
-     <width>661</width>
-     <height>22</height>
-    </rect>
    </property>
   </widget>
   <widget class="QPushButton" name="btn_add">
@@ -181,7 +150,7 @@
    <property name="geometry">
     <rect>
      <x>80</x>
-     <y>185</y>
+     <y>140</y>
      <width>133</width>
      <height>18</height>
     </rect>
@@ -200,7 +169,7 @@
    <property name="geometry">
     <rect>
      <x>80</x>
-     <y>210</y>
+     <y>180</y>
      <width>661</width>
      <height>22</height>
     </rect>

@@ -18,17 +18,11 @@ addmenuitem::addmenuitem(QWidget *parent)
     }
 
 
-    ui->item_id->setPlaceholderText("Generated Automatically");
     ui->item_name->setPlaceholderText("Enter Item Name");
 
     ui->item_price->setPlaceholderText("Enter Price");
     ui->item_description->setPlaceholderText("Enter Description");
-    ui->item_id->setReadOnly(true);
 
-
-    // Validator for item_id (only integers)
-    QIntValidator *idValidator = new QIntValidator(1, 9999, this); // Adjust range if needed
-    ui->item_id->setValidator(idValidator);
 
     // Validator for item_price (only decimal numbers with 2 digits after decimal point)
     QDoubleValidator *priceValidator = new QDoubleValidator(0.0, 9999.99, 2, this);

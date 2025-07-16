@@ -112,7 +112,7 @@ void edit::loadTableView()
                 queryTables.prepare("DELETE FROM tables WHERE table_no = ?");
                 queryTables.addBindValue(tableNo.toInt());
 
-                if (!delQuery.exec() || !delQuery.exec()) {
+                if (!delQuery.exec() || !queryTables.exec()) {
                     QMessageBox::critical(this, "Delete Error", "Database error: " + delQuery.lastError().text());
                 } else {
                     QMessageBox::information(this, "Deleted", "Deleted successfully.");
