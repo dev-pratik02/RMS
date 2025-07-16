@@ -55,7 +55,8 @@ void forgotpass::on_btn_confirm_clicked()
     }
 
     // Open DB (use shared/named connection to avoid "database locked")
-    QSqlDatabase db = DatabaseManager::getDatabase();
+    QSqlDatabase &db = DatabaseManager::getDatabase();
+
 
     // Check if record exists
     QSqlQuery checkQuery(db);

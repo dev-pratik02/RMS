@@ -5,12 +5,15 @@
 #include <QDebug>
 #include <QSqlError>
 #include <QRegularExpressionValidator>
+#include "databasemanager.h"
+
 add_tables::add_tables(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::add_tables)
 {
     ui->setupUi(this);
-    db = QSqlDatabase::database();
+    QSqlDatabase &db = DatabaseManager::getDatabase();
+
     QIntValidator *intValidator = new QIntValidator(1, 9999, this);
     ui->lineEdit_2->setValidator(intValidator);  // Seats
 

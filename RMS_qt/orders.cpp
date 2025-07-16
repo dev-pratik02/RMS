@@ -8,7 +8,8 @@ orders::orders(QWidget *parent)
 {
     ui->setupUi(this);
 
-    QSqlDatabase db = DatabaseManager::getDatabase();
+    QSqlDatabase &db = DatabaseManager::getDatabase();
+
 
 
     // Remove any widget previously set in the scroll area

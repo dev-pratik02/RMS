@@ -30,7 +30,8 @@ edit_order::edit_order(const QString &orderId, const QString &table, const QStri
         delete oldLayout;
     }
 
-    db = DatabaseManager::getDatabase();
+    QSqlDatabase &db = DatabaseManager::getDatabase();
+
 
 
 

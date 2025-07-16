@@ -1,5 +1,6 @@
 #include "editing_table.h"
 #include "ui_editing_table.h"
+#include "databasemanager.h"
 #include <QSqlQuery>
 #include <QMessageBox>
 #include <QSqlError>
@@ -10,7 +11,8 @@ editing_table::editing_table(QWidget *parent) :
     ui(new Ui::editing_table)
 {
     ui->setupUi(this);
-    db = QSqlDatabase::database();
+    QSqlDatabase &db = DatabaseManager::getDatabase();
+
 
     // Make table_no field non-editable
     ui->lineEdit_e1->setReadOnly(true);

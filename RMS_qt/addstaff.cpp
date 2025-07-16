@@ -13,7 +13,8 @@ addstaff::addstaff(QWidget *parent)
 {
     ui->setupUi(this);
 
-    QSqlDatabase db = DatabaseManager::getDatabase();
+    QSqlDatabase &db = DatabaseManager::getDatabase();
+
 
     if (!db.open()) {
         qDebug() << "Addstaff DB open error:" << db.lastError().text();

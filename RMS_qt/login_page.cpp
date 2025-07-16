@@ -88,7 +88,8 @@ void login_page::on_btn_login_clicked()
     }
 
     // Open Database
-    QSqlDatabase db = DatabaseManager::getDatabase();
+    QSqlDatabase &db = DatabaseManager::getDatabase();
+
 
     if (!db.open()) {
         QMessageBox::critical(this, "Database Error", db.lastError().text());

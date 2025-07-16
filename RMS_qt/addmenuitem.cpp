@@ -55,7 +55,8 @@ void addmenuitem::on_btn_save_clicked()
         return;
     }
 
-    QSqlDatabase db = DatabaseManager::getDatabase();
+    QSqlDatabase &db = DatabaseManager::getDatabase();
+
 
 
     if (!db.open()) {

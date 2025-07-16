@@ -56,7 +56,8 @@ signup::~signup()
 
 bool signup::openDatabase()
 {
-    QSqlDatabase db = DatabaseManager::getDatabase();
+    QSqlDatabase &db = DatabaseManager::getDatabase();
+
 
     if (!db.open()) {
         qDebug() << "Database error:" << db.lastError();

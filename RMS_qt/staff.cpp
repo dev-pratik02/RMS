@@ -21,7 +21,8 @@ staff::staff(QWidget *parent)
 
     qDebug() << "The application dir path is:\n" << QCoreApplication::applicationDirPath();
 
-    QSqlDatabase db = DatabaseManager::getDatabase();
+    QSqlDatabase &db = DatabaseManager::getDatabase();
+
 
     if (db.open()) {
         qDebug() << "Database is accessed by staff page";

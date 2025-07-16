@@ -3,19 +3,22 @@
 
 QSqlDatabase& DatabaseManager::getDatabase()
 {
-    static QSqlDatabase db;
-    if (!QSqlDatabase::contains("qt_sql_default_connection")) {
-        db = QSqlDatabase::addDatabase("QSQLITE", "qt_sql_default_connection");
+    static QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "qt_sql_default_connection");
+
+    if (!db.isOpen()) {
         db.setDatabaseName("/Users/pratik/Programming/RMS/RMS_qt/RmsApp.db");
+
         if (!db.open()) {
-            qDebug() << "Failed to open DB";
+            qDebug() << "Failed to open DB:" << db.lastError();
         } else {
+            qDebug() << "Database opened successfully";
             QSqlQuery pragmaQuery(db);
             pragmaQuery.exec("PRAGMA journal_mode=WAL;");
         }
-    } else {
-        db = QSqlDatabase::database("qt_sql_default_connection");
     }
+
     return db;
 }
+
+
 

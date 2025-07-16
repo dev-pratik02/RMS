@@ -1,6 +1,7 @@
 #include "edit.h"
 #include<table.h>
 #include "ui_edit.h"
+#include "databasemanager.h"
 #include <QSqlQueryModel>
 #include <QSqlError>
 #include <QDebug>
@@ -16,7 +17,8 @@ edit::edit(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    db = QSqlDatabase::database();
+    QSqlDatabase &db = DatabaseManager::getDatabase();
+
 
     if (!db.isOpen()) {
         qDebug() << "Database not open in edit!";

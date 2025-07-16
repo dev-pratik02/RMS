@@ -21,7 +21,8 @@ menu::menu(QWidget *parent)
     ui->setupUi(this);
     ptraddmenuitem = new addmenuitem();
 
-    QSqlDatabase db = DatabaseManager::getDatabase();
+    QSqlDatabase &db = DatabaseManager::getDatabase();
+
     if (!db.open()) {
         qDebug() << "Database connection failed:" << db.lastError().text();
     } else {

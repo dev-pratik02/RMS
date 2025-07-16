@@ -26,7 +26,8 @@ category::category(QWidget *parent)
     loadCategories();
 
 
-    QSqlDatabase db = DatabaseManager::getDatabase();
+    QSqlDatabase &db = DatabaseManager::getDatabase();
+
 
     if (!db.open()) {
         qDebug() << "Database connection failed:" << db.lastError().text();

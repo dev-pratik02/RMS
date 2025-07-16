@@ -12,8 +12,16 @@ POS_AddOrder::POS_AddOrder(QString table_no,class pos *posWindow, MainWindow *ma
     resize(1280, 800);
     qDebug() << "The received table no. is " << table_no;
 
-    QSqlDatabase db = DatabaseManager::getDatabase();
+    QSqlDatabase &db = DatabaseManager::getDatabase();
 
+    if(!db.open()){
+        qDebug() << "cant open db";
+        qDebug() << db.lastError();
+        return;
+    }
+    else{
+        qDebug() << "db opened successfully";
+    }
     // Main layout of the screen (horizontal split)
     QHBoxLayout *mainLayout = new QHBoxLayout(this);
 
@@ -254,7 +262,6 @@ POS_AddOrder::POS_AddOrder(QString table_no,class pos *posWindow, MainWindow *ma
         }
 
         if (!order_id.isNull()) {
-            qDebug() << "Just before the loadExistingOrderItems function";
             loadExistingOrderItems(order_id);
             qDebug() << "The table: " << table_no << " has order: " << order_id << " and the status is: " << table_status;
         } else {
@@ -292,7 +299,7 @@ POS_AddOrder::POS_AddOrder(QString table_no,class pos *posWindow, MainWindow *ma
 
 void POS_AddOrder::loadExistingOrderItems(const QString &orderId)
 {
-    qDebug() << "inside the load existing order items function";
+
     QSqlQuery query(db);
     query.prepare(R"(
         SELECT m.item_name, m.menu_item_id, m.price, oi.quantity
@@ -302,7 +309,7 @@ void POS_AddOrder::loadExistingOrderItems(const QString &orderId)
     )");
     query.addBindValue(orderId);
 
-    qDebug() << "Before the execution of query";
+
     if (!query.exec()) {
         qDebug() << "Failed to load existing order items:" << query.lastError();
         return;
@@ -323,7 +330,7 @@ void POS_AddOrder::loadExistingOrderItems(const QString &orderId)
 
     }
 
-    qDebug() << "Before calling the update order table";
+
     updateOrderTable();
 }
 
@@ -353,10 +360,10 @@ void POS_AddOrder::updateOrderTable()
         qDebug() << "Error: orderTable is nullptr!";
         return;
     }
-    qDebug() << "inside the update order table function";
+
     orderTable->setRowCount(0);
     double total = 0;
-    qDebug() << "before the for loop of the updateordertable function";
+
     for (auto it = orderItems.begin(); it != orderItems.end(); ++it) {
 
         int row = orderTable->rowCount();
@@ -388,7 +395,7 @@ void POS_AddOrder::updateOrderTable()
         orderTable->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
     }
 
-    qDebug() << "After the for loop of update order table function";
+
     qDebug() << "Total rows inserted in orderTable:" << orderTable->rowCount();
 
     double serviceCharge = 0.1 * total;
@@ -491,6 +498,7 @@ void POS_AddOrder::sendOrder()
 {
     qDebug() << "Send Order button clicked";
     qDebug() << "Sending order for Table:" << m_tableNo << "Order ID:" << m_orderId;
+    qDebug() << QSqlDatabase::drivers();
 
     // Early return if order is empty
     if (orderItems.isEmpty()) {
@@ -521,6 +529,8 @@ void POS_AddOrder::sendOrder()
     if (checkOrder.exec() && checkOrder.next()) {
         orderExists = (checkOrder.value(0).toInt() > 0);
     }
+
+    qDebug() << "Valid:" << db.isValid() << "Open:" << db.isOpen() << "Driver:" << db.driverName();
 
     if (!db.transaction()) {
         qDebug() << "Failed to start transaction: " << db.lastError();

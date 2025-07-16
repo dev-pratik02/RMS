@@ -16,7 +16,8 @@ table::table(QWidget *parent)
 
 
 
-    QSqlDatabase db = DatabaseManager::getDatabase();
+    QSqlDatabase &db = DatabaseManager::getDatabase();
+
 
 
     if (!db.open()) {

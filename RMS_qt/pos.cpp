@@ -11,7 +11,8 @@ pos::pos(QWidget *parent)
 {
     ui->setupUi(this);
     this->resize(1280, 800);
-    QSqlDatabase db = DatabaseManager::getDatabase();
+    QSqlDatabase &db = DatabaseManager::getDatabase();
+
 
 
     QStringList table_list;

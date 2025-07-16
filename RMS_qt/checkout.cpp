@@ -220,7 +220,8 @@ checkout::checkout(const QString &orderId, const QString &table, const QString &
 
     // Connect button to close dialog
     connect(completeBtn, &QPushButton::clicked, this, [=]() {
-        QSqlDatabase db = DatabaseManager::getDatabase();
+        QSqlDatabase &db = DatabaseManager::getDatabase();
+
 
         if (!db.transaction()) {
             qDebug() << "Failed to start transaction:" << db.lastError();
