@@ -12,21 +12,18 @@
 #include <QToolButton>
 #include <QStyle>
 #include "databasemanager.h"
-
+#include "mainwindow.h"
 
 login_page::login_page(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::login_page)
 {
     ui->setupUi(this);
-    setupUiLinks();
-    ui->label_signup->setStyleSheet("QLabel { color: blue; text-decoration: underline; }");
-    ui->label_forgotpass->setStyleSheet("QLabel { color: blue; text-decoration: underline; }");
     ui->input_password->setEchoMode(QLineEdit::Password);
     setupEyeButton(ui->input_password);
 
     // First image
-    QPixmap loginPix("C:/Users/Swift/RMS/RMS-assets/login_page_image.png");
+    QPixmap loginPix(":/login_page/login_page_image.png");
     if(!loginPix.isNull()) {
         ui->label_pic->setPixmap(loginPix);
         ui->label_pic->setScaledContents(true);
@@ -35,7 +32,7 @@ login_page::login_page(QWidget *parent)
     }
 
     // Second image (use different variable name)
-    QPixmap hatPix("C:/Users/Swift/RMS/RMS-assets/login_page_chefHat.png");
+    QPixmap hatPix(":/login_page/login_page_chefHat");
     if(!hatPix.isNull()) {
         ui->label_pic1->setPixmap(hatPix);
         ui->label_pic1->setScaledContents(true);
@@ -52,30 +49,7 @@ login_page::~login_page()
 {
     delete ui;
 }
-void login_page::setupUiLinks()
-{
-    ui->label_signup->setText("<a href=\"signup\">Sign up</a>");
-    ui->label_forgotpass->setText("<a href=\"forgotpass\">Forgot Password?</a>");
 
-    // Allow link interaction
-    ui->label_signup->setTextInteractionFlags(Qt::TextBrowserInteraction);
-    ui->label_forgotpass->setTextInteractionFlags(Qt::TextBrowserInteraction);
-
-    ui->label_signup->setOpenExternalLinks(false);
-    ui->label_forgotpass->setOpenExternalLinks(false);
-
-    // Connect linkActivated signals
-    connect(ui->label_signup, &QLabel::linkActivated, this, &login_page::onSignupClicked);
-    connect(ui->label_forgotpass, &QLabel::linkActivated, this, &login_page::onForgotClicked);
-}
-void login_page::onSignupClicked() {
-    signup signupDialog(this);
-    signupDialog.exec();
-}
-void login_page::onForgotClicked() {
-    forgotpass forgotDialog(this);
-    forgotDialog.exec();
-}
 void login_page::on_btn_login_clicked()
 {
     QString userid = ui->input_userid->text().trimmed();
@@ -104,6 +78,8 @@ void login_page::on_btn_login_clicked()
     if (query.exec()) {
         if (query.next() && query.value(0).toInt() == 1) {
             QMessageBox::information(this, "Login Success", "Welcome back!");
+            MainWindow *main = new MainWindow();
+            main->show();
             this->close();
         } else {
             QMessageBox::warning(this, "Login Failed", "Invalid User ID or Password.");
@@ -114,3 +90,17 @@ void login_page::on_btn_login_clicked()
 
     db.close();
 }
+
+void login_page::on_btn_signup_clicked()
+{
+    signup signupDialog(this);
+    signupDialog.exec();
+}
+
+
+void login_page::on_btn_forgot_clicked()
+{
+    forgotpass forgotDialog(this);
+    forgotDialog.exec();
+}
+

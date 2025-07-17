@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/login_page">
+        <file>login_page_image.png</file>
+        <file>login_page_chefHat.png</file>
+    </qresource>
+</RCC>

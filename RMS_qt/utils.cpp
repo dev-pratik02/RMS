@@ -50,7 +50,7 @@ void setupEyeButton(QLineEdit *passwordEdit) {
     passwordEdit->setEchoMode(QLineEdit::Password);
 
     QToolButton *eyeButton = new QToolButton(passwordEdit);
-    QPixmap pixmap("C:/Users/Swift/RMS/RMS-assets/eye.png");  // Update if using resource file
+    QPixmap pixmap(":login_page/");  // Update if using resource file
 
     if (pixmap.isNull()) {
         qDebug() << "Eye image not found.";
