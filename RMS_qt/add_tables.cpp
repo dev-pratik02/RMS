@@ -31,20 +31,7 @@ add_tables::~add_tables()
 {
     delete ui;
 }
-// void add_tables::setNextTableNumber()
-// {
-//     QSqlQuery query;
-//     if (query.exec("SELECT MAX(table_no) FROM table_assign")) {
-//         if (query.next()) {
-//             int nextTableNo = query.value(0).toInt() + 1;
-//             ui->lineEdit_1->setText(QString::number(nextTableNo));
-//         } else {
-//             ui->lineEdit_1->setText("1");
-//         }
-//     } else {
-//         ui->lineEdit_1->setText("1");
-//     }
-// }
+
 
 void add_tables::on_btn_save_clicked()
 {

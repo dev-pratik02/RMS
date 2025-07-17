@@ -32,15 +32,13 @@ login_page::login_page(QWidget *parent)
     }
 
     // Second image (use different variable name)
-    QPixmap hatPix(":/login_page/login_page_chefHat");
+    QPixmap hatPix(":/login_page/login_page_chefHat.png");
     if(!hatPix.isNull()) {
         ui->label_pic1->setPixmap(hatPix);
         ui->label_pic1->setScaledContents(true);
     } else {
         qDebug() << "Failed to load chef hat image";
     }
-
-    QString hashed = hashPassword("mypassword");
 
 }
 
@@ -70,13 +68,15 @@ void login_page::on_btn_login_clicked()
         return;
     }
     QString hashedInput = hashPassword(password);
+    qDebug() << hashedInput;
     QSqlQuery query;
-    query.prepare("SELECT COUNT(*) FROM users WHERE email = ? AND password = ?");
+    query.prepare("SELECT COUNT(*) FROM users WHERE username = ? AND password = ?");
     query.addBindValue(userid);
     query.addBindValue(hashedInput);
 
     if (query.exec()) {
-        if (query.next() && query.value(0).toInt() == 1) {
+
+        if (query.next() && query.value(0).toInt() > 0) {
             QMessageBox::information(this, "Login Success", "Welcome back!");
             MainWindow *main = new MainWindow();
             main->show();

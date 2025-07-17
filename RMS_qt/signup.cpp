@@ -33,18 +33,11 @@ signup::signup(QWidget *parent)
     QDate maxDate = QDate::currentDate().addYears(-18);
     ui->date_dob->setMaximumDate(maxDate);
 
-    QString hashed = hashPassword("mypassword");
-
     setupEyeButton(ui->line_password);
     setupEyeButton(ui->line_confirmpass);
 
     qDebug() << "line_password valid:" << ui->line_password;
     qDebug() << "line_confirmpass valid:" << ui->line_confirmpass;
-
-
-    if (!isValidEmail(ui->line_email->text())) {
-
-    }
 
 }
 
@@ -74,8 +67,8 @@ void signup::on_btn_confirm_clicked()
     QString dob = ui->date_dob->date().toString("yyyy-MM-dd");
     QString pass = ui->line_password->text();
     QString confirmpass = ui->line_confirmpass->text();
-
-    if (name.isEmpty() || phone.isEmpty() || email.isEmpty() || pass.isEmpty() || confirmpass.isEmpty()) {
+    QString username = ui->input_username->text();
+    if (name.isEmpty() || username.isEmpty()|| phone.isEmpty() || email.isEmpty() || pass.isEmpty() || confirmpass.isEmpty()) {
         QMessageBox::warning(this, "Input Error", "Please fill all the fields.");
         return;
     }
@@ -96,13 +89,14 @@ void signup::on_btn_confirm_clicked()
 
     QString hashedPass = hashPassword(pass);
     QSqlQuery query;
-    query.prepare("INSERT INTO users (name, phone, email, dob, password) "
-                  "VALUES (?, ?, ?, ?, ?)");
+    query.prepare("INSERT INTO users (name, phone, email, dob, password, username) "
+                  "VALUES (?, ?, ?, ?, ?,?)");
     query.addBindValue(name);
     query.addBindValue(phone);
     query.addBindValue(email);
     query.addBindValue(dob);
     query.addBindValue(hashedPass);
+    query.addBindValue(username);
     if (!query.exec()) {
         QMessageBox::critical(this, "Database Error", query.lastError().text());
     } else {

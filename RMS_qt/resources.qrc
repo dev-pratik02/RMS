@@ -2,5 +2,8 @@
     <qresource prefix="/login_page">
         <file>login_page_image.png</file>
         <file>login_page_chefHat.png</file>
+        <file>eye.png</file>
+        <file>eye-off.png</file>
     </qresource>
+    <qresource prefix="/new/prefix1"/>
 </RCC>
