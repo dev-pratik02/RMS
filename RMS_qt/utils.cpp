@@ -50,7 +50,7 @@ void setupEyeButton(QLineEdit *passwordEdit) {
     passwordEdit->setEchoMode(QLineEdit::Password);
 
     QToolButton *eyeButton = new QToolButton(passwordEdit);
-    QPixmap pixmap(":login_page/");  // Update if using resource file
+    QPixmap pixmap(":/login_page/eye.png");  // Update if using resource file
 
     if (pixmap.isNull()) {
         qDebug() << "Eye image not found.";
@@ -74,12 +74,11 @@ void setupEyeButton(QLineEdit *passwordEdit) {
     eyeButton->show();
     eyeButton->raise();
 
-    QObject::connect(eyeButton, &QToolButton::pressed, [=]() {
-        passwordEdit->setEchoMode(QLineEdit::Normal);
-    });
+    bool *isVisible = new bool(false);  // basic state tracking
 
-    QObject::connect(eyeButton, &QToolButton::released, [=]() {
-        passwordEdit->setEchoMode(QLineEdit::Password);
+    QObject::connect(eyeButton, &QToolButton::clicked, [=]() mutable {
+        *isVisible = !*isVisible;
+        passwordEdit->setEchoMode(*isVisible ? QLineEdit::Normal : QLineEdit::Password);
     });
 
     QObject::connect(passwordEdit, &QLineEdit::textChanged, [=]() {
