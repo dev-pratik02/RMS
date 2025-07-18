@@ -56,42 +56,48 @@ void category::on_btn_addcategory_clicked()
 
 void category::loadCategories()
 {
-    QSqlQuery query("SELECT [category_name], [category_id], [display_order], [description] FROM category");
+    QSqlQuery query(db);
+    query.prepare("SELECT [category_name], [category_id], [display_order], [description] FROM category");
 
     ui->tableWidget->setRowCount(0);
     ui->tableWidget->setColumnCount(5);
 
     int row = 0;
-    while (query.next()) {
-        QString name = query.value(0).toString();
-        QString id = query.value(1).toString();
-        QString itemCount = query.value(2).toString();
-        QString description = query.value(3).toString();
+    if(query.exec()){
+        while (query.next()) {
+            QString name = query.value(0).toString();
+            QString id = query.value(1).toString();
+            QString itemCount = query.value(2).toString();
+            QString description = query.value(3).toString();
 
-        ui->tableWidget->insertRow(row);
-        ui->tableWidget->setItem(row, 0, new QTableWidgetItem(name));
-        ui->tableWidget->setItem(row, 1, new QTableWidgetItem(id));
-        ui->tableWidget->setItem(row, 2, new QTableWidgetItem(itemCount));
-        ui->tableWidget->setItem(row, 3, new QTableWidgetItem(description));
+            ui->tableWidget->insertRow(row);
+            ui->tableWidget->setItem(row, 0, new QTableWidgetItem(name));
+            ui->tableWidget->setItem(row, 1, new QTableWidgetItem(id));
+            ui->tableWidget->setItem(row, 2, new QTableWidgetItem(itemCount));
+            ui->tableWidget->setItem(row, 3, new QTableWidgetItem(description));
 
-        QWidget *actionWidget = new QWidget();
-        QHBoxLayout *layout = new QHBoxLayout(actionWidget);
-        layout->setContentsMargins(0, 0, 0, 0);
+            QWidget *actionWidget = new QWidget();
+            QHBoxLayout *layout = new QHBoxLayout(actionWidget);
+            layout->setContentsMargins(0, 0, 0, 0);
 
-        QPushButton *editBtn = new QPushButton("Edit");
-        connect(editBtn, &QPushButton::clicked, this, [=]() {
-            handleEditCategory(name, id, itemCount, description);
-        });
-        layout->addWidget(editBtn);
+            QPushButton *editBtn = new QPushButton("Edit");
+            connect(editBtn, &QPushButton::clicked, this, [=]() {
+                handleEditCategory(name, id, itemCount, description);
+            });
+            layout->addWidget(editBtn);
 
-        QPushButton *deleteBtn = new QPushButton("Delete");
-        connect(deleteBtn, &QPushButton::clicked, this, [=]() {
-            handleDeleteCategory(id);
-        });
-        layout->addWidget(deleteBtn);
+            QPushButton *deleteBtn = new QPushButton("Delete");
+            connect(deleteBtn, &QPushButton::clicked, this, [=]() {
+                handleDeleteCategory(id);
+            });
+            layout->addWidget(deleteBtn);
 
-        ui->tableWidget->setCellWidget(row, 4, actionWidget);
-        row++;
+            ui->tableWidget->setCellWidget(row, 4, actionWidget);
+            row++;
+        }
+    }
+    else{
+        qDebug() << "Could not execute the query \n " << query.lastError();
     }
 
     QStringList headers = {"Category Name", "Category ID", "Display Order", "Description", "Actions"};
@@ -111,7 +117,7 @@ void category::handleEditCategory(QString name, QString id, QString itemCount, Q
 
 void category::handleDeleteCategory(QString id)
 {
-    QSqlQuery query;
+    QSqlQuery query(db);
     query.prepare("DELETE FROM category WHERE [category_id] = ?");
     query.addBindValue(id);
 

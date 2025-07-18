@@ -2,7 +2,8 @@
 #define ADDCATEGORY_H
 
 #include <QDialog>
-
+#include <QtSql>
+#include "databasemanager.h"
 namespace Ui {
 class addcategory;
 }
@@ -21,6 +22,7 @@ private slots:
 
 private:
     Ui::addcategory *ui;
+    QSqlDatabase db;
 
 signals:
     void categoryUpdated();

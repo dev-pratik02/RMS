@@ -11,8 +11,6 @@ editing_table::editing_table(QWidget *parent) :
     ui(new Ui::editing_table)
 {
     ui->setupUi(this);
-    QSqlDatabase &db = DatabaseManager::getDatabase();
-
 
     // Make table_no field non-editable
     ui->lineEdit_e1->setReadOnly(true);
@@ -64,7 +62,8 @@ void editing_table::on_btn_change_clicked()
         return;
     }
 
-    QSqlQuery query;
+    QSqlDatabase &db = DatabaseManager::getDatabase();
+    QSqlQuery query(db);
     query.prepare("UPDATE table_assign SET seats=?, location=?, table_type=?, description=? "
                   "WHERE table_no=?");
 
@@ -74,7 +73,7 @@ void editing_table::on_btn_change_clicked()
     query.addBindValue(Description);
     query.addBindValue(original_table_no); // Don't change table_no
 
-    QSqlQuery queryTables;
+    QSqlQuery queryTables(db);
     queryTables.prepare("UPDATE tables set seats=?, remarks=? where table_no=?");
     queryTables.addBindValue(Seats);
     queryTables.addBindValue(Description);

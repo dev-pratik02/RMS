@@ -1,8 +1,6 @@
 #include "signup.h"
 #include "utils.h"
 #include "ui_signup.h"
-#include <QSqlDatabase>
-#include <QSqlQuery>
 #include <QMessageBox>
 #include <QSqlError>
 #include <QLineEdit>
@@ -24,7 +22,9 @@ signup::signup(QWidget *parent)
     ui->line_password->setEchoMode(QLineEdit::Password);
     ui->line_confirmpass->setEchoMode(QLineEdit::Password);
 
-    ui->line_phone->setValidator(new QIntValidator(0, 9999999999, this));
+    QRegularExpression re("\\d{10}");  // Exactly 10 digits
+    ui->line_phone->setValidator(new QRegularExpressionValidator(re, this));
+
 
     QRegularExpression nameRegex("^[A-Za-z ]+$");
     QValidator *nameValidator = new QRegularExpressionValidator(nameRegex, this);
@@ -45,18 +45,6 @@ signup::signup(QWidget *parent)
 signup::~signup()
 {
     delete ui;
-}
-
-bool signup::openDatabase()
-{
-    QSqlDatabase &db = DatabaseManager::getDatabase();
-
-
-    if (!db.open()) {
-        qDebug() << "Database error:" << db.lastError();
-        return false;
-    }
-    return true;
 }
 
 void signup::on_btn_confirm_clicked()
@@ -84,11 +72,12 @@ void signup::on_btn_confirm_clicked()
 
 
     // Connect to DB
-    if (!openDatabase())
-        return;
-
+    QSqlDatabase &db = DatabaseManager::getDatabase();
+    if (!db.open()) {
+        qDebug() << "Database error:" << db.lastError();
+    }
     QString hashedPass = hashPassword(pass);
-    QSqlQuery query;
+    QSqlQuery query(db);
     query.prepare("INSERT INTO users (name, phone, email, dob, password, username) "
                   "VALUES (?, ?, ?, ?, ?,?)");
     query.addBindValue(name);
@@ -103,8 +92,6 @@ void signup::on_btn_confirm_clicked()
         QMessageBox::information(this, "Success", "Signup successful!");
         this->close();
     }
-
-    QSqlDatabase::database().close();
 }
 
 

@@ -41,9 +41,10 @@ void menu::loadData()
     ui->tableWidget->clearContents();
     ui->tableWidget->setRowCount(0);
 
-    QSqlQuery query("SELECT menu_item_id, item_name, price,category, description FROM menu");
+    QSqlQuery query(db);
+    query.prepare("SELECT menu_item_id, item_name, price,category, description FROM menu");
     int row = 0;
-
+    if(query.exec()){
         while (query.next()) {
 
             QString id = query.value(0).toString();
@@ -80,6 +81,10 @@ void menu::loadData()
 
             ui->tableWidget->setCellWidget(row, 5, actionWidget);
             row++;
+        }
+    }
+    else{
+        qDebug() << "Could not execute query to load data in menu table \n " << query.lastError();
     }
 
     qDebug() << "Loaded" << row << "rows into table.";
@@ -102,7 +107,7 @@ void menu::handleEditButton(QString id, QString name, QString price, QString des
 
 void menu::handleDeleteButton(QString id)
 {
-    QSqlQuery query;
+    QSqlQuery query(db);
     query.prepare("DELETE FROM menu WHERE menu_item_id = ?");
     query.addBindValue(id);
 

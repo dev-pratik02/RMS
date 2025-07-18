@@ -30,11 +30,11 @@ signals:
 private slots:
     void on_btn_save_clicked();
     void on_btn_reset_clicked();
-
     void on_image_upload_clicked();
 
 private:
     Ui::addmenuitem *ui;
+    QSqlDatabase db;
 };
 
 #endif

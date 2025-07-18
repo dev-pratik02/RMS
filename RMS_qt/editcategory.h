@@ -2,7 +2,8 @@
 #define EDITCATEGORY_H
 
 #include <QDialog>
-
+#include <QtSql>
+#include "databasemanager.h"
 namespace Ui {
 class editcategory;
 }
@@ -23,7 +24,7 @@ private slots:
 private:
     Ui::editcategory *ui;
     QString originalId;
-
+    QSqlDatabase db;
 signals:
     void categoryUpdated();
 };

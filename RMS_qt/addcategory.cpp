@@ -10,8 +10,6 @@ addcategory::addcategory(QWidget *parent)
     , ui(new Ui::addcategory)
 {
     ui->setupUi(this);
-
-
     // Validator for item_no (only integers)
     QIntValidator* itemNoValidator = new QIntValidator(1, 99, this);  // Adjust range as needed
     ui->item_no->setValidator(itemNoValidator);
@@ -37,7 +35,8 @@ void addcategory::on_btn_add_clicked()
         return;
     }
 
-    QSqlQuery query;
+    QSqlDatabase &db = DatabaseManager::getDatabase();
+    QSqlQuery query(db);
     query.prepare("INSERT INTO category ([category_name], [display_order], [description]) "
                   "VALUES (:name,:num, :desc)");
     query.bindValue(":name", name);

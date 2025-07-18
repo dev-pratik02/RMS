@@ -7,7 +7,13 @@ addmenuitem::addmenuitem(QWidget *parent)
     , ui(new Ui::addmenuitem)
 {
     ui->setupUi(this);
-    QSqlQuery query;
+    QSqlDatabase &db = DatabaseManager::getDatabase();
+    if (!db.open()) {
+        qDebug() << "Database connection failed:" << db.lastError().text();
+    } else {
+        qDebug() << "Database connected successfully!";
+    }
+    QSqlQuery query(db);
     if (query.exec("SELECT [category_name] FROM category")) {
         while (query.next()) {
             QString categoryName = query.value(0).toString();
@@ -49,18 +55,7 @@ void addmenuitem::on_btn_save_clicked()
         return;
     }
 
-    QSqlDatabase &db = DatabaseManager::getDatabase();
-
-
-
-    if (!db.open()) {
-        qDebug() << "Database connection failed:" << db.lastError().text();
-    } else {
-        qDebug() << "Database connected successfully!";
-    }
-
-
-    QSqlQuery query;
+    QSqlQuery query(db);
     query.prepare("INSERT INTO menu ([menu_item_id],[item_name], [category] ,[price],[description],[image]) "
                   "VALUES (:itemid, :name, :category, :price, :description, :image)");
     query.bindValue(":name", name);

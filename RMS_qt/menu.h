@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include "addmenuitem.h"
 #include "category.h"
-
+#include <QtSql>
 namespace Ui {
 class menu;
 }
@@ -29,7 +29,7 @@ private slots:
 private:
     Ui::menu *ui;
     addmenuitem *ptraddmenuitem;
-
+    QSqlDatabase db;
     void connectDatabase();
     void loadDataIntoTable();
     QVector<QPushButton*> editButtons;

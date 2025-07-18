@@ -2,7 +2,7 @@
 #define SIGNUP_H
 
 #include <QDialog>
-
+#include <QtSql>
 namespace Ui {
 class signup;
 }
@@ -21,7 +21,7 @@ private slots:
 
 private:
     Ui::signup *ui;
-    bool openDatabase();
+    QSqlDatabase db;
     bool passwordVisible = false;
     void setupEyeButtone();
 };

@@ -37,7 +37,9 @@ edit::~edit()
 
 void edit::loadTableView()
 {
-    QSqlQuery query("SELECT table_no, seats, location, table_type, description FROM table_assign");
+    QSqlQuery query(db);
+    query.prepare("SELECT table_no, seats, location, table_type, description FROM table_assign");
+    query.exec();
     if (query.lastError().isValid()) {
         qDebug() << "Query error:" << query.lastError().text();
         return;
@@ -191,11 +193,11 @@ void edit::on_delete_button_clicked()
         );
 
     if (reply == QMessageBox::Yes) {
-        QSqlQuery query;
+        QSqlQuery query(db);
         query.prepare("DELETE FROM table_assign WHERE table_no = ?");
         query.addBindValue(tableNo);
 
-        QSqlQuery queryTables;
+        QSqlQuery queryTables(db);
         queryTables.prepare("DELETE FROM tables WHERE table_no = ?");
         queryTables.addBindValue(tableNo);
 

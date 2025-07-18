@@ -14,8 +14,8 @@ editmenuitem::editmenuitem(QString id, QString name, QString price, QString desc
     ui->item_name->setText(name);
     ui->item_price->setText(price);
     ui->item_description->setText(description);
-
-    QSqlQuery query;
+    QSqlDatabase &db = DatabaseManager::getDatabase();
+    QSqlQuery query(db);
     if (query.exec("SELECT [category_name] FROM category")) {
         while (query.next()) {
             QString categoryName = query.value(0).toString();
@@ -40,7 +40,7 @@ editmenuitem::editmenuitem(QString id, QString name, QString price, QString desc
         ui->combo_category->setCurrentIndex(index);
     }
 
-    QSqlQuery imageQuery;
+    QSqlQuery imageQuery(db);
     imageQuery.prepare("SELECT image FROM menu WHERE menu_item_id = ?");
     imageQuery.addBindValue(id);
     if (imageQuery.exec()) {
@@ -79,7 +79,7 @@ void editmenuitem::on_btn_save_clicked()
         return;
     }
 
-    QSqlQuery query;
+    QSqlQuery query(db);
     query.prepare("UPDATE menu SET [item_name] = ?,category = ?, price = ?, description = ?, image = ? WHERE [menu_item_id] = ?");
     query.addBindValue(name);
     query.addBindValue(category);

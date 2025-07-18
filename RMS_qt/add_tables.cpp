@@ -53,7 +53,7 @@ void add_tables::on_btn_save_clicked()
         return;
     }
 
-    QSqlQuery query;
+    QSqlQuery query(db);
     query.prepare("INSERT INTO table_assign (seats, location, table_type, description) "
                   "VALUES (?, ?, ?, ?)");
     query.addBindValue(seatsInt);
@@ -61,7 +61,7 @@ void add_tables::on_btn_save_clicked()
     query.addBindValue(Type);
     query.addBindValue(Description);
 
-    QSqlQuery queryTables;
+    QSqlQuery queryTables(db);
     queryTables.prepare("INSERT INTO tables(seats, status, order_id,remarks) VALUES(?,'available','',?)");
     queryTables.addBindValue(seatsInt);
     queryTables.addBindValue(Description);

@@ -22,7 +22,7 @@ private slots:
 
 private:
     Ui::category *ui;
-
+    QSqlDatabase db;
 private:
     void handleEditCategory(QString name, QString id, QString itemCount, QString description);
     void handleDeleteCategory(QString id);

@@ -71,16 +71,28 @@ void table::refreshTableList()
     int totalTables = 0;
     int availableTables = 0;
 
-    QSqlQuery totalQuery("SELECT COUNT(*) FROM tables");
-    if (totalQuery.next()) {
-        totalTables = totalQuery.value(0).toInt();
-        ui->label_t->setText(QString::number(totalTables));
+    QSqlQuery totalQuery(db);
+    totalQuery.prepare("SELECT COUNT(*) FROM tables");
+    if(totalQuery.exec()){
+        if (totalQuery.next()) {
+            totalTables = totalQuery.value(0).toInt();
+            ui->label_t->setText(QString::number(totalTables));
+        }
+    }
+    else{
+        qDebug() << "could not execute the query \n " << totalQuery.lastError();
     }
 
-    QSqlQuery availableQuery("SELECT COUNT(*) FROM tables WHERE status = 'available'");
-    if (availableQuery.next()) {
-        availableTables = availableQuery.value(0).toInt();
-        ui->label_a->setText(QString::number(availableTables));
+    QSqlQuery availableQuery(db);
+    availableQuery.prepare("SELECT COUNT(*) FROM tables WHERE status = 'available'");
+    if(availableQuery.exec()){
+        if (availableQuery.next()) {
+            availableTables = availableQuery.value(0).toInt();
+            ui->label_a->setText(QString::number(availableTables));
+        }
+    }
+    else{
+        qDebug() << "could not execute the query \n " << availableQuery.lastError();
     }
 
     //  Only if available = 0, turn label red
@@ -101,15 +113,18 @@ void table::refreshTableList()
 }
 void table::updateSeatLabels()
 {
-    QSqlQuery query("SELECT COUNT(*), SUM(CASE WHEN status = 'available' THEN 1 ELSE 0 END) FROM tables");
+    QSqlQuery query(db);
+    query.prepare("SELECT COUNT(*), SUM(CASE WHEN status = 'available' THEN 1 ELSE 0 END) FROM tables");
+    if(query.exec()){
+        if (query.next()) {
+            int Total = query.value(0).toInt();
+            int Available = query.value(1).toInt();
 
-    if (query.next()) {
-        int Total = query.value(0).toInt();
-        int Available = query.value(1).toInt();
-
-        ui->label_t->setText(QString::number(Total));
-        ui->label_a->setText(QString::number(Available));
-    } else {
+            ui->label_t->setText(QString::number(Total));
+            ui->label_a->setText(QString::number(Available));
+        }
+    }
+    else {
         qDebug() << "Failed to query table counts:" << query.lastError().text();
     }
 }
