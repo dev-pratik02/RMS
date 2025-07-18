@@ -12,7 +12,6 @@ add_tables::add_tables(QWidget *parent) :
     ui(new Ui::add_tables)
 {
     ui->setupUi(this);
-    QSqlDatabase &db = DatabaseManager::getDatabase();
 
     QIntValidator *intValidator = new QIntValidator(1, 9999, this);
     ui->lineEdit_2->setValidator(intValidator);  // Seats
@@ -53,6 +52,7 @@ void add_tables::on_btn_save_clicked()
         return;
     }
 
+    QSqlDatabase &db = DatabaseManager::getDatabase();
     QSqlQuery query(db);
     query.prepare("INSERT INTO table_assign (seats, location, table_type, description) "
                   "VALUES (?, ?, ?, ?)");

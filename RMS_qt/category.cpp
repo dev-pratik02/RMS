@@ -127,5 +127,16 @@ void category::handleDeleteCategory(QString id)
     }
 
     QMessageBox::information(this, "Deleted", "Category deleted successfully.");
+
+    QSqlQuery querySeq(db);
+    querySeq.prepare("UPDATE sqlite_sequence SET seq = (SELECT MAX(category_id) FROM category) WHERE name = 'category'");
+    if(querySeq.exec()){
+        qDebug() << "updated seq of category successfully";
+        querySeq.finish();
+    }
+    else{
+        qDebug() << "could not update the seq \n " << querySeq.lastError();
+    }
+
     loadCategories();
 }

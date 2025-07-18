@@ -20,7 +20,6 @@ editcategory::editcategory(QString name, QString id, QString itemCount, QString 
 
     ui->category_id->setReadOnly(true);
 
-    QSqlDatabase &db = DatabaseManager::getDatabase();
 
      // Validator for category_id (integers only)
      QIntValidator *idValidator = new QIntValidator(1, 9999, this); // Customize range as needed
@@ -47,6 +46,7 @@ void editcategory::on_btn_edit_clicked()
         return;
     }
 
+    QSqlDatabase &db = DatabaseManager::getDatabase();
     QSqlQuery query(db);
     query.prepare("UPDATE category SET [category_name]=:name, [category_id]=:id, [display_order]=:num, [description]=:desc WHERE [category_id]=:originalId");
     query.bindValue(":name", newName);

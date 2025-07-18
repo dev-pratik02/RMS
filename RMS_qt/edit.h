@@ -32,10 +32,6 @@ private slots:
     void on_btn_back_clicked();
     void on_btn_add_clicked();
     void on_edit_button_clicked(int row);
-
-    void on_delete_button_clicked();
-
-
 };
 
 #endif

@@ -117,6 +117,15 @@ void menu::handleDeleteButton(QString id)
     }
 
     QMessageBox::information(this, "Deleted", "Item deleted successfully.");
+    QSqlQuery querySeq(db);
+    querySeq.prepare("UPDATE sqlite_sequence SET seq = (SELECT MAX(menu_item_id) FROM menu) WHERE name = 'menu'");
+    if(querySeq.exec()){
+        qDebug() << "updated seq of menu items successfully";
+        querySeq.finish();
+    }
+    else{
+        qDebug() << "could not update the seq \n " << querySeq.lastError();
+    }
     loadData();  // Refresh table
 }
 

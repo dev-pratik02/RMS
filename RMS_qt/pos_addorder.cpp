@@ -589,6 +589,17 @@ void POS_AddOrder::sendOrder()
             qDebug() << "Failed to delete old items: " << deleteItems.lastError();
             success = false;
         }
+        else{
+            QSqlQuery querySeq(db);
+            querySeq.prepare("UPDATE sqlite_sequence SET seq = (SELECT MAX(item_id) FROM order_items) WHERE name = 'order_items'");
+            if(querySeq.exec()){
+                qDebug() << "updated seq of order items successfully";
+                querySeq.finish();
+            }
+            else{
+                qDebug() << "could not update the seq \n " << querySeq.lastError();
+            }
+        }
     }
 
     // Insert new order items

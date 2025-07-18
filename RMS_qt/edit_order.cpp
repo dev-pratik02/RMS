@@ -312,16 +312,41 @@ edit_order::edit_order(const QString &orderId, const QString &table, const QStri
         querydelitems.prepare("DELETE FROM order_items WHERE order_id = ?");
         querydelitems.addBindValue(orderId);
         bool ok1 = querydelitems.exec();
-        if (!ok1)
+        if (!ok1){
             qDebug() << "Delete order_items failed:" << querydelitems.lastError();
+        }
+        else{
+            qDebug() << "deleted order items successfully";
+            QSqlQuery querySeq(db);
+            querySeq.prepare("UPDATE sqlite_sequence SET seq = (SELECT MAX(item_id) FROM order_items) WHERE name = 'order_items'");
+            if(querySeq.exec()){
+                qDebug() << "updated seq of order items successfully";
+                querySeq.finish();
+            }
+            else{
+                qDebug() << "could not update the seq \n " << querySeq.lastError();
+            }
+        }
 
         QSqlQuery querydelorder(db);
         querydelorder.prepare("DELETE FROM orders WHERE order_id = ?");
         querydelorder.addBindValue(orderId);
         bool ok2 = querydelorder.exec();
-        if (!ok2)
-            qDebug() << "Delete orders failed:" << querydelorder.lastError();
-
+        if (!ok2){
+            qDebug() << "Delete of order failed:" << querydelorder.lastError();
+        }
+        else{
+            qDebug() << "deleted order successfully";
+            QSqlQuery querySeq(db);
+            querySeq.prepare("UPDATE sqlite_sequence SET seq = (SELECT MAX(order_id) FROM orders) WHERE name = 'orders'");
+            if(querySeq.exec()){
+                qDebug() << "updated seq of orders successfully";
+                querySeq.finish();
+            }
+            else{
+                qDebug() << "could not update the seq \n " << querySeq.lastError();
+            }
+        }
         QSqlQuery querytableStatus(db);
         querytableStatus.prepare("UPDATE tables SET status = 'available' WHERE order_id = ?");
         querytableStatus.addBindValue(orderId);
@@ -398,6 +423,18 @@ void edit_order::onSaveClicked() {
         qDebug() << "Failed to delete existing order items:" << deleteQuery.lastError();
         db.rollback();
         return;
+    }
+    else{
+            qDebug() << "deleted order items successfully";
+            QSqlQuery querySeq(db);
+            querySeq.prepare("UPDATE sqlite_sequence SET seq = (SELECT MAX(item_id) FROM order_items) WHERE name = 'order_items'");
+            if(querySeq.exec()){
+                qDebug() << "updated seq of order items successfully";
+                querySeq.finish();
+            }
+            else{
+                qDebug() << "could not update the seq \n " << querySeq.lastError();
+            }
     }
 
     // Step 2: Insert all current rows from UI

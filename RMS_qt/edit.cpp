@@ -17,13 +17,6 @@ edit::edit(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    QSqlDatabase &db = DatabaseManager::getDatabase();
-
-
-    if (!db.isOpen()) {
-        qDebug() << "Database not open in edit!";
-    }
-
     loadTableView();
 
     connect(ui->btn_back, &QPushButton::clicked, this, &edit::on_btn_back_clicked);
@@ -37,6 +30,11 @@ edit::~edit()
 
 void edit::loadTableView()
 {
+    QSqlDatabase &db = DatabaseManager::getDatabase();
+    if (!db.isOpen()) {
+        qDebug() << "Database not open in edit!";
+    }
+
     QSqlQuery query(db);
     query.prepare("SELECT table_no, seats, location, table_type, description FROM table_assign");
     query.exec();
@@ -46,7 +44,6 @@ void edit::loadTableView()
     }
 
     // Clear existing contents and set up columns (6 data + 1 action)
-    ui->table_view->clear();
     ui->table_view->setColumnCount(6);
     ui->table_view->setRowCount(0);
     QStringList headers = {"Table No", "Seats", "Location", "Table Type", "Description", "Actions"};
@@ -106,11 +103,11 @@ void edit::loadTableView()
                 );
 
             if (reply == QMessageBox::Yes) {
-                QSqlQuery delQuery;
+                QSqlQuery delQuery(db);
                 delQuery.prepare("DELETE FROM table_assign WHERE table_no = ?");
                 delQuery.addBindValue(tableNo.toInt());
 
-                QSqlQuery queryTables;
+                QSqlQuery queryTables(db);
                 queryTables.prepare("DELETE FROM tables WHERE table_no = ?");
                 queryTables.addBindValue(tableNo.toInt());
 
@@ -118,6 +115,26 @@ void edit::loadTableView()
                     QMessageBox::critical(this, "Delete Error", "Database error: " + delQuery.lastError().text());
                 } else {
                     QMessageBox::information(this, "Deleted", "Deleted successfully.");
+
+                    QSqlQuery querySeq(db);
+                    querySeq.prepare("UPDATE sqlite_sequence SET seq = (SELECT MAX(table_no) FROM table_assign) WHERE name = 'table_assign'");
+                    if(querySeq.exec()){
+                        qDebug() << "updated seq of table assign successfully";
+                        querySeq.finish();
+                    }
+                    else{
+                        qDebug() << "could not update the seq \n " << querySeq.lastError();
+                    }
+
+                    QSqlQuery querySeq2(db);
+                    querySeq2.prepare("UPDATE sqlite_sequence SET seq = (SELECT MAX(table_no) FROM tables) WHERE name = 'tables'");
+                    if(querySeq2.exec()){
+                        qDebug() << "updated seq of tables successfully";
+                        querySeq2.finish();
+                    }
+                    else{
+                        qDebug() << "could not update the seq \n " << querySeq2.lastError();
+                    }
                     refreshTableView();
                 }
             }
@@ -132,7 +149,6 @@ void edit::loadTableView()
     ui->table_view->setColumnWidth(2, 100);
     ui->table_view->setColumnWidth(4, 100);
     ui->table_view->setColumnWidth(5, 150);
-    ui->table_view->setColumnWidth(6, 150);
 }
 
 
@@ -179,43 +195,6 @@ void edit::on_edit_button_clicked(int row)
 }
 
 
-void edit::on_delete_button_clicked()
-{
-    QPushButton *button = qobject_cast<QPushButton*>(sender());
-    int row = button->property("row").toInt();
-    QString tableNo = ui->table_view->item(row, 0)->text();
-
-    QMessageBox::StandardButton reply = QMessageBox::question(
-        this,
-        "Delete Table",
-        "Are you sure you want to delete Table No: " + tableNo + "?",
-        QMessageBox::Yes | QMessageBox::No
-        );
-
-    if (reply == QMessageBox::Yes) {
-        QSqlQuery query(db);
-        query.prepare("DELETE FROM table_assign WHERE table_no = ?");
-        query.addBindValue(tableNo);
-
-        QSqlQuery queryTables(db);
-        queryTables.prepare("DELETE FROM tables WHERE table_no = ?");
-        queryTables.addBindValue(tableNo);
-
-        if (!query.exec()) {
-            QMessageBox::critical(this, "Error", "Failed to update table_assign: " + query.lastError().text());
-            return;
-        }
-        if (!queryTables.exec()) {
-            QMessageBox::critical(this, "Error", "Failed to update tables: " + queryTables.lastError().text());
-            return;
-        }
-        else {
-            QMessageBox::information(this, "Deleted", "Deleted successfully.");
-            query.finish();
-            refreshTableView();
-        }
-    }
-}
 
 void edit::refreshTableView()
 {

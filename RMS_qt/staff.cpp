@@ -136,6 +136,15 @@ void staff::loadStaffData()
             if (!deleteQuery.exec()) {
                 qDebug() << "Delete failed:" << deleteQuery.lastError().text();
             } else {
+                QSqlQuery querySeq(db);
+                querySeq.prepare("UPDATE sqlite_sequence SET seq = (SELECT MAX(staff_id) FROM staff) WHERE name = 'staff'");
+                if(querySeq.exec()){
+                    qDebug() << "updated seq of staff successfully";
+                    querySeq.finish();
+                }
+                else{
+                    qDebug() << "could not update the seq \n " << querySeq.lastError();
+                }
                 loadStaffData();
             }
         });

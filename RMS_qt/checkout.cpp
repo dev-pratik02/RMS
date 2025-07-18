@@ -157,6 +157,8 @@ checkout::checkout(const QString &orderId, const QString &table, const QString &
     // Give extra height to the details section
     detailsSection->setMinimumHeight(60);
 
+
+
     // Calculate subtotal, service charge, total
     double subtotal = 0.0;
     for (int i = 0; i < orderTable->rowCount(); ++i) {
