@@ -5,5 +5,8 @@
         <file>eye.png</file>
         <file>eye-off.png</file>
     </qresource>
-    <qresource prefix="/new/prefix1"/>
+    <qresource prefix="/database">
+        <file>RmsApp.db</file>
+        <file>RmsApp.sqbpro</file>
+    </qresource>
 </RCC>

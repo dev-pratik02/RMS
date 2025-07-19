@@ -8,7 +8,8 @@ class DatabaseManager
 {
 public:
     static QSqlDatabase& getDatabase();
-
+    static QString writableDbPath;
+    static void setupDatabase();
 };
 
 #endif // DATABASEMANAGER_H
