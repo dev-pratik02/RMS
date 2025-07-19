@@ -77,7 +77,6 @@ void add_tables::on_btn_save_clicked()
     on_btn_reset_clicked();
 
     emit dataSaved();
-     // setNextTableNumber();
 }
 
 
@@ -87,7 +86,6 @@ void add_tables::on_btn_reset_clicked()
      ui->lineEdit_3->clear();
      ui->lineEdit_5->clear();
     ui->textEdit_1->clear();
-      // setNextTableNumber();
 }
 
 void add_tables::on_btn_back1_clicked()

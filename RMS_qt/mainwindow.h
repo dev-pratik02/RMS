@@ -39,10 +39,10 @@ private:
     Ui::MainWindow *ui;
     QSqlDatabase DB_connection;
 
-    orders *ptrorders;
-    class pos *ptrpos;
-    menu *ptrmenu;
-    staff *ptrstaff;
-    table *ptrtables;
+    orders *ptrorders = nullptr;
+    class pos *ptrpos = nullptr;
+    menu *ptrmenu = nullptr;
+    staff *ptrstaff = nullptr;
+    table *ptrtables = nullptr;
 };
 #endif // MAINWINDOW_H

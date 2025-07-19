@@ -6,11 +6,6 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    ptrorders = new orders();
-    ptrpos = new class pos();
-    ptrmenu = new menu();
-    ptrstaff = new staff();
-    ptrtables = new table();
 }
 
 MainWindow::~MainWindow()
@@ -27,30 +22,45 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_btn_menu_clicked()
 {
+    if(!ptrmenu){
+        ptrmenu = new menu();
+    }
     ptrmenu->show();
 }
 
 
 void MainWindow::on_btn_staff_clicked()
 {
+    if(!ptrstaff){
+        ptrstaff = new staff();
+    }
     ptrstaff->show();
 }
 
 
 void MainWindow::on_btn_tables_clicked()
 {
+    if(!ptrtables){
+        ptrtables = new table();
+    }
     ptrtables->show();
 }
 
 
 void MainWindow::on_btn_orders_clicked()
 {
+    if(!ptrorders){
+        ptrorders = new orders();
+    }
     ptrorders->show();
 }
 
 
 void MainWindow::on_btn_pos_clicked()
 {
+    if(!ptrpos){
+        ptrpos = new class pos();
+    }
     ptrpos->show();
 }
 

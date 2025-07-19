@@ -19,18 +19,6 @@ staff::staff(QWidget *parent)
 {
     ui->setupUi(this);
 
-    qDebug() << "The application dir path is:\n" << QCoreApplication::applicationDirPath();
-
-    QSqlDatabase &db = DatabaseManager::getDatabase();
-
-
-    if (db.open()) {
-        qDebug() << "Database is accessed by staff page";
-    } else {
-        qDebug() << "Database connection failed";
-        qDebug() << "Error:" << db.lastError();
-    }
-
     loadStaffData();
 }
 
@@ -41,6 +29,14 @@ staff::~staff()
 
 void staff::loadStaffData()
 {
+    QSqlDatabase &db = DatabaseManager::getDatabase();
+    if (db.open()) {
+        qDebug() << "Database is accessed by staff page";
+    } else {
+        qDebug() << "Database connection failed";
+        qDebug() << "Error:" << db.lastError();
+    }
+
     ui->table_staff->setColumnCount(7); // 6 data columns + 1 action column
     QStringList headers = {"ID", "Name", "Position", "Salary", "Age", "Contact", "Action"};
     ui->table_staff->setHorizontalHeaderLabels(headers);

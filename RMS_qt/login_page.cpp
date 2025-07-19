@@ -68,7 +68,7 @@ void login_page::on_btn_login_clicked()
         return;
     }
     QString hashedInput = hashPassword(password);
-    qDebug() << hashedInput;
+    // qDebug() << hashedInput;
     QSqlQuery query(db);
     query.prepare("SELECT COUNT(*) FROM users WHERE username = ? AND password = ?");
     query.addBindValue(userid);
