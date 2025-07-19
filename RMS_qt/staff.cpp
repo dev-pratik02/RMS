@@ -60,24 +60,23 @@ void staff::loadStaffData()
         return;
     }
 
-    QColor columnColors[6] = {
-        QColor("#FFF2CC"), // ID - light yellow
-        QColor("#D9EAD3"), // Name - light green
-        QColor("#CFE2F3"), // Position - light blue
-        QColor("#F4CCCC"), // Salary - light red
-        QColor("#EAD1DC"), // Age - light pink
-        QColor("#D9D2E9")  // Contact - light purple
-    };
+    // QColor columnColors[6] = {
+    //     QColor("#FFF2CC"), // ID - light yellow
+    //     QColor("#D9EAD3"), // Name - light green
+    //     QColor("#CFE2F3"), // Position - light blue
+    //     QColor("#F4CCCC"), // Salary - light red
+    //     QColor("#EAD1DC"), // Age - light pink
+    //     QColor("#D9D2E9")  // Contact - light purple
+    // };
 
     int row = 0;
     while (query.next()) {
         ui->table_staff->insertRow(row);
 
-        // Add colored items
         for (int col = 0; col < 6; ++col) {
             QTableWidgetItem *item = new QTableWidgetItem(query.value(col).toString());
             item->setTextAlignment(Qt::AlignCenter);
-            item->setBackground(columnColors[col]);
+            // item->setBackground(columnColors[col]);
             ui->table_staff->setItem(row, col, item);
         }
 

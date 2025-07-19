@@ -61,7 +61,7 @@
     </font>
    </property>
    <property name="text">
-    <string>EDIT</string>
+    <string>SAVE</string>
    </property>
   </widget>
   <widget class="QPlainTextEdit" name="category_description">

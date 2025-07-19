@@ -179,10 +179,10 @@
   <widget class="QPushButton" name="btn_confirm">
    <property name="geometry">
     <rect>
-     <x>410</x>
-     <y>510</y>
-     <width>80</width>
-     <height>24</height>
+     <x>409</x>
+     <y>503</y>
+     <width>81</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="font">

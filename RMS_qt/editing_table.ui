@@ -153,12 +153,12 @@
     <rect>
      <x>520</x>
      <y>470</y>
-     <width>71</width>
-     <height>21</height>
+     <width>81</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="text">
-    <string>change</string>
+    <string>SAVE</string>
    </property>
   </widget>
   <widget class="QPushButton" name="btn_cancel">
@@ -166,12 +166,12 @@
     <rect>
      <x>190</x>
      <y>470</y>
-     <width>71</width>
-     <height>21</height>
+     <width>81</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="text">
-    <string>cancel</string>
+    <string>CANCEL</string>
    </property>
   </widget>
  </widget>
