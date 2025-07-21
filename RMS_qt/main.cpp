@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     g_mainWindow = new MainWindow();
 
-    DatabaseManager::setupDatabase();
+    // DatabaseManager::setupDatabase();
     DatabaseManager::getDatabase();
     loginPage = new login_page();
     loginPage->show();

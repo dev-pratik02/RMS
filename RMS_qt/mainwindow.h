@@ -20,6 +20,7 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = nullptr);
+
     ~MainWindow();
 
 private slots:
@@ -38,7 +39,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QSqlDatabase DB_connection;
-
+    QString userRole;
     orders *ptrorders = nullptr;
     class pos *ptrpos = nullptr;
     menu *ptrmenu = nullptr;

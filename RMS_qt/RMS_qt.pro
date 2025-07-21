@@ -27,6 +27,7 @@ SOURCES += \
     editmenuitem.cpp \
     editstaff.cpp \
     forgotpass.cpp \
+    globals.cpp \
     login_page.cpp \
     mainwindow.cpp \
     menu.cpp \
@@ -56,6 +57,7 @@ HEADERS += \
     editmenuitem.h \
     editstaff.h \
     forgotpass.h \
+    globals.h \
     login_page.h \
     mainwindow.h \
     menu.h \

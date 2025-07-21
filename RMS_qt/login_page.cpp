@@ -13,6 +13,7 @@
 #include <QStyle>
 #include "databasemanager.h"
 #include "mainwindow.h"
+#include "globals.h"
 
 login_page::login_page(QWidget *parent)
     : QDialog(parent)
@@ -78,6 +79,21 @@ void login_page::on_btn_login_clicked()
 
         if (query.next() && query.value(0).toInt() > 0) {
             QMessageBox::information(this, "Login Success", "Welcome back!");
+
+            //To get the role of the user
+            QSqlQuery role(db);
+            role.prepare("SELECT role FROM users WHERE username=? AND password=?");
+            role.addBindValue(userid);
+            role.addBindValue(hashedInput);
+            if(role.exec()){
+                while(role.next()){
+                    g_userRole = role.value(0).toString();
+                    qDebug() << "The role of the user is " << g_userRole;
+                }
+            }
+            else{
+                qDebug() << "Role could not be found \n" << role.lastError();
+            }
             MainWindow *main = new MainWindow();
             main->show();
             this->close();

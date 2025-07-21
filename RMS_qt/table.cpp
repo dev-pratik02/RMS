@@ -4,7 +4,7 @@
 #include <QSqlError>
 #include <QDebug>
 #include "databasemanager.h"
-
+#include "globals.h"
 table::table(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::table)
@@ -17,9 +17,6 @@ table::table(QWidget *parent)
 
 
     QSqlDatabase &db = DatabaseManager::getDatabase();
-
-
-
     if (!db.open()) {
         qDebug() << "Failed to open database:" << db.lastError().text();
     } else {
@@ -27,6 +24,10 @@ table::table(QWidget *parent)
     }
 
     loadTableList();
+
+    if(g_userRole != "Manager" && g_userRole != "Admin"){
+        ui->btn_edit->setVisible(false);
+    }
 
     // connect(ui->btn_edit, &QPushButton::clicked, this, &table::on_btn_edit_clicked);
 }

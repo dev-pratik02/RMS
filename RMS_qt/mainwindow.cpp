@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "globals.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -31,10 +32,15 @@ void MainWindow::on_btn_menu_clicked()
 
 void MainWindow::on_btn_staff_clicked()
 {
-    if(!ptrstaff){
-        ptrstaff = new staff();
+    if(g_userRole == "Manager" || g_userRole == "Admin"){
+        if(!ptrstaff){
+            ptrstaff = new staff();
+        }
+        ptrstaff->show();
     }
-    ptrstaff->show();
+    else{
+        QMessageBox::critical(this,"Can't open","You don't have permission to access this page");
+    }
 }
 
 

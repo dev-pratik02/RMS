@@ -13,6 +13,7 @@
 #include <QPushButton>
 
 #include "databasemanager.h"
+#include "globals.h"
 
 menu::menu(QWidget *parent)
     : QMainWindow(parent)
@@ -60,26 +61,31 @@ void menu::loadData()
             ui->tableWidget->setItem(row, 3, new QTableWidgetItem(category));
             ui->tableWidget->setItem(row, 4, new QTableWidgetItem(description));
 
+            if(g_userRole == "Manager" || g_userRole == "Admin"){
+                QWidget *actionWidget = new QWidget();
+                QHBoxLayout *layout = new QHBoxLayout(actionWidget);
+                layout->setContentsMargins(0, 0, 0, 0);
 
-            QWidget *actionWidget = new QWidget();
-            QHBoxLayout *layout = new QHBoxLayout(actionWidget);
-            layout->setContentsMargins(0, 0, 0, 0);
+                // Edit button
+                QPushButton *editBtn = new QPushButton("Edit");
+                connect(editBtn, &QPushButton::clicked, this, [=]() {
+                    handleEditButton(id, name, price, description,category);
+                });
+                layout->addWidget(editBtn);
 
-            // Edit button
-            QPushButton *editBtn = new QPushButton("Edit");
-            connect(editBtn, &QPushButton::clicked, this, [=]() {
-                handleEditButton(id, name, price, description,category);
-            });
-            layout->addWidget(editBtn);
+                // Delete button
+                QPushButton *deleteBtn = new QPushButton("Delete");
+                connect(deleteBtn, &QPushButton::clicked, this, [=]() {
+                handleDeleteButton(id);
+                });
+                layout->addWidget(deleteBtn);
 
-            // Delete button
-            QPushButton *deleteBtn = new QPushButton("Delete");
-            connect(deleteBtn, &QPushButton::clicked, this, [=]() {
-            handleDeleteButton(id);
-            });
-            layout->addWidget(deleteBtn);
-
-            ui->tableWidget->setCellWidget(row, 5, actionWidget);
+                ui->tableWidget->setCellWidget(row, 5, actionWidget);
+            }
+            else{
+                ui->tableWidget->setColumnCount(5);
+                ui->btn_addmenu->setVisible(false);
+            }
             row++;
         }
     }

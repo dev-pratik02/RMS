@@ -10,7 +10,7 @@
 #include <QHBoxLayout>
 
 #include "databasemanager.h"
-
+#include "globals.h"
 
 category::category(QWidget *parent)
     : QDialog(parent)
@@ -76,23 +76,29 @@ void category::loadCategories()
             ui->tableWidget->setItem(row, 2, new QTableWidgetItem(itemCount));
             ui->tableWidget->setItem(row, 3, new QTableWidgetItem(description));
 
-            QWidget *actionWidget = new QWidget();
-            QHBoxLayout *layout = new QHBoxLayout(actionWidget);
-            layout->setContentsMargins(0, 0, 0, 0);
+            if(g_userRole == "Manager" || g_userRole == "Admin"){
+                QWidget *actionWidget = new QWidget();
+                QHBoxLayout *layout = new QHBoxLayout(actionWidget);
+                layout->setContentsMargins(0, 0, 0, 0);
 
-            QPushButton *editBtn = new QPushButton("Edit");
-            connect(editBtn, &QPushButton::clicked, this, [=]() {
-                handleEditCategory(name, id, itemCount, description);
-            });
-            layout->addWidget(editBtn);
+                QPushButton *editBtn = new QPushButton("Edit");
+                connect(editBtn, &QPushButton::clicked, this, [=]() {
+                    handleEditCategory(name, id, itemCount, description);
+                });
+                layout->addWidget(editBtn);
 
-            QPushButton *deleteBtn = new QPushButton("Delete");
-            connect(deleteBtn, &QPushButton::clicked, this, [=]() {
-                handleDeleteCategory(id);
-            });
-            layout->addWidget(deleteBtn);
+                QPushButton *deleteBtn = new QPushButton("Delete");
+                connect(deleteBtn, &QPushButton::clicked, this, [=]() {
+                    handleDeleteCategory(id);
+                });
+                layout->addWidget(deleteBtn);
 
-            ui->tableWidget->setCellWidget(row, 4, actionWidget);
+                ui->tableWidget->setCellWidget(row, 4, actionWidget);
+            }
+            else{
+                ui->tableWidget->setColumnCount(4);
+                ui->btn_addcategory->setVisible(false);
+            }
             row++;
         }
     }
