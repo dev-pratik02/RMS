@@ -8,8 +8,7 @@ POS_AddOrder::POS_AddOrder(QString table_no,class pos *posWindow, MainWindow *ma
 {
     // Set window title and size
     setWindowTitle("POS - Add Order");
-    setMinimumSize(1280, 800);
-    resize(1280, 800);
+    setMinimumSize(1280, 720);
     qDebug() << "The received table no. is " << table_no;
 
     QSqlDatabase &db = DatabaseManager::getDatabase();
