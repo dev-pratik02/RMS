@@ -32,6 +32,13 @@ orders::orders(QWidget *parent)
             oldWidget->deleteLater();
     }
 
+    if(g_userRole == "Waiter"){
+        currentStatus = "Ready";
+        ui->btn_widget->setVisible(false);
+    }else if(g_userRole == "Kitchen"){
+        currentStatus = "Preparing";
+        ui->btn_widget->setVisible(false);
+    }
     ordersPageSetup();
 
 }
@@ -50,6 +57,8 @@ void orders::ordersPageSetup(){
     else{
         queryInsert.prepare("SELECT * FROM orders where status = ?");
         queryInsert.addBindValue(currentStatus);
+
+        //styling current status button
         if(currentStatus == "Preparing"){
             setActiveButton(ui->btn_preparing);
         }
@@ -62,6 +71,7 @@ void orders::ordersPageSetup(){
         else if(currentStatus == "Billed"){
             setActiveButton(ui->btn_billed);
         }
+
     }
     if(queryInsert.exec()){
         qDebug()<<"Successfully fetched order details";
@@ -81,48 +91,60 @@ void orders::ordersPageSetup(){
     qDebug() << "Number of records:" << records;
     queryInsert.first();
 
+    if(records == 0){
+        qDebug() << "no orders";
+        ui->scrollArea->hide();
+        ui->cardContainer->hide();
+        ui->btn_widget->hide();
+        ui->recordLabel->setText("There are no orders of the status: " + currentStatus);
+        ui->recordLabel->setAlignment(Qt::AlignCenter);
+        ui->recordLabel->setStyleSheet("font-size: 16px; color: white; padding: 10px;");
+        ui->recordLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        ui->recordLabel->show();
+    }
+
+    else{
+        ui->recordLabel->hide();
+        const int columns = 3;
+        const int cardWidth = 200;
+        const int cardHeight = 200;
+        const int hSpacing = 12;
+        const int vSpacing = 12;
+        const int count = records;
+        int rows = (count + columns - 1) / columns;
+
+        QWidget *dynamicCardContainer = new QWidget;
+        QGridLayout *gridLayout = new QGridLayout(dynamicCardContainer);
+        gridLayout->setSpacing(vSpacing);
+        gridLayout->setHorizontalSpacing(hSpacing);
+        gridLayout->setVerticalSpacing(vSpacing);
+        gridLayout->setContentsMargins(0, 0, 0, 0);
 
 
+        int i=0;
+        do{
+            int row = i / columns;
+            int col = i % columns;
+            QWidget *card = createOrderCard(
+                queryInsert.value(0).toString(),
+                queryInsert.value(1).toString(),
+                queryInsert.value(2).toString(),
+                queryInsert.value(3).toString()
+                );
+            gridLayout->addWidget(card, row, col);
+            ++i;
+        }while(queryInsert.next());
 
-    const int columns = 3;
-    const int cardWidth = 200;
-    const int cardHeight = 200;
-    const int hSpacing = 12;
-    const int vSpacing = 12;
-    const int count = records;
-    int rows = (count + columns - 1) / columns;
+        queryInsert.finish();
 
-    QWidget *dynamicCardContainer = new QWidget;
-    QGridLayout *gridLayout = new QGridLayout(dynamicCardContainer);
-    gridLayout->setSpacing(vSpacing);
-    gridLayout->setHorizontalSpacing(hSpacing);
-    gridLayout->setVerticalSpacing(vSpacing);
-    gridLayout->setContentsMargins(0, 0, 0, 0);
-
-
-    int i=0;
-    do{
-        int row = i / columns;
-        int col = i % columns;
-        QWidget *card = createOrderCard(
-            queryInsert.value(0).toString(),
-            queryInsert.value(1).toString(),
-            queryInsert.value(2).toString(),
-            queryInsert.value(3).toString()
+        // Set a minimum size for the container so the scroll area works
+        dynamicCardContainer->setMinimumSize(
+            columns * cardWidth + (columns - 1) * hSpacing,
+            rows * cardHeight + (rows - 1) * vSpacing
             );
-        gridLayout->addWidget(card, row, col);
-        ++i;
-    }while(queryInsert.next());
 
-    queryInsert.finish();
-
-    // Set a minimum size for the container so the scroll area works
-    dynamicCardContainer->setMinimumSize(
-        columns * cardWidth + (columns - 1) * hSpacing,
-        rows * cardHeight + (rows - 1) * vSpacing
-        );
-
-    ui->scrollArea->setWidget(dynamicCardContainer);
+        ui->scrollArea->setWidget(dynamicCardContainer);
+    }
 }
 
 
@@ -321,12 +343,13 @@ QWidget* orders::createOrderCard(const QString &orderId, const QString &table, c
 
 
     // --- Bottom Section: Buttons ---
-    if(g_userRole == "Manager" || g_userRole == "Admin"){
-        QWidget *bottomSection = new QWidget(card);
-        QHBoxLayout *bottomLayout = new QHBoxLayout(bottomSection);
-        bottomLayout->setContentsMargins(0, 0, 0, 0);
-        bottomLayout->setSpacing(6);
 
+    QWidget *bottomSection = new QWidget(card);
+    QHBoxLayout *bottomLayout = new QHBoxLayout(bottomSection);
+    bottomLayout->setContentsMargins(0, 0, 0, 0);
+    bottomLayout->setSpacing(6);
+
+    if(g_userRole == "Manager" || g_userRole == "Admin"){
         QPushButton *editBtn = new QPushButton("Edit", bottomSection);
         QPushButton *checkoutBtn = new QPushButton("Checkout", bottomSection);
 
@@ -375,6 +398,50 @@ QWidget* orders::createOrderCard(const QString &orderId, const QString &table, c
             });
 
             dlg->show();
+        });
+    }
+    else if(g_userRole == "Waiter"){
+        QPushButton *served_btn = new QPushButton("Mark as Served",bottomSection);
+        served_btn->setStyleSheet("background-color: #0078d7; color: white; border-radius: 4px; padding: 2px 8px; font-size: 10px;");
+        served_btn->setFixedHeight(18);
+        bottomLayout->addWidget(served_btn);
+        mainLayout->addWidget(bottomSection);
+        connect(served_btn, &QPushButton::clicked, this, [=]() {
+            QSqlDatabase &db = DatabaseManager::getDatabase();
+            QSqlQuery updateStatus(db);
+            updateStatus.prepare("UPDATE orders SET status = 'Served' WHERE order_id = ?");
+            updateStatus.addBindValue(orderId);
+            if (updateStatus.exec()) {
+                qDebug() << "Order status updated to Served";
+            } else {
+                qDebug() << "Failed to update status:" << updateStatus.lastError();
+            }
+            updateStatus.finish();
+            this->close();
+            ptrorders = new orders();
+            ptrorders->show();
+        });
+    }
+    else if(g_userRole == "Kitchen"){
+        QPushButton *ready_btn = new QPushButton("Mark as Ready",bottomSection);
+        ready_btn->setStyleSheet("background-color: #0078d7; color: white; border-radius: 4px; padding: 2px 8px; font-size: 10px;");
+        ready_btn->setFixedHeight(18);
+        bottomLayout->addWidget(ready_btn);
+        mainLayout->addWidget(bottomSection);
+        connect(ready_btn, &QPushButton::clicked, this, [=]() {
+            QSqlDatabase &db = DatabaseManager::getDatabase();
+            QSqlQuery updateStatus(db);
+            updateStatus.prepare("UPDATE orders SET status = 'Ready' WHERE order_id = ?");
+            updateStatus.addBindValue(orderId);
+            if (updateStatus.exec()) {
+                qDebug() << "Order status updated to Ready";
+            } else {
+                qDebug() << "Failed to update status:" << updateStatus.lastError();
+            }
+            updateStatus.finish();
+            this->close();
+            ptrorders = new orders();
+            ptrorders->show();
         });
     }
 

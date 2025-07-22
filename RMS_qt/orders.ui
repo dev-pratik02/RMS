@@ -47,7 +47,20 @@
      </widget>
     </widget>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QLabel" name="recordLabel">
+    <property name="geometry">
+     <rect>
+      <x>-50</x>
+      <y>200</y>
+      <width>721</width>
+      <height>39</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QWidget" name="btn_widget" native="true">
     <property name="geometry">
      <rect>
       <x>60</x>
@@ -56,7 +69,7 @@
       <height>51</height>
      </rect>
     </property>
-    <layout class="QHBoxLayout" name="horizontalLayout">
+    <layout class="QHBoxLayout" name="btn_layout">
      <item>
       <widget class="QPushButton" name="btn_all">
        <property name="text">
