@@ -33,6 +33,16 @@ public:
 private slots:
 
 
+    void on_btn_preparing_clicked();
+
+    void on_btn_ready_clicked();
+
+    void on_btn_served_clicked();
+
+    void on_btn_billed_clicked();
+
+    void on_btn_all_clicked();
+
 private:
     Ui::orders *ui;
     checkout *ptrcheckout;
@@ -41,6 +51,8 @@ private:
     orders *ptrorders;
     QSqlDatabase db;
     QWidget* createOrderCard(const QString &orderId, const QString &table, const QString &time, const QString &status);
+    void ordersPageSetup();
+    void setActiveButton(QPushButton* activeBtn);
 };
 
 #endif // ORDERS_H

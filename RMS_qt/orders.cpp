@@ -3,15 +3,28 @@
 #include "ui_orders.h"
 #include "databasemanager.h"
 #include "globals.h"
+
+QString currentStatus = "";
+const QString activeButtonStyle = R"(
+    background-color: #0078d7;
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+    padding: 5px;
+)";
+
+const QString inactiveButtonStyle = R"(
+    background-color: #000000;
+    color: white;
+    border-radius: 8px;
+    padding:5px;
+)";
+
 orders::orders(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::orders)
 {
     ui->setupUi(this);
-
-    QSqlDatabase &db = DatabaseManager::getDatabase();
-
-
 
     // Remove any widget previously set in the scroll area
     if (QWidget *oldWidget = ui->scrollArea->widget()) {
@@ -19,12 +32,39 @@ orders::orders(QWidget *parent)
             oldWidget->deleteLater();
     }
 
+    ordersPageSetup();
+
+}
+
+
+void orders::ordersPageSetup(){
 
     //Fetching data from database
 
+    QSqlDatabase &db = DatabaseManager::getDatabase();
     QSqlQuery queryInsert(db);
-    if(queryInsert.exec("SELECT * FROM orders where status!='Billed'")){
-        // qDebug()<<"Successfully fetched order details";
+    if(currentStatus.isEmpty()){
+        setActiveButton(ui->btn_all);
+        queryInsert.prepare("SELECT * FROM orders");
+    }
+    else{
+        queryInsert.prepare("SELECT * FROM orders where status = ?");
+        queryInsert.addBindValue(currentStatus);
+        if(currentStatus == "Preparing"){
+            setActiveButton(ui->btn_preparing);
+        }
+        else if(currentStatus == "Ready"){
+            setActiveButton(ui->btn_ready);
+        }
+        else if(currentStatus == "Served"){
+            setActiveButton(ui->btn_served);
+        }
+        else if(currentStatus == "Billed"){
+            setActiveButton(ui->btn_billed);
+        }
+    }
+    if(queryInsert.exec()){
+        qDebug()<<"Successfully fetched order details";
     }
     else{
         qDebug()<< "Can't fetch order details";
@@ -46,7 +86,7 @@ orders::orders(QWidget *parent)
 
     const int columns = 3;
     const int cardWidth = 200;
-    const int cardHeight = 120;
+    const int cardHeight = 200;
     const int hSpacing = 12;
     const int vSpacing = 12;
     const int count = records;
@@ -69,7 +109,7 @@ orders::orders(QWidget *parent)
             queryInsert.value(1).toString(),
             queryInsert.value(2).toString(),
             queryInsert.value(3).toString()
-        );
+            );
         gridLayout->addWidget(card, row, col);
         ++i;
     }while(queryInsert.next());
@@ -80,10 +120,12 @@ orders::orders(QWidget *parent)
     dynamicCardContainer->setMinimumSize(
         columns * cardWidth + (columns - 1) * hSpacing,
         rows * cardHeight + (rows - 1) * vSpacing
-    );
+        );
 
     ui->scrollArea->setWidget(dynamicCardContainer);
 }
+
+
 
 QWidget* orders::createOrderCard(const QString &orderId, const QString &table, const QString &time, const QString &status)
 {
@@ -108,6 +150,7 @@ QWidget* orders::createOrderCard(const QString &orderId, const QString &table, c
     topGrid->setVerticalSpacing(0);
 
     QString labelStyle = "color: white; background: transparent; border: none; font-size: 10px;";
+    QString labelStyleImp = "color: white; background: transparent; border: none; font-size: 14px;";
 
     QLabel *idLabel = new QLabel("Order #" + orderId, topSection);
     QLabel *timeLabel = new QLabel("Time: " + time, topSection);
@@ -116,7 +159,7 @@ QWidget* orders::createOrderCard(const QString &orderId, const QString &table, c
 
     idLabel->setStyleSheet(labelStyle);
     timeLabel->setStyleSheet(labelStyle);
-    tableLabel->setStyleSheet(labelStyle);
+    tableLabel->setStyleSheet(labelStyleImp);
     statusLabel->setStyleSheet(labelStyle);
 
     idLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
@@ -129,9 +172,9 @@ QWidget* orders::createOrderCard(const QString &orderId, const QString &table, c
     tableLabel->setWordWrap(true);
     statusLabel->setWordWrap(true);
 
-    topGrid->addWidget(idLabel, 0, 0);
+    topGrid->addWidget(tableLabel, 0, 0);
+    topGrid->addWidget(idLabel, 1, 0);
     topGrid->addWidget(timeLabel, 0, 1);
-    topGrid->addWidget(tableLabel, 1, 0);
     topGrid->addWidget(statusLabel, 1, 1);
 
     mainLayout->addWidget(topSection);
@@ -194,6 +237,7 @@ QWidget* orders::createOrderCard(const QString &orderId, const QString &table, c
     // Reset query to first record for reading data
     if (orders_row > 0)
         queryOrders.first();
+
 
     // --- Middle Section: Table of order items (6 rows, no headers) ---
     QTableWidget *orderTable = new QTableWidget(orders_row, 3, card);
@@ -337,15 +381,65 @@ QWidget* orders::createOrderCard(const QString &orderId, const QString &table, c
     return card;
 }
 
+
+void orders::setActiveButton(QPushButton* activeBtn) {
+    QList<QPushButton*> buttons = {
+        ui->btn_all,
+        ui->btn_preparing,
+        ui->btn_ready,
+        ui->btn_served,
+        ui->btn_billed
+    };
+
+    for (QPushButton* btn : buttons) {
+        if (btn == activeBtn) {
+            btn->setStyleSheet(activeButtonStyle);
+        } else {
+            btn->setStyleSheet(inactiveButtonStyle);
+        }
+    }
+}
+
+void orders::on_btn_preparing_clicked()
+{
+    currentStatus = "Preparing";
+    setActiveButton(ui->btn_preparing);
+    ordersPageSetup();
+
+}
+
+
+void orders::on_btn_ready_clicked()
+{
+    currentStatus = "Ready";
+    setActiveButton(ui->btn_ready);
+    ordersPageSetup();
+}
+
+
+void orders::on_btn_served_clicked()
+{
+    currentStatus = "Served";
+    setActiveButton(ui->btn_served);
+    ordersPageSetup();
+}
+
+
+void orders::on_btn_billed_clicked()
+{
+    currentStatus = "Billed";
+    setActiveButton(ui->btn_billed);
+    ordersPageSetup();
+}
+
+void orders::on_btn_all_clicked()
+{
+    currentStatus = "";
+    setActiveButton(ui->btn_all);
+    ordersPageSetup();
+}
+
 orders::~orders()
 {
     delete ui;
 }
-
-
-
-
-
-
-
-
