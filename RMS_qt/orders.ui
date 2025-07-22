@@ -98,13 +98,6 @@
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QPushButton" name="btn_billed">
-       <property name="text">
-        <string>Billed</string>
-       </property>
-      </widget>
-     </item>
     </layout>
    </widget>
   </widget>

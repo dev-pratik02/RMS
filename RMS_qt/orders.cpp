@@ -40,7 +40,6 @@ orders::orders(QWidget *parent)
         ui->btn_widget->setVisible(false);
     }
     ordersPageSetup();
-    qDebug() << "After return";
 
 }
 
@@ -53,7 +52,7 @@ void orders::ordersPageSetup(){
     QSqlQuery queryInsert(db);
     if(currentStatus.isEmpty()){
         setActiveButton(ui->btn_all);
-        queryInsert.prepare("SELECT * FROM orders");
+        queryInsert.prepare("SELECT * FROM orders where status!= 'Billed'");
     }
     else{
         queryInsert.prepare("SELECT * FROM orders where status = ?");
@@ -69,10 +68,6 @@ void orders::ordersPageSetup(){
         else if(currentStatus == "Served"){
             setActiveButton(ui->btn_served);
         }
-        else if(currentStatus == "Billed"){
-            setActiveButton(ui->btn_billed);
-        }
-
     }
     if(queryInsert.exec()){
         qDebug()<<"Successfully fetched order details";
@@ -99,7 +94,6 @@ void orders::ordersPageSetup(){
         ui->recordLabel->setStyleSheet("font-size: 16px; color: white; padding: 10px;");
         ui->recordLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         ui->recordLabel->show();
-        qDebug() << "Before return";
         return;
     }
 
@@ -455,7 +449,6 @@ void orders::setActiveButton(QPushButton* activeBtn) {
         ui->btn_preparing,
         ui->btn_ready,
         ui->btn_served,
-        ui->btn_billed
     };
 
     for (QPushButton* btn : buttons) {
@@ -493,14 +486,6 @@ void orders::on_btn_served_clicked()
     ptrorders->show();
 }
 
-
-void orders::on_btn_billed_clicked()
-{
-    currentStatus = "Billed";
-    this->close();
-    ptrorders = new orders();
-    ptrorders->show();
-}
 
 void orders::on_btn_all_clicked()
 {

@@ -39,8 +39,6 @@ private slots:
 
     void on_btn_served_clicked();
 
-    void on_btn_billed_clicked();
-
     void on_btn_all_clicked();
 
 private:
