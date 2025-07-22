@@ -40,6 +40,7 @@ orders::orders(QWidget *parent)
         ui->btn_widget->setVisible(false);
     }
     ordersPageSetup();
+    qDebug() << "After return";
 
 }
 
@@ -93,14 +94,13 @@ void orders::ordersPageSetup(){
 
     if(records == 0){
         qDebug() << "no orders";
-        ui->scrollArea->hide();
-        ui->cardContainer->hide();
-        ui->btn_widget->hide();
         ui->recordLabel->setText("There are no orders of the status: " + currentStatus);
         ui->recordLabel->setAlignment(Qt::AlignCenter);
         ui->recordLabel->setStyleSheet("font-size: 16px; color: white; padding: 10px;");
         ui->recordLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         ui->recordLabel->show();
+        qDebug() << "Before return";
+        return;
     }
 
     else{
@@ -470,40 +470,44 @@ void orders::setActiveButton(QPushButton* activeBtn) {
 void orders::on_btn_preparing_clicked()
 {
     currentStatus = "Preparing";
-    setActiveButton(ui->btn_preparing);
-    ordersPageSetup();
-
+    this->close();
+    ptrorders = new orders();
+    ptrorders->show();
 }
 
 
 void orders::on_btn_ready_clicked()
 {
     currentStatus = "Ready";
-    setActiveButton(ui->btn_ready);
-    ordersPageSetup();
+    this->close();
+    ptrorders = new orders();
+    ptrorders->show();
 }
 
 
 void orders::on_btn_served_clicked()
 {
     currentStatus = "Served";
-    setActiveButton(ui->btn_served);
-    ordersPageSetup();
+    this->close();
+    ptrorders = new orders();
+    ptrorders->show();
 }
 
 
 void orders::on_btn_billed_clicked()
 {
     currentStatus = "Billed";
-    setActiveButton(ui->btn_billed);
-    ordersPageSetup();
+    this->close();
+    ptrorders = new orders();
+    ptrorders->show();
 }
 
 void orders::on_btn_all_clicked()
 {
     currentStatus = "";
-    setActiveButton(ui->btn_all);
-    ordersPageSetup();
+    this->close();
+    ptrorders = new orders();
+    ptrorders->show();
 }
 
 orders::~orders()

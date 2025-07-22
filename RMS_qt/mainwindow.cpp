@@ -64,9 +64,13 @@ void MainWindow::on_btn_orders_clicked()
 
 void MainWindow::on_btn_pos_clicked()
 {
-    if(!ptrpos){
-        ptrpos = new class pos();
+    if(g_userRole == "Kitchen"){
+        QMessageBox::critical(this,"Can't open","You don't have permission to access this page");
+    }else{
+        if(!ptrpos){
+            ptrpos = new class pos();
+        }
+        ptrpos->show();
     }
-    ptrpos->show();
 }
 
