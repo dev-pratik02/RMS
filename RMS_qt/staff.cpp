@@ -12,13 +12,13 @@
 #include <QPushButton>
 #include <QHBoxLayout>
 #include <QHeaderView>
+#include <QMessageBox>  // Added for confirmation dialog
 
 staff::staff(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::staff)
 {
     ui->setupUi(this);
-
     loadStaffData();
 }
 
@@ -41,7 +41,6 @@ void staff::loadStaffData()
     QStringList headers = {"ID", "Name", "Position", "Salary", "Age", "Contact", "Action"};
     ui->table_staff->setHorizontalHeaderLabels(headers);
 
-    // Set font for "Action" header column (index 6)
     QFont headerFont("Arial", 12, QFont::Normal);
     QTableWidgetItem *actionHeaderItem = ui->table_staff->horizontalHeaderItem(6);
     if (actionHeaderItem) {
@@ -56,15 +55,6 @@ void staff::loadStaffData()
         return;
     }
 
-    // QColor columnColors[6] = {
-    //     QColor("#FFF2CC"), // ID - light yellow
-    //     QColor("#D9EAD3"), // Name - light green
-    //     QColor("#CFE2F3"), // Position - light blue
-    //     QColor("#F4CCCC"), // Salary - light red
-    //     QColor("#EAD1DC"), // Age - light pink
-    //     QColor("#D9D2E9")  // Contact - light purple
-    // };
-
     int row = 0;
     while (query.next()) {
         ui->table_staff->insertRow(row);
@@ -72,7 +62,6 @@ void staff::loadStaffData()
         for (int col = 0; col < 6; ++col) {
             QTableWidgetItem *item = new QTableWidgetItem(query.value(col).toString());
             item->setTextAlignment(Qt::AlignCenter);
-            // item->setBackground(columnColors[col]);
             ui->table_staff->setItem(row, col, item);
         }
 
@@ -124,23 +113,30 @@ void staff::loadStaffData()
         });
 
         connect(deleteBtn, &QPushButton::clicked, this, [=]() {
-            QSqlQuery deleteQuery;
-            deleteQuery.prepare("DELETE FROM staff WHERE staff_id = ?");
-            deleteQuery.addBindValue(id);
+            QMessageBox::StandardButton reply;
+            reply = QMessageBox::question(this, "Confirm Deletion",
+                                          "Are you sure you want to delete staff member \"" + name + "\"?",
+                                          QMessageBox::Yes | QMessageBox::No);
 
-            if (!deleteQuery.exec()) {
-                qDebug() << "Delete failed:" << deleteQuery.lastError().text();
-            } else {
-                QSqlQuery querySeq(db);
-                querySeq.prepare("UPDATE sqlite_sequence SET seq = (SELECT MAX(staff_id) FROM staff) WHERE name = 'staff'");
-                if(querySeq.exec()){
-                    qDebug() << "updated seq of staff successfully";
-                    querySeq.finish();
+            if (reply == QMessageBox::Yes) {
+                QSqlQuery deleteQuery;
+                deleteQuery.prepare("DELETE FROM staff WHERE staff_id = ?");
+                deleteQuery.addBindValue(id);
+
+                if (!deleteQuery.exec()) {
+                    qDebug() << "Delete failed:" << deleteQuery.lastError().text();
+                } else {
+                    QSqlQuery querySeq(db);
+                    querySeq.prepare("UPDATE sqlite_sequence SET seq = (SELECT MAX(staff_id) FROM staff) WHERE name = 'staff'");
+                    if(querySeq.exec()){
+                        qDebug() << "Updated seq of staff successfully";
+                        querySeq.finish();
+                    }
+                    else{
+                        qDebug() << "Could not update the seq\n" << querySeq.lastError();
+                    }
+                    loadStaffData();
                 }
-                else{
-                    qDebug() << "could not update the seq \n " << querySeq.lastError();
-                }
-                loadStaffData();
             }
         });
 
@@ -149,8 +145,6 @@ void staff::loadStaffData()
 
     ui->totalstaff->setText("Total no. of staff: " + QString::number(row));
     ui->totalstaff->setAlignment(Qt::AlignCenter);
-
-    // Stretch columns to fit window
     ui->table_staff->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
@@ -161,6 +155,6 @@ void staff::on_ADDSTAFF_clicked()
     delete ptraddstaff;
 
     if (result == QDialog::Accepted) {
-        loadStaffData(); // Refresh table instead of re-opening window
+        loadStaffData(); // Refresh table
     }
 }

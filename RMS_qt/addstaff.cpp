@@ -4,6 +4,8 @@
 #include <QDebug>
 #include <QRegularExpression>
 #include <QRegularExpressionValidator>
+#include <QIntValidator>
+#include <QDoubleValidator>
 
 #include "databasemanager.h"
 
@@ -15,20 +17,21 @@ addstaff::addstaff(QWidget *parent)
 
     QSqlDatabase &db = DatabaseManager::getDatabase();
 
-
     if (!db.open()) {
         qDebug() << "Addstaff DB open error:" << db.lastError().text();
     }
 
-    // Setup validators
-    QRegularExpression rx("^\\d{10}$");
-    ui->input_contact->setValidator(new QRegularExpressionValidator(rx, this));
+    // Validators
+    QRegularExpression digitOnlyRegex("^\\d*$");  // digits only
+    ui->input_contact->setValidator(new QRegularExpressionValidator(digitOnlyRegex, this));
+    ui->input_contact->setMaxLength(10);  // max 10 digits
+
     ui->input_age->setValidator(new QIntValidator(18, 99, this));
     ui->input_salary->setValidator(new QDoubleValidator(0, 1000000, 2, this));
 
-    QRegularExpression rx2("^[a-zA-Z\\s]*$");
-    ui->input_name->setValidator(new QRegularExpressionValidator(rx2, this));
-    ui->input_position->setValidator(new QRegularExpressionValidator(rx2, this));
+    QRegularExpression namePositionRegex("^[a-zA-Z\\s]*$");
+    ui->input_name->setValidator(new QRegularExpressionValidator(namePositionRegex, this));
+    ui->input_position->setValidator(new QRegularExpressionValidator(namePositionRegex, this));
 }
 
 addstaff::~addstaff()
@@ -38,14 +41,20 @@ addstaff::~addstaff()
 
 void addstaff::on_btn_add_clicked()
 {
-    QString name = ui->input_name->text();
-    QString position = ui->input_position->text();
-    QString salary = ui->input_salary->text();
-    QString age = ui->input_age->text();
-    QString contact = ui->input_contact->text();
+    QString name = ui->input_name->text().trimmed();
+    QString position = ui->input_position->text().trimmed();
+    QString salary = ui->input_salary->text().trimmed();
+    QString age = ui->input_age->text().trimmed();
+    QString contact = ui->input_contact->text().trimmed();
 
     if (name.isEmpty() || position.isEmpty() || salary.isEmpty() || age.isEmpty() || contact.isEmpty()) {
         QMessageBox::warning(this, "Input Error", "Please fill all fields.");
+        return;
+    }
+
+    // Enforce exactly 10 digits for contact
+    if (contact.length() != 10) {
+        QMessageBox::warning(this, "Input Error", "Contact number must be exactly 10 digits.");
         return;
     }
 

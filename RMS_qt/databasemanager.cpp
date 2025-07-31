@@ -14,7 +14,7 @@ QSqlDatabase& DatabaseManager::getDatabase()
 
     if (!db.isOpen()) {
         // db.setDatabaseName(writableDbPath);
-        db.setDatabaseName("/Users/pratik/Programming/RMS/RMS_qt/RmsApp.db");
+        db.setDatabaseName("C:/Users/VICTUS/OneDrive/Desktop/Project/RMS_qt/RmsApp.db");
 
         if (!db.open()) {
             qDebug() << "Failed to open DB:" << db.lastError();
