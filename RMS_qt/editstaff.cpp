@@ -12,19 +12,21 @@ editstaff::editstaff(QWidget *parent)
 {
     ui->setupUi(this);
 
-    // Validators for each input field
+    // 🔒 Make ID field non-editable
+    ui->input_id->setReadOnly(true);
+
+    // Validators
     ui->input_age->setValidator(new QIntValidator(18, 99, this));
     ui->input_salary->setValidator(new QDoubleValidator(0, 1000000, 2, this));
 
-    // Contact validator: exactly 10 digits only
     QRegularExpression phoneRegex("^\\d{10}$");
     ui->input_contact->setValidator(new QRegularExpressionValidator(phoneRegex, this));
 
-    QRegularExpression namePositionRegex("^[a-zA-Z\\s]*$"); // Letters and spaces only
+    QRegularExpression namePositionRegex("^[a-zA-Z\\s]*$");
     ui->input_name->setValidator(new QRegularExpressionValidator(namePositionRegex, this));
     ui->input_position->setValidator(new QRegularExpressionValidator(namePositionRegex, this));
 
-    // Connect SAVE button click to validation + accept
+    // SAVE
     connect(ui->SAVE, &QPushButton::clicked, this, [this]() {
         QString name = ui->input_name->text().trimmed();
         QString position = ui->input_position->text().trimmed();
@@ -46,7 +48,7 @@ editstaff::editstaff(QWidget *parent)
         accept();
     });
 
-    // Cancel button closes dialog without saving
+    // CANCEL
     connect(ui->CANCEL, &QPushButton::clicked, this, &editstaff::reject);
 }
 

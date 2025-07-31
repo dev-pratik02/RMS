@@ -6,7 +6,8 @@
 #include <QRegularExpressionValidator>
 #include <QIntValidator>
 #include <QDoubleValidator>
-
+#include <QSqlQuery>
+#include <QSqlError>
 #include "databasemanager.h"
 
 addstaff::addstaff(QWidget *parent)
@@ -19,6 +20,20 @@ addstaff::addstaff(QWidget *parent)
 
     if (!db.open()) {
         qDebug() << "Addstaff DB open error:" << db.lastError().text();
+    }
+
+    // Set staff_id box read-only
+    ui->input_id->setReadOnly(true);
+
+    // Load next available staff_id (guessed as max + 1)
+    QSqlQuery idQuery(db);
+    if (idQuery.exec("SELECT IFNULL(MAX(staff_id), 0) + 1 FROM staff")) {
+        if (idQuery.next()) {
+            int nextId = idQuery.value(0).toInt();
+            ui->input_id->setText(QString::number(nextId));
+        }
+    } else {
+        qDebug() << "Could not fetch next ID:" << idQuery.lastError().text();
     }
 
     // Validators
@@ -52,12 +67,12 @@ void addstaff::on_btn_add_clicked()
         return;
     }
 
-    // Enforce exactly 10 digits for contact
     if (contact.length() != 10) {
         QMessageBox::warning(this, "Input Error", "Contact number must be exactly 10 digits.");
         return;
     }
 
+    QSqlDatabase &db = DatabaseManager::getDatabase();
     QSqlQuery query(db);
     query.prepare("INSERT INTO staff (staff_name, position, salary, age, contact) VALUES (?, ?, ?, ?, ?)");
     query.addBindValue(name);
@@ -71,7 +86,9 @@ void addstaff::on_btn_add_clicked()
         return;
     }
 
-    QMessageBox::information(this, "Success", "Staff added successfully!");
+    int newId = query.lastInsertId().toInt();
+    QMessageBox::information(this, "Success", "Staff added successfully!\nGenerated ID: " + QString::number(newId));
+
     accept(); // Close dialog and signal success
 }
 
@@ -82,4 +99,14 @@ void addstaff::on_btn_reset_clicked()
     ui->input_salary->clear();
     ui->input_age->clear();
     ui->input_contact->clear();
+
+    // Reload next ID after reset
+    QSqlDatabase &db = DatabaseManager::getDatabase();
+    QSqlQuery idQuery(db);
+    if (idQuery.exec("SELECT IFNULL(MAX(staff_id), 0) + 1 FROM staff")) {
+        if (idQuery.next()) {
+            int nextId = idQuery.value(0).toInt();
+            ui->input_id->setText(QString::number(nextId));
+        }
+    }
 }
