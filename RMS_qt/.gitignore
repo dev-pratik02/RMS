@@ -73,7 +73,8 @@ CMakeLists.txt.user*
 # --------
 *.dll
 *.exe
-
+RmsApp.db-wal
+RmsApp.db-shm
 # Directories with generated files
 .moc/
 .obj/
