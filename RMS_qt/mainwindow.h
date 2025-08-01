@@ -7,6 +7,7 @@
 #include "table.h"
 #include <QMainWindow>
 #include <QtSql>
+#include <QPixmap>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {

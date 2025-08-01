@@ -7,6 +7,12 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    QPixmap profile(":/login_page/profile.png");
+    ui->profile->setPixmap(profile);
+
+    // ui->profile->setPixmap(profile.scaled(ui->profile->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+
 }
 
 MainWindow::~MainWindow()

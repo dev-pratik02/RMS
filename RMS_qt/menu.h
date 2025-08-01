@@ -5,6 +5,7 @@
 #include "addmenuitem.h"
 #include "category.h"
 #include <QtSql>
+
 namespace Ui {
 class menu;
 }

@@ -81,6 +81,7 @@ void login_page::on_btn_login_clicked()
             QMessageBox::information(this, "Login Success", "Welcome back!");
 
             //To get the role of the user
+            g_username = userid;
             QSqlQuery role(db);
             role.prepare("SELECT role FROM users WHERE username=? AND password=?");
             role.addBindValue(userid);

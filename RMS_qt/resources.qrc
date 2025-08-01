@@ -4,6 +4,7 @@
         <file>login_page_chefHat.png</file>
         <file>eye.png</file>
         <file>eye-off.png</file>
+        <file>profile.png</file>
     </qresource>
     <qresource prefix="/database">
         <file>RmsApp.db</file>

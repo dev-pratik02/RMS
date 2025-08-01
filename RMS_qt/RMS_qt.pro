@@ -36,6 +36,7 @@ SOURCES += \
     OrdersWidget.cpp \
     pos_addorder.cpp \
     pos.cpp \
+    profile.cpp \
     signup.cpp \
     staff.cpp \
     table.cpp \
@@ -66,6 +67,7 @@ HEADERS += \
     OrdersWidget.h \
     pos_addorder.h \
     pos.h \
+    profile.h \
     signup.h \
     staff.h \
     table.h \
@@ -93,6 +95,7 @@ FORMS += \
     orders.ui \
     pos_addorder.ui \
     pos.ui \
+    profile.ui \
     signup.ui \
     staff.ui \
     table.ui
