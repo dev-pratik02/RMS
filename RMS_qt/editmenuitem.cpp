@@ -10,7 +10,6 @@ editmenuitem::editmenuitem(QString id, QString name, QString price, QString desc
     itemId(id)
 {
     ui->setupUi(this);
-    ui->item_id->setText(id);
     ui->item_name->setText(name);
     ui->item_price->setText(price);
     ui->item_description->setText(description);
@@ -33,7 +32,6 @@ editmenuitem::editmenuitem(QString id, QString name, QString price, QString desc
     ui->item_name->setPlaceholderText("Enter item name");
     ui->combo_category->setPlaceholderText("Enter item category");
     ui->item_description->setPlaceholderText("Enter description");
-    ui->item_id->setReadOnly(true);
 
     int index = ui->combo_category->findText(category);
     if (index != -1) {

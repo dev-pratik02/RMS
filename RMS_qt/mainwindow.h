@@ -5,10 +5,12 @@
 #include "menu.h"
 #include "staff.h"
 #include "table.h"
+#include "profile.h"
 #include <QMainWindow>
 #include <QtSql>
 #include <QPixmap>
 
+class profile;
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -37,6 +39,8 @@ private slots:
 
     void on_btn_pos_clicked();
 
+    void on_btn_profile_clicked();
+
 private:
     Ui::MainWindow *ui;
     QSqlDatabase DB_connection;
@@ -46,5 +50,6 @@ private:
     menu *ptrmenu = nullptr;
     staff *ptrstaff = nullptr;
     table *ptrtables = nullptr;
+    profile *ptrprofile = nullptr;
 };
 #endif // MAINWINDOW_H

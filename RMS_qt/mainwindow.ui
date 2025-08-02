@@ -14,94 +14,109 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="btn_orders">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>200</y>
-      <width>101</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Orders</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btn_pos">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>260</y>
-      <width>101</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>POS</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btn_menu">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>40</y>
-      <width>101</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Menu</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btn_staff">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>90</y>
-      <width>101</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Staff</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btn_tables">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>140</y>
-      <width>101</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Tables</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="profile">
     <property name="geometry">
      <rect>
-      <x>1100</x>
-      <y>30</y>
-      <width>111</width>
-      <height>111</height>
+      <x>1110</x>
+      <y>20</y>
+      <width>81</width>
+      <height>61</height>
      </rect>
     </property>
     <property name="text">
      <string/>
     </property>
    </widget>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1280</width>
-     <height>24</height>
-    </rect>
-   </property>
+   <widget class="QPushButton" name="btn_profile">
+    <property name="geometry">
+     <rect>
+      <x>1080</x>
+      <y>100</y>
+      <width>101</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Profile</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>80</y>
+      <width>211</width>
+      <height>421</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QPushButton" name="btn_menu">
+       <property name="font">
+        <font>
+         <pointsize>20</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Menu</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_staff">
+       <property name="font">
+        <font>
+         <pointsize>20</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Staff</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_tables">
+       <property name="font">
+        <font>
+         <pointsize>20</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Tables</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_orders">
+       <property name="font">
+        <font>
+         <pointsize>20</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Orders</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_pos">
+       <property name="font">
+        <font>
+         <pointsize>20</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>POS</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

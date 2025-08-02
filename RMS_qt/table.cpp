@@ -12,8 +12,6 @@ table::table(QWidget *parent)
 {
     ui->setupUi(this);
 
-    ui->total->setStyleSheet("background-color: rgb(0,102,204); color: rgb(255,255,255); padding: 4px; border-radius: 5px;");
-
 
 
     QSqlDatabase &db = DatabaseManager::getDatabase();
@@ -77,7 +75,7 @@ void table::refreshTableList()
     if(totalQuery.exec()){
         if (totalQuery.next()) {
             totalTables = totalQuery.value(0).toInt();
-            ui->label_t->setText(QString::number(totalTables));
+            ui->total->setText("Total Tables: " + QString::number(totalTables));
         }
     }
     else{
@@ -89,22 +87,12 @@ void table::refreshTableList()
     if(availableQuery.exec()){
         if (availableQuery.next()) {
             availableTables = availableQuery.value(0).toInt();
-            ui->label_a->setText(QString::number(availableTables));
+            ui->available->setText("Available Tables: " + QString::number(availableTables));
         }
     }
     else{
         qDebug() << "could not execute the query \n " << availableQuery.lastError();
     }
-
-    //  Only if available = 0, turn label red
-    if (availableTables == 0) {
-        ui->available->setStyleSheet("background-color: rgb(220,20,60); color: rgb(255,255,255);font: 700 12pt Arial; padding: 4px; border-radius: 5px;");
-    } else {
-        ui->available->setStyleSheet("background-color: rgb(0,208,0); color: rgb(255,255,255);font: 700 12pt Arial; padding: 4px; border-radius: 5px;");
-    }
-
-
-
 
     loadTableList();
     updateSeatLabels();
@@ -121,8 +109,8 @@ void table::updateSeatLabels()
             int Total = query.value(0).toInt();
             int Available = query.value(1).toInt();
 
-            ui->label_t->setText(QString::number(Total));
-            ui->label_a->setText(QString::number(Available));
+            ui->total->setText("Total Tables: " + QString::number(Total));
+            ui->available->setText("Available Tables: " + QString::number(Available));
         }
     }
     else {

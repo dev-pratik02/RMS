@@ -14,6 +14,21 @@ QString hashPassword(const QString &password) {
     return QString(hash.toHex());
 }
 
+
+bool isOver18(const QString& dobStr) {
+    // Format: "dd/MM/yyyy"
+    QDate dob = QDate::fromString(dobStr, "dd/MM/yyyy");
+    if (!dob.isValid()) {
+        qDebug() << "Invalid date format.";
+        return false;
+    }
+
+    QDate today = QDate::currentDate();
+    int age = dob.daysTo(today) / 365.25;  // Approximate years with leap years
+    return age >= 18;
+}
+
+
 // --- Validate email format ---
 bool isValidEmail(const QString &email) {
     QRegularExpression regex(R"(^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$)");

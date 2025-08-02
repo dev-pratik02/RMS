@@ -33,6 +33,7 @@ signup::signup(QWidget *parent)
     QDate maxDate = QDate::currentDate().addYears(-18);
     ui->date_dob->setMaximumDate(maxDate);
 
+    ui->date_dob->setDisplayFormat("dd/MM/yyyy");
     setupEyeButton(ui->line_password);
     setupEyeButton(ui->line_confirmpass);
 
@@ -52,7 +53,7 @@ void signup::on_btn_confirm_clicked()
     QString name = ui->line_name->text().trimmed();
     QString phone = ui->line_phone->text().trimmed();
     QString email = ui->line_email->text().trimmed();
-    QString dob = ui->date_dob->date().toString("yyyy-MM-dd");
+    QString dob = ui->date_dob->date().toString("dd/MM/yyyy");
     QString pass = ui->line_password->text();
     QString confirmpass = ui->line_confirmpass->text();
     QString username = ui->input_username->text();

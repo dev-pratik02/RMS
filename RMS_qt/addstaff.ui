@@ -16,8 +16,8 @@
   <widget class="QLabel" name="ADDSTAFF">
    <property name="geometry">
     <rect>
-     <x>308</x>
-     <y>20</y>
+     <x>550</x>
+     <y>30</y>
      <width>181</width>
      <height>31</height>
     </rect>
@@ -25,7 +25,7 @@
    <property name="font">
     <font>
      <family>Arial</family>
-     <pointsize>16</pointsize>
+     <pointsize>24</pointsize>
      <italic>false</italic>
      <bold>false</bold>
     </font>
@@ -37,107 +37,28 @@
     <set>Qt::AlignmentFlag::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QWidget" name="layoutWidget">
+  <widget class="QWidget" name="">
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>60</y>
-     <width>701</width>
-     <height>463</height>
+     <x>140</x>
+     <y>100</y>
+     <width>1011</width>
+     <height>481</height>
     </rect>
    </property>
-   <property name="font">
-    <font>
-     <family>Arial</family>
-     <pointsize>12</pointsize>
-    </font>
-   </property>
-   <layout class="QFormLayout" name="formLayout_2">
-    <item row="8" column="0" colspan="2">
-     <widget class="QLineEdit" name="input_salary">
-      <property name="font">
-       <font>
-        <family>Arial</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-     </widget>
-    </item>
-    <item row="11" column="0" colspan="2">
-     <widget class="QLabel" name="position">
-      <property name="font">
-       <font>
-        <family>Arial</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>POSITION:</string>
-      </property>
-     </widget>
-    </item>
-    <item row="12" column="0" colspan="2">
-     <widget class="QLineEdit" name="input_position">
-      <property name="font">
-       <font>
-        <family>Arial</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-     </widget>
-    </item>
-    <item row="15" column="0" colspan="2">
-     <widget class="QLabel" name="age">
-      <property name="font">
-       <font>
-        <family>Arial</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>AGE:</string>
-      </property>
-     </widget>
-    </item>
-    <item row="16" column="0" colspan="2">
-     <widget class="QLineEdit" name="input_age">
-      <property name="font">
-       <font>
-        <family>Arial</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-     </widget>
-    </item>
-    <item row="19" column="0" colspan="2">
-     <widget class="QLabel" name="contact">
-      <property name="font">
-       <font>
-        <family>Arial</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>CONTACT:</string>
-      </property>
-     </widget>
-    </item>
-    <item row="20" column="0" colspan="2">
-     <widget class="QLineEdit" name="input_contact">
-      <property name="font">
-       <font>
-        <family>Arial</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0">
+   <layout class="QFormLayout" name="formLayout">
+    <property name="formAlignment">
+     <set>Qt::AlignmentFlag::AlignCenter</set>
+    </property>
+    <property name="verticalSpacing">
+     <number>60</number>
+    </property>
+    <item row="0" column="0">
      <widget class="QLabel" name="name">
       <property name="font">
        <font>
         <family>Arial</family>
-        <pointsize>12</pointsize>
+        <pointsize>16</pointsize>
        </font>
       </property>
       <property name="text">
@@ -148,25 +69,18 @@
       </property>
      </widget>
     </item>
-    <item row="5" column="0">
-     <widget class="QLabel" name="SALARY">
-      <property name="font">
-       <font>
-        <family>Arial</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>SALARY:</string>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="0" colspan="2">
+    <item row="0" column="1">
      <widget class="QLineEdit" name="input_name">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="font">
        <font>
         <family>Arial</family>
-        <pointsize>12</pointsize>
+        <pointsize>14</pointsize>
        </font>
       </property>
       <property name="text">
@@ -174,49 +88,165 @@
       </property>
      </widget>
     </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="SALARY">
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>SALARY:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QLineEdit" name="input_salary">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="position">
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>POSITION:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QLineEdit" name="input_position">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="age">
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>AGE:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QLineEdit" name="input_age">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="contact">
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>CONTACT:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QLineEdit" name="input_contact">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="layoutWidget">
+  <widget class="QPushButton" name="btn_add">
    <property name="geometry">
     <rect>
-     <x>550</x>
-     <y>530</y>
-     <width>195</width>
-     <height>33</height>
+     <x>967</x>
+     <y>610</y>
+     <width>73</width>
+     <height>39</height>
     </rect>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout">
-    <item>
-     <widget class="QPushButton" name="btn_reset">
-      <property name="font">
-       <font>
-        <family>Arial</family>
-        <pointsize>12</pointsize>
-        <italic>false</italic>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>RESET</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="btn_add">
-      <property name="font">
-       <font>
-        <family>Arial</family>
-        <pointsize>12</pointsize>
-        <italic>false</italic>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>ADD</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>20</pointsize>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>ADD</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn_reset">
+   <property name="geometry">
+    <rect>
+     <x>760</x>
+     <y>610</y>
+     <width>97</width>
+     <height>39</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>20</pointsize>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>RESET</string>
+   </property>
   </widget>
  </widget>
  <resources/>

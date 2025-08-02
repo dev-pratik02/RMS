@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "globals.h"
+#include "profile.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -78,5 +79,14 @@ void MainWindow::on_btn_pos_clicked()
         }
         ptrpos->show();
     }
+}
+
+
+void MainWindow::on_btn_profile_clicked()
+{
+    if(!ptrprofile){
+        ptrprofile = new profile(this,this);
+    }
+    ptrprofile->show();
 }
 

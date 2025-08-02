@@ -18,6 +18,7 @@ SOURCES += \
     addmenuitem.cpp \
     addstaff.cpp \
     category.cpp \
+    change_password.cpp \
     checkout.cpp \
     databasemanager.cpp \
     edit_order.cpp \
@@ -31,7 +32,6 @@ SOURCES += \
     login_page.cpp \
     mainwindow.cpp \
     menu.cpp \
-    menuiteminfo.cpp \
     orders.cpp \
     OrdersWidget.cpp \
     pos_addorder.cpp \
@@ -49,6 +49,7 @@ HEADERS += \
     addmenuitem.h \
     addstaff.h \
     category.h \
+    change_password.h \
     checkout.h \
     databasemanager.h \
     edit_order.h \
@@ -62,7 +63,6 @@ HEADERS += \
     login_page.h \
     mainwindow.h \
     menu.h \
-    menuiteminfo.h \
     orders.h \
     OrdersWidget.h \
     pos_addorder.h \
@@ -79,19 +79,18 @@ FORMS += \
     addmenuitem.ui \
     addstaff.ui \
     category.ui \
+    change_password.ui \
     checkout.ui \
     edit_order.ui \
     edit.ui \
     editcategory.ui \
     editing_table.ui \
     editmenuitem.ui \
-    editnewcategory.ui \
     editstaff.ui \
     forgotpass.ui \
     login_page.ui \
     mainwindow.ui \
     menu.ui \
-    menuiteminfo.ui \
     orders.ui \
     pos_addorder.ui \
     pos.ui \

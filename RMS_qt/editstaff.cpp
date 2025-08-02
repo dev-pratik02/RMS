@@ -42,8 +42,6 @@ editstaff::editstaff(QWidget *parent)
         accept();  // All good, close dialog and return success
     });
 
-    // Connect CANCEL button to reject dialog
-    connect(ui->CANCEL, &QPushButton::clicked, this, &editstaff::reject);
 }
 
 editstaff::~editstaff()
@@ -55,7 +53,6 @@ void editstaff::setData(const QString &id, const QString &name, const QString &p
                         const QString &salary, const QString &age, const QString &contact)
 {
     staffId = id;
-    ui->input_id->setText(id);
     ui->input_name->setText(name);
     ui->input_position->setText(position);
     ui->input_salary->setText(salary);
@@ -86,3 +83,13 @@ QString editstaff::getAge() const {
 QString editstaff::getContact() const {
     return ui->input_contact->text().trimmed();
 }
+
+void editstaff::on_btn_reset_clicked()
+{
+    ui->input_age->clear();
+    ui->input_contact->clear();
+    ui->input_name->clear();
+    ui->input_position->clear();
+    ui->input_salary->clear();
+}
+

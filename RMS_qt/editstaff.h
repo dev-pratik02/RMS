@@ -25,6 +25,9 @@ public:
     QString getAge() const;
     QString getContact() const;
 
+private slots:
+    void on_btn_reset_clicked();
+
 private:
     Ui::editstaff *ui;
     QString staffId;

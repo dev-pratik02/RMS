@@ -80,9 +80,6 @@ void staff::loadStaffData()
         QPushButton *editBtn = new QPushButton("Edit");
         QPushButton *deleteBtn = new QPushButton("Delete");
 
-        editBtn->setStyleSheet("background-color: lightblue;");
-        deleteBtn->setStyleSheet("background-color: lightcoral;");
-
         QWidget *actionWidget = new QWidget();
         QHBoxLayout *layout = new QHBoxLayout(actionWidget);
         layout->addWidget(editBtn);
@@ -164,3 +161,9 @@ void staff::on_ADDSTAFF_clicked()
         loadStaffData(); // Refresh table instead of re-opening window
     }
 }
+
+void staff::on_btn_staff_access_clicked()
+{
+
+}
+

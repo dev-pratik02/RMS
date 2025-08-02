@@ -2,10 +2,15 @@
 #define PROFILE_H
 #include "globals.h"
 #include "databasemanager.h"
+#include "login_page.h"
+#include "utils.h"
+#include "change_password.h"
 #include <QDialog>
 #include <QtSql>
 #include <QMessageBox>
+#include "mainwindow.h"
 
+class MainWindow;
 namespace Ui {
 class profile;
 }
@@ -15,7 +20,7 @@ class profile : public QDialog
     Q_OBJECT
 
 public:
-    explicit profile(QWidget *parent = nullptr);
+    explicit profile(QWidget *parent = nullptr, MainWindow *mainWindow=nullptr);
     ~profile();
 
 private slots:
@@ -29,7 +34,11 @@ private slots:
 
 private:
     Ui::profile *ui;
+    MainWindow *m_mainWindow;
     QSqlDatabase db;
+    void load_data();
+
+    change_password *passPage=nullptr;
 };
 
 #endif // PROFILE_H

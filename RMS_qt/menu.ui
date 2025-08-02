@@ -24,7 +24,7 @@
    <widget class="QLabel" name="MENUMANAGEMENT">
     <property name="geometry">
      <rect>
-      <x>270</x>
+      <x>520</x>
       <y>0</y>
       <width>271</width>
       <height>51</height>
@@ -33,9 +33,10 @@
     <property name="font">
      <font>
       <family>Arial</family>
-      <pointsize>20</pointsize>
+      <pointsize>24</pointsize>
       <italic>false</italic>
       <bold>true</bold>
+      <kerning>true</kerning>
      </font>
     </property>
     <property name="text">
@@ -43,27 +44,6 @@
     </property>
     <property name="alignment">
      <set>Qt::AlignmentFlag::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="menuitems">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>120</y>
-      <width>101</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Arial</family>
-      <pointsize>16</pointsize>
-      <italic>false</italic>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>Menu Items:</string>
     </property>
    </widget>
    <widget class="QTableWidget" name="tableWidget">
@@ -74,8 +54,8 @@
      <rect>
       <x>30</x>
       <y>160</y>
-      <width>751</width>
-      <height>391</height>
+      <width>1221</width>
+      <height>541</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -93,13 +73,10 @@
     <property name="font">
      <font>
       <family>Arial</family>
-      <pointsize>12</pointsize>
+      <pointsize>16</pointsize>
       <italic>false</italic>
-      <bold>false</bold>
-      <strikeout>false</strikeout>
-      <stylestrategy>PreferDefault</stylestrategy>
-      <kerning>false</kerning>
-      <hintingpreference>PreferDefaultHinting</hintingpreference>
+      <bold>true</bold>
+      <kerning>true</kerning>
      </font>
     </property>
     <property name="mouseTracking">
@@ -157,9 +134,9 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>599</x>
+      <x>1060</x>
       <y>60</y>
-      <width>152</width>
+      <width>182</width>
       <height>81</height>
      </rect>
     </property>
@@ -169,9 +146,8 @@
        <property name="font">
         <font>
          <family>Arial</family>
-         <pointsize>16</pointsize>
+         <pointsize>20</pointsize>
          <italic>false</italic>
-         <bold>true</bold>
         </font>
        </property>
        <property name="text">
@@ -184,9 +160,9 @@
        <property name="font">
         <font>
          <family>Arial</family>
-         <pointsize>16</pointsize>
+         <pointsize>20</pointsize>
          <italic>false</italic>
-         <bold>true</bold>
+         <bold>false</bold>
         </font>
        </property>
        <property name="text">
@@ -196,22 +172,6 @@
      </item>
     </layout>
    </widget>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1280</width>
-     <height>24</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuMenu">
-    <property name="title">
-     <string>Menu</string>
-    </property>
-   </widget>
-   <addaction name="menuMenu"/>
   </widget>
  </widget>
  <resources/>

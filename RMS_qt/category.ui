@@ -22,16 +22,16 @@
   <widget class="QPushButton" name="btn_addcategory">
    <property name="geometry">
     <rect>
-     <x>560</x>
-     <y>100</y>
-     <width>184</width>
-     <height>26</height>
+     <x>960</x>
+     <y>110</y>
+     <width>251</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="font">
     <font>
      <family>Arial</family>
-     <pointsize>12</pointsize>
+     <pointsize>20</pointsize>
      <italic>false</italic>
      <bold>true</bold>
     </font>
@@ -40,38 +40,18 @@
     <string>ADD NEW CATEGORY</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>50</x>
-     <y>110</y>
-     <width>82</width>
-     <height>18</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Arial</family>
-     <pointsize>12</pointsize>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="text">
-    <string>Categories:</string>
-   </property>
-  </widget>
   <widget class="QTableWidget" name="tableWidget">
    <property name="geometry">
     <rect>
      <x>45</x>
-     <y>141</y>
-     <width>701</width>
-     <height>411</height>
+     <y>181</y>
+     <width>1191</width>
+     <height>501</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>12</pointsize>
+     <pointsize>16</pointsize>
      <bold>false</bold>
     </font>
    </property>
@@ -110,16 +90,16 @@
   <widget class="QLabel" name="MENUMANAGEMENT">
    <property name="geometry">
     <rect>
-     <x>230</x>
+     <x>450</x>
      <y>30</y>
-     <width>311</width>
+     <width>401</width>
      <height>24</height>
     </rect>
    </property>
    <property name="font">
     <font>
      <family>Arial</family>
-     <pointsize>16</pointsize>
+     <pointsize>24</pointsize>
      <italic>false</italic>
      <bold>true</bold>
     </font>

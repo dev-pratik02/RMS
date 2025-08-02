@@ -28,11 +28,17 @@
   <widget class="QPushButton" name="btn_back1">
    <property name="geometry">
     <rect>
-     <x>170</x>
-     <y>520</y>
-     <width>61</width>
-     <height>21</height>
+     <x>240</x>
+     <y>580</y>
+     <width>71</width>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>20</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>Back</string>
@@ -41,11 +47,17 @@
   <widget class="QPushButton" name="btn_reset">
    <property name="geometry">
     <rect>
-     <x>380</x>
-     <y>520</y>
-     <width>71</width>
-     <height>21</height>
+     <x>740</x>
+     <y>580</y>
+     <width>81</width>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>20</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>Reset</string>
@@ -54,11 +66,17 @@
   <widget class="QPushButton" name="btn_save">
    <property name="geometry">
     <rect>
-     <x>600</x>
-     <y>520</y>
-     <width>71</width>
-     <height>21</height>
+     <x>950</x>
+     <y>580</y>
+     <width>81</width>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>20</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>Save</string>
@@ -69,57 +87,109 @@
     <rect>
      <x>170</x>
      <y>100</y>
-     <width>501</width>
-     <height>375</height>
+     <width>901</width>
+     <height>451</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
     <item row="0" column="1">
      <widget class="QLabel" name="label_2">
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Seats</string>
       </property>
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QLineEdit" name="lineEdit_2"/>
+     <widget class="QLineEdit" name="lineEdit_2">
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+     </widget>
     </item>
     <item row="2" column="1">
      <widget class="QLabel" name="label_3">
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Table Location</string>
       </property>
      </widget>
     </item>
     <item row="3" column="1">
-     <widget class="QLineEdit" name="lineEdit_3"/>
+     <widget class="QLineEdit" name="lineEdit_3">
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+     </widget>
     </item>
     <item row="4" column="1">
      <widget class="QLabel" name="label_5">
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Table type</string>
       </property>
      </widget>
     </item>
     <item row="5" column="1">
-     <widget class="QLineEdit" name="lineEdit_5"/>
+     <widget class="QLineEdit" name="lineEdit_5">
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+     </widget>
     </item>
     <item row="6" column="1">
      <widget class="QLabel" name="label_6">
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Description</string>
       </property>
      </widget>
     </item>
     <item row="7" column="1">
-     <widget class="QTextEdit" name="textEdit_1"/>
+     <widget class="QTextEdit" name="textEdit_1">
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
   <widget class="QLabel" name="label_7">
    <property name="geometry">
     <rect>
-     <x>190</x>
+     <x>460</x>
      <y>30</y>
      <width>461</width>
      <height>61</height>

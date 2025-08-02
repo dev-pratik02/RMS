@@ -21,8 +21,8 @@
   <widget class="QLabel" name="ADDMENUITEM">
    <property name="geometry">
     <rect>
-     <x>280</x>
-     <y>10</y>
+     <x>530</x>
+     <y>30</y>
      <width>241</width>
      <height>41</height>
     </rect>
@@ -30,7 +30,7 @@
    <property name="font">
     <font>
      <family>Arial</family>
-     <pointsize>16</pointsize>
+     <pointsize>24</pointsize>
      <italic>false</italic>
      <bold>true</bold>
     </font>
@@ -45,8 +45,8 @@
   <widget class="QPushButton" name="btn_save">
    <property name="geometry">
     <rect>
-     <x>520</x>
-     <y>560</y>
+     <x>990</x>
+     <y>610</y>
      <width>93</width>
      <height>29</height>
     </rect>
@@ -54,7 +54,7 @@
    <property name="font">
     <font>
      <family>Arial</family>
-     <pointsize>12</pointsize>
+     <pointsize>20</pointsize>
      <italic>false</italic>
      <bold>true</bold>
     </font>
@@ -66,8 +66,8 @@
   <widget class="QPushButton" name="btn_reset">
    <property name="geometry">
     <rect>
-     <x>220</x>
-     <y>560</y>
+     <x>690</x>
+     <y>610</y>
      <width>93</width>
      <height>29</height>
     </rect>
@@ -75,7 +75,7 @@
    <property name="font">
     <font>
      <family>Arial</family>
-     <pointsize>12</pointsize>
+     <pointsize>20</pointsize>
      <italic>false</italic>
      <bold>true</bold>
     </font>
@@ -87,10 +87,10 @@
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>110</x>
-     <y>80</y>
-     <width>611</width>
-     <height>451</height>
+     <x>160</x>
+     <y>90</y>
+     <width>961</width>
+     <height>491</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
@@ -99,7 +99,7 @@
       <property name="font">
        <font>
         <family>Arial</family>
-        <pointsize>12</pointsize>
+        <pointsize>16</pointsize>
         <italic>false</italic>
         <bold>false</bold>
        </font>
@@ -110,14 +110,27 @@
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QLineEdit" name="item_name"/>
+     <widget class="QLineEdit" name="item_name">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+     </widget>
     </item>
     <item row="3" column="0">
      <widget class="QLabel" name="label_2">
       <property name="font">
        <font>
         <family>Arial</family>
-        <pointsize>12</pointsize>
+        <pointsize>16</pointsize>
        </font>
       </property>
       <property name="text">
@@ -127,6 +140,12 @@
     </item>
     <item row="3" column="1">
      <widget class="QLabel" name="image_preview">
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -134,6 +153,12 @@
     </item>
     <item row="4" column="1">
      <widget class="QPushButton" name="image_upload">
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Upload image</string>
       </property>
@@ -144,7 +169,7 @@
       <property name="font">
        <font>
         <family>Arial</family>
-        <pointsize>12</pointsize>
+        <pointsize>16</pointsize>
        </font>
       </property>
       <property name="text">
@@ -153,14 +178,21 @@
      </widget>
     </item>
     <item row="5" column="1">
-     <widget class="QComboBox" name="combo_category"/>
+     <widget class="QComboBox" name="combo_category">
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+     </widget>
     </item>
     <item row="7" column="0">
      <widget class="QLabel" name="PRICE">
       <property name="font">
        <font>
         <family>Arial</family>
-        <pointsize>12</pointsize>
+        <pointsize>16</pointsize>
        </font>
       </property>
       <property name="text">
@@ -170,6 +202,18 @@
     </item>
     <item row="7" column="1">
      <widget class="QLineEdit" name="item_price">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -180,7 +224,7 @@
       <property name="font">
        <font>
         <family>Arial</family>
-        <pointsize>12</pointsize>
+        <pointsize>16</pointsize>
        </font>
       </property>
       <property name="text">
@@ -190,6 +234,12 @@
     </item>
     <item row="9" column="1">
      <widget class="QPlainTextEdit" name="item_description">
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
       <property name="plainText">
        <string/>
       </property>

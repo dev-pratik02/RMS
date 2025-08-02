@@ -24,7 +24,8 @@ signals:
 
 private slots:
     void on_btn_change_clicked();
-    void on_btn_cancel_clicked();
+
+    void on_btn_reset_clicked();
 
 private:
     Ui::editing_table *ui;

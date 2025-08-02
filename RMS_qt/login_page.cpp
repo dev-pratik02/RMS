@@ -106,12 +106,6 @@ void login_page::on_btn_login_clicked()
     }
 }
 
-void login_page::on_btn_signup_clicked()
-{
-    signup signupDialog(this);
-    signupDialog.exec();
-}
-
 
 void login_page::on_btn_forgot_clicked()
 {

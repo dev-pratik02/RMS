@@ -43,12 +43,6 @@ void editing_table::setData(const QString &tableNo, const QString &seats, const 
     ui->textEdit_1->setPlainText(description);
 }
 
-void editing_table::on_btn_cancel_clicked()
-{
-    this->close();
-    if (parentWidget()) parentWidget()->show();
-}
-
 void editing_table::on_btn_change_clicked()
 {
     QString Seats = ui->lineEdit_e2->text();
@@ -88,5 +82,15 @@ void editing_table::on_btn_change_clicked()
 
     emit dataUpdated();
     this->close();
+}
+
+
+void editing_table::on_btn_reset_clicked()
+{
+    ui->lineEdit_e1->clear();
+    ui->lineEdit_e2->clear();
+    ui->lineEdit_e3->clear();
+    ui->lineEdit_e5->clear();
+    ui->textEdit_1->clear();
 }
 
