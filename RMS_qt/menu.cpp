@@ -41,6 +41,8 @@ void menu::loadData()
     ui->tableWidget->setColumnCount(6);
     ui->tableWidget->clearContents();
     ui->tableWidget->setRowCount(0);
+    ui->tableWidget->horizontalHeader()->setSectionResizeMode(4, QHeaderView::Stretch);
+
 
     QSqlQuery query(db);
     query.prepare("SELECT menu_item_id, item_name, price,category, description FROM menu");

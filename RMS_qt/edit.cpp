@@ -144,11 +144,7 @@ void edit::loadTableView()
     }
 
     ui->table_view->resizeColumnsToContents();
-    ui->table_view->setColumnWidth(0, 80);
-    ui->table_view->setColumnWidth(1, 60);
-    ui->table_view->setColumnWidth(2, 100);
-    ui->table_view->setColumnWidth(4, 100);
-    ui->table_view->setColumnWidth(5, 150);
+    ui->table_view->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
 

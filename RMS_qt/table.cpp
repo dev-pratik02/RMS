@@ -47,13 +47,7 @@ void table::loadTableList()
 
     ui->table_list->setModel(model);
     ui->table_list->resizeColumnsToContents();
-    ui->table_list->setColumnWidth(0, 80);   // Table No
-    ui->table_list->setColumnWidth(1, 60);   // Seats
-    ui->table_list->setColumnWidth(2, 100);  // Location
-    ui->table_list->setColumnWidth(3, 100);  // Orientation
-    ui->table_list->setColumnWidth(4, 100);  // Quality
-    ui->table_list->setColumnWidth(5, 200);  // Description
-    ui->table_list->setColumnWidth(6, 100);
+    ui->table_list->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
 void table::on_btn_edit_clicked()
