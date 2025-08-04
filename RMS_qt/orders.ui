@@ -17,10 +17,10 @@
    <widget class="QScrollArea" name="scrollArea">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>59</y>
-      <width>701</width>
-      <height>521</height>
+      <x>30</x>
+      <y>60</y>
+      <width>1221</width>
+      <height>650</height>
      </rect>
     </property>
     <property name="widgetResizable">
@@ -31,34 +31,34 @@
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>699</width>
-       <height>519</height>
+       <width>1219</width>
+       <height>648</height>
       </rect>
      </property>
      <widget class="QWidget" name="cardContainer" native="true">
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>9</y>
-        <width>641</width>
-        <height>491</height>
+        <y>30</y>
+        <width>1161</width>
+        <height>591</height>
        </rect>
       </property>
+      <widget class="QLabel" name="recordLabel">
+       <property name="geometry">
+        <rect>
+         <x>-110</x>
+         <y>80</y>
+         <width>721</width>
+         <height>39</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
      </widget>
     </widget>
-   </widget>
-   <widget class="QLabel" name="recordLabel">
-    <property name="geometry">
-     <rect>
-      <x>-50</x>
-      <y>200</y>
-      <width>721</width>
-      <height>39</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
    </widget>
    <widget class="QWidget" name="btn_widget" native="true">
     <property name="geometry">
@@ -69,7 +69,17 @@
       <height>51</height>
      </rect>
     </property>
-    <layout class="QHBoxLayout" name="btn_layout">
+   </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>420</x>
+      <y>10</y>
+      <width>631</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QPushButton" name="btn_all">
        <property name="text">

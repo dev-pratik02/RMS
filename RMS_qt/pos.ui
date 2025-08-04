@@ -23,8 +23,8 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>240</x>
-      <y>60</y>
+      <x>510</x>
+      <y>50</y>
       <width>381</width>
       <height>31</height>
      </rect>
@@ -41,11 +41,16 @@
    <widget class="QPushButton" name="btn_place_order">
     <property name="geometry">
      <rect>
-      <x>330</x>
-      <y>320</y>
-      <width>101</width>
-      <height>32</height>
+      <x>560</x>
+      <y>330</y>
+      <width>211</width>
+      <height>61</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>24</pointsize>
+     </font>
     </property>
     <property name="text">
      <string>Place Order</string>
@@ -54,10 +59,10 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>300</x>
-      <y>230</y>
-      <width>191</width>
-      <height>41</height>
+      <x>440</x>
+      <y>190</y>
+      <width>451</width>
+      <height>61</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">
@@ -65,7 +70,7 @@
       <widget class="QLabel" name="label_2">
        <property name="font">
         <font>
-         <pointsize>16</pointsize>
+         <pointsize>30</pointsize>
         </font>
        </property>
        <property name="text">
@@ -74,7 +79,13 @@
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="pos_table_dropdown"/>
+      <widget class="QComboBox" name="pos_table_dropdown">
+       <property name="font">
+        <font>
+         <pointsize>28</pointsize>
+        </font>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>

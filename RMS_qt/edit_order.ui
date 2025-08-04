@@ -17,9 +17,9 @@
    <property name="geometry">
     <rect>
      <x>50</x>
-     <y>19</y>
-     <width>711</width>
-     <height>561</height>
+     <y>30</y>
+     <width>1181</width>
+     <height>661</height>
     </rect>
    </property>
    <property name="frameShape">

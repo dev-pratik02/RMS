@@ -99,9 +99,9 @@ void orders::ordersPageSetup(){
 
     else{
         ui->recordLabel->hide();
-        const int columns = 3;
-        const int cardWidth = 200;
-        const int cardHeight = 200;
+        const int columns = 4;
+        const int cardWidth = 250;
+        const int cardHeight = 250;
         const int hSpacing = 12;
         const int vSpacing = 12;
         const int count = records;
