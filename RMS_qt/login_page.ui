@@ -18,8 +18,8 @@
     <rect>
      <x>230</x>
      <y>250</y>
-     <width>211</width>
-     <height>31</height>
+     <width>262</width>
+     <height>36</height>
     </rect>
    </property>
    <property name="font">
@@ -37,8 +37,8 @@
     <rect>
      <x>240</x>
      <y>320</y>
-     <width>181</width>
-     <height>20</height>
+     <width>249</width>
+     <height>24</height>
     </rect>
    </property>
    <property name="font">
@@ -105,8 +105,8 @@ color: white;
     <rect>
      <x>260</x>
      <y>530</y>
-     <width>141</width>
-     <height>32</height>
+     <width>148</width>
+     <height>26</height>
     </rect>
    </property>
    <property name="font">
@@ -139,10 +139,10 @@ color: white;
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>232</x>
-     <y>380</y>
-     <width>56</width>
-     <height>18</height>
+     <x>220</x>
+     <y>375</y>
+     <width>73</width>
+     <height>24</height>
     </rect>
    </property>
    <property name="font">
@@ -173,10 +173,10 @@ color: white;
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>213</x>
-     <y>430</y>
-     <width>75</width>
-     <height>18</height>
+     <x>190</x>
+     <y>420</y>
+     <width>98</width>
+     <height>24</height>
     </rect>
    </property>
    <property name="font">

@@ -24,8 +24,8 @@
     <rect>
      <x>311</x>
      <y>285</y>
-     <width>114</width>
-     <height>18</height>
+     <width>150</width>
+     <height>24</height>
     </rect>
    </property>
    <property name="font">
@@ -59,8 +59,8 @@
     <rect>
      <x>311</x>
      <y>115</y>
-     <width>144</width>
-     <height>18</height>
+     <width>188</width>
+     <height>24</height>
     </rect>
    </property>
    <property name="font">
@@ -139,8 +139,8 @@
     <rect>
      <x>430</x>
      <y>40</y>
-     <width>411</width>
-     <height>24</height>
+     <width>340</width>
+     <height>36</height>
     </rect>
    </property>
    <property name="font">
@@ -163,8 +163,8 @@
     <rect>
      <x>311</x>
      <y>195</y>
-     <width>133</width>
-     <height>18</height>
+     <width>175</width>
+     <height>24</height>
     </rect>
    </property>
    <property name="font">

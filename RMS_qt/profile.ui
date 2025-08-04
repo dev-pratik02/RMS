@@ -57,10 +57,10 @@
    <widget class="QLabel" name="maleLabel">
     <property name="geometry">
      <rect>
-      <x>59</x>
+      <x>40</x>
       <y>4</y>
-      <width>54</width>
-      <height>19</height>
+      <width>68</width>
+      <height>28</height>
      </rect>
     </property>
     <property name="font">
@@ -100,10 +100,10 @@
    <widget class="QLabel" name="nameLabel">
     <property name="geometry">
      <rect>
-      <x>70</x>
+      <x>50</x>
       <y>60</y>
-      <width>43</width>
-      <height>19</height>
+      <width>56</width>
+      <height>28</height>
      </rect>
     </property>
     <property name="font">
@@ -133,10 +133,10 @@
    <widget class="QLabel" name="emailLabel">
     <property name="geometry">
      <rect>
-      <x>74</x>
+      <x>60</x>
       <y>112</y>
-      <width>39</width>
-      <height>19</height>
+      <width>50</width>
+      <height>28</height>
      </rect>
     </property>
     <property name="font">
@@ -166,10 +166,10 @@
    <widget class="QLabel" name="addressLabel">
     <property name="geometry">
      <rect>
-      <x>53</x>
+      <x>40</x>
       <y>164</y>
-      <width>60</width>
-      <height>19</height>
+      <width>75</width>
+      <height>28</height>
      </rect>
     </property>
     <property name="font">
@@ -199,10 +199,10 @@
    <widget class="QLabel" name="dateOfBirthLabel">
     <property name="geometry">
      <rect>
-      <x>21</x>
+      <x>0</x>
       <y>216</y>
-      <width>92</width>
-      <height>19</height>
+      <width>118</width>
+      <height>28</height>
      </rect>
     </property>
     <property name="font">
@@ -232,10 +232,10 @@
    <widget class="QLabel" name="phoneNumberLabel">
     <property name="geometry">
      <rect>
-      <x>4</x>
+      <x>-20</x>
       <y>267</y>
-      <width>109</width>
-      <height>19</height>
+      <width>141</width>
+      <height>28</height>
      </rect>
     </property>
     <property name="font">
@@ -265,10 +265,10 @@
    <widget class="QLabel" name="roleLabel">
     <property name="geometry">
      <rect>
-      <x>81</x>
+      <x>70</x>
       <y>319</y>
-      <width>32</width>
-      <height>19</height>
+      <width>41</width>
+      <height>28</height>
      </rect>
     </property>
     <property name="font">
@@ -355,8 +355,8 @@
     <rect>
      <x>20</x>
      <y>651</y>
-     <width>101</width>
-     <height>41</height>
+     <width>111</width>
+     <height>44</height>
     </rect>
    </property>
    <property name="font">
@@ -373,8 +373,8 @@
     <rect>
      <x>930</x>
      <y>21</y>
-     <width>211</width>
-     <height>41</height>
+     <width>224</width>
+     <height>44</height>
     </rect>
    </property>
    <property name="font">
