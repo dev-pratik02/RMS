@@ -40,6 +40,7 @@ SOURCES += \
     signup.cpp \
     staff.cpp \
     table.cpp \
+    users.cpp \
     utils.cpp \
     main.cpp
 
@@ -71,6 +72,7 @@ HEADERS += \
     signup.h \
     staff.h \
     table.h \
+    users.h \
     utils.h
 
 FORMS += \
@@ -97,7 +99,8 @@ FORMS += \
     profile.ui \
     signup.ui \
     staff.ui \
-    table.ui
+    table.ui \
+    users.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

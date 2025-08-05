@@ -44,6 +44,7 @@ void pos::on_btn_place_order_clicked()
     ptraddorder = new POS_AddOrder(table_no, this, g_mainWindow);
     ptraddorder->setAttribute(Qt::WA_DeleteOnClose);
     ptraddorder->show();
+    this->close();
 
 }
 

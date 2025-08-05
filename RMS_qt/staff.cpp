@@ -164,6 +164,8 @@ void staff::on_ADDSTAFF_clicked()
 
 void staff::on_btn_staff_access_clicked()
 {
+    ptrusers = new users();
+    ptrusers->show();
 
 }
 

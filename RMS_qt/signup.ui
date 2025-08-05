@@ -52,7 +52,7 @@
     <string>Confirm</string>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QFrame" name="frame">
    <property name="geometry">
     <rect>
      <x>340</x>

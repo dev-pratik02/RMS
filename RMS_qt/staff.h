@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QtSql>
 #include "addstaff.h"
+#include "users.h"
 
 namespace Ui {
 class staff;
@@ -20,12 +21,12 @@ public:
 private slots:
     void on_ADDSTAFF_clicked();
     void loadStaffData();
-
     void on_btn_staff_access_clicked();
 
 private:
     Ui::staff *ui;
     addstaff *ptraddstaff;
+    users *ptrusers;
     QSqlDatabase db;
 };
 

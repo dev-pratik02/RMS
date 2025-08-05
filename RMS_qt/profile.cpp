@@ -67,7 +67,6 @@ void profile::on_pass_btn_clicked()
     if(!passPage){
         passPage = new change_password();
     }
-    this->close();
     passPage->show();
 }
 
