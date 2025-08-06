@@ -57,7 +57,9 @@ void signup::on_btn_confirm_clicked()
     QString pass = ui->line_password->text();
     QString confirmpass = ui->line_confirmpass->text();
     QString username = ui->input_username->text();
-    if (name.isEmpty() || username.isEmpty()|| phone.isEmpty() || email.isEmpty() || pass.isEmpty() || confirmpass.isEmpty()) {
+    QString address = ui->input_address->text();
+    QString role = ui->input_role->text();
+    if (name.isEmpty() || username.isEmpty()|| phone.isEmpty() || email.isEmpty() || pass.isEmpty() || confirmpass.isEmpty() || address.isEmpty() || role.isEmpty()) {
         QMessageBox::warning(this, "Input Error", "Please fill all the fields.");
         return;
     }
@@ -79,14 +81,16 @@ void signup::on_btn_confirm_clicked()
     }
     QString hashedPass = hashPassword(pass);
     QSqlQuery query(db);
-    query.prepare("INSERT INTO users (name, phone, email, dob, password, username) "
-                  "VALUES (?, ?, ?, ?, ?,?)");
+    query.prepare("INSERT INTO users (name, phone, email, dob, password, username,address,role) "
+                  "VALUES (?, ?, ?, ?, ?,?,?,?)");
     query.addBindValue(name);
     query.addBindValue(phone);
     query.addBindValue(email);
     query.addBindValue(dob);
     query.addBindValue(hashedPass);
     query.addBindValue(username);
+    query.addBindValue(address);
+    query.addBindValue(role);
     if (!query.exec()) {
         QMessageBox::critical(this, "Database Error", query.lastError().text());
     } else {

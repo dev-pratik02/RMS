@@ -90,11 +90,6 @@
    </column>
    <column>
     <property name="text">
-     <string>Gender</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
      <string>username</string>
     </property>
    </column>

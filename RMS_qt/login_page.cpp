@@ -21,7 +21,7 @@ login_page::login_page(QWidget *parent)
 {
     ui->setupUi(this);
     ui->input_password->setEchoMode(QLineEdit::Password);
-    setupEyeButton(ui->input_password);
+    setupEyeButton(ui->input_password);  //enables toggle password view
 
     // First image
     QPixmap loginPix(":/login_page/login_page_image.png");

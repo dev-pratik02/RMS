@@ -15,7 +15,7 @@ users::users(QWidget *parent)
     }
 
     QSqlQuery query(db);
-    query.prepare("SELECT name,address,phone,email,dob,gender,username,role FROM users");
+    query.prepare("SELECT name,address,phone,email,dob,username,role FROM users");
     int row=0;
     if(query.exec()){
         while(query.next()){
@@ -24,9 +24,8 @@ users::users(QWidget *parent)
             QString phone = query.value(2).toString();
             QString email = query.value(3).toString();
             QString dob = query.value(4).toString();
-            QString gender = query.value(5).toString();
-            QString username = query.value(6).toString();
-            QString role = query.value(7).toString();
+            QString username = query.value(5).toString();
+            QString role = query.value(6).toString();
 
             ui->table_users->insertRow(row);
             ui->table_users->setItem(row, 0, new QTableWidgetItem(name));
@@ -34,9 +33,8 @@ users::users(QWidget *parent)
             ui->table_users->setItem(row, 2, new QTableWidgetItem(phone));
             ui->table_users->setItem(row, 3, new QTableWidgetItem(email));
             ui->table_users->setItem(row, 4, new QTableWidgetItem(dob));
-            ui->table_users->setItem(row, 5, new QTableWidgetItem(gender));
-            ui->table_users->setItem(row, 6, new QTableWidgetItem(username));
-            ui->table_users->setItem(row, 7, new QTableWidgetItem(role));
+            ui->table_users->setItem(row, 5, new QTableWidgetItem(username));
+            ui->table_users->setItem(row, 6, new QTableWidgetItem(role));
             row++;
         }
     }
